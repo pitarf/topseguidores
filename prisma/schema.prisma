@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model SystemSetting {
+  id              String   @id @default("1")
+  siteTitle       String   @default("Cresce Reels - Comprar Visualizações Instagram")
+  siteDescription String   @default("Aumente seu engajamento no Reels de forma rápida e segura.")
+  siteKeywords    String   @default("comprar visualizações, instagram reels, engajamento, redes sociais")
+  faviconUrl      String?
+  logoUrl         String?
+  fbPixelId       String?
+  fbApiToken      String?
+  updatedAt       DateTime @updatedAt
+}
+
+model Plan {
+  id          String   @id @default(cuid())
+  name        String
+  viewsAmount Int
+  price       Decimal
+  originalPrice Decimal?
+  isPopular   Boolean  @default(false)
+  badge       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  orders      Order[]
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  instagramUrl    String
+  amount          Int
+  price           Decimal
+  status          OrderStatus @default(PENDING)
+  pixCode         String?     @db.Text
+  pixQrCodeBase64 String?     @db.Text
+  paymentId       String?     @unique
+  panelOrderId    String?     // ID do pedido retornado pelo PerfectPanel
+  plan            Plan        @relation(fields: [planId], references: [id])
+  planId          String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model FakeNotification {
+  id        String   @id @default(cuid())
+  username  String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+enum OrderStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELED
+}
