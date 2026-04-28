@@ -34,6 +34,7 @@ export function Hero() {
             transition={{ delay: 0.1, duration: 0.6 }}
             className="mb-6 text-5xl font-[900] tracking-tighter text-white lg:text-[72px] leading-[1.1]"
           >
+            <span className="block text-2xl lg:text-3xl text-zinc-500 mb-4 font-black tracking-widest uppercase">Viraliza Reels</span>
             Cresça seu <span className="neon-text-red">Instagram</span>
           </motion.h1>
           
