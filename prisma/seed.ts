@@ -22,8 +22,8 @@ async function main() {
     },
   });
 
-  // 2. Planos Padrão (Limpar antes para evitar duplicidade no seed)
-  await prisma.plan.deleteMany();
+  // 2. Planos Padrão (Comentado deleteMany para não quebrar se houver pedidos)
+  // await prisma.plan.deleteMany();
 
   const plansList = [
     { name: "Pacote Teste", viewsAmount: 1000, price: 3.00, originalPrice: 5.00, isPopular: true, badge: "💎 TESTE" },
