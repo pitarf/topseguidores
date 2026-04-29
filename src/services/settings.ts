@@ -20,10 +20,15 @@ export async function getSystemSettings() {
   } catch (error) {
     console.error("Erro ao buscar configurações do sistema:", error);
     return {
-      siteTitle: "Cresce Reels",
+      id: "fallback",
+      siteTitle: "Viraliza Reels",
       siteDescription: "Impulsione seu Instagram",
       siteKeywords: "instagram, reels, views",
       faviconUrl: null,
-    };
+      logoUrl: null,
+      fbPixelId: null,
+      fbApiToken: null,
+      updatedAt: new Date(),
+    } as any;
   }
 }
