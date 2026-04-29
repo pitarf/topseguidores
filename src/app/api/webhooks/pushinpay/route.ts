@@ -9,10 +9,10 @@ export async function POST(req: Request) {
     console.log("PushinPay Webhook Received:", body);
 
     // 1. Validar Token de Segurança e Status
-    const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'fallback-secret';
+    const WEBHOOK_TOKEN = process.env.PUSHINPAY_WEBHOOK_TOKEN;
     const token = searchParams.get("token");
 
-    if (token !== WEBHOOK_SECRET) {
+    if (!token || token !== WEBHOOK_TOKEN) {
       console.warn("⚠️ Tentativa de acesso não autorizada ao Webhook!");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

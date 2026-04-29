@@ -30,9 +30,9 @@ export async function POST(req: Request) {
 
     // 2. Chamar API da PushinPay
     const PUSHINPAY_TOKEN = process.env.PUSHINPAY_TOKEN;
-    const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'fallback-secret';
-    const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://seu-dominio.com';
-    const WEBHOOK_URL = `${APP_URL}/api/webhooks/pushinpay?orderId=${order.id}&token=${WEBHOOK_SECRET}`;
+    const WEBHOOK_TOKEN = process.env.PUSHINPAY_WEBHOOK_TOKEN;
+    const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://viralizareels.com';
+    const WEBHOOK_URL = `${APP_URL}/api/webhooks/pushinpay?orderId=${order.id}&token=${WEBHOOK_TOKEN}`;
 
     const response = await fetch("https://api.pushinpay.com.br/api/pix/cashIn", {
       method: "POST",
