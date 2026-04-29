@@ -91,7 +91,7 @@ export function Pricing({ initialPlans }: { initialPlans: Plan[] }) {
                     {[
                       "📌 Cole o link do seu vídeo",
                       "🔓 Vídeo privado não funciona",
-                      "⚡ Entrega em até 20 minutos",
+                      "⚡ Entrega em até 10 minutos",
                     ].map((feature, fIndex) => (
                       <li key={fIndex} className="flex items-center gap-2 text-xs font-bold text-zinc-400 text-left">
                         {feature}
