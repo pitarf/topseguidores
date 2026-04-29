@@ -8,7 +8,15 @@ export async function POST(req: Request) {
     const body = await req.json();
     console.log("PushinPay Webhook Received:", body);
 
-    // 1. Validar Status
+    // 1. Validar Token de Segurança e Status
+    const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'fallback-secret';
+    const token = searchParams.get("token");
+
+    if (token !== WEBHOOK_SECRET) {
+      console.warn("⚠️ Tentativa de acesso não autorizada ao Webhook!");
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     if (body.status === "paid" || body.status === "approved") {
       const orderId = body.external_id || body.reference_id || searchParams.get("orderId");
 
@@ -16,30 +24,37 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "External ID missing" }, { status: 400 });
       }
 
-      // 2. Localizar pedido
-      const order = await prisma.order.findUnique({
-        where: { id: orderId },
+      // 2. Localizar e Bloquear pedido para evitar Condição de Corrida (Atomicidade)
+      // Usamos updateMany com status PENDING para garantir que apenas 1 processo consiga "pegar" o pedido
+      const updateResult = await prisma.order.updateMany({
+        where: { 
+          id: orderId,
+          status: "PENDING" // Só processa se ainda estiver pendente
+        },
+        data: {
+          status: "SUCCESS" 
+        }
       });
 
-      if (!order) {
-        return NextResponse.json({ error: "Order not found" }, { status: 404 });
+      if (updateResult.count === 0) {
+        // Se count for 0, significa que o pedido já foi processado ou não existe
+        return NextResponse.json({ message: "Already processed or not found" });
       }
 
-      if (order.status === "SUCCESS") {
-        return NextResponse.json({ message: "Already processed" });
-      }
+      // Agora buscamos o pedido para ter os dados de entrega
+      const order = await prisma.order.findUnique({ where: { id: orderId } });
+      if (!order) return NextResponse.json({ error: "Fatal error" }, { status: 500 });
 
       // 3. Disparar API de entrega (PerfectPanel)
       const panelOrderId = await sendOrderToPerfectPanel(order.instagramUrl, order.amount);
 
-      // 4. Marcar como pago e salvar o ID do Painel
-      await prisma.order.update({
-        where: { id: orderId },
-        data: {
-          status: "SUCCESS",
-          panelOrderId: panelOrderId || null,
-        },
-      });
+      // 4. Salvar o ID do Painel se houver
+      if (panelOrderId) {
+        await prisma.order.update({
+          where: { id: orderId },
+          data: { panelOrderId },
+        });
+      }
 
       console.log(`✅ Pedido ${orderId} PAGO! API de entrega processada (Painel ID: ${panelOrderId}).`);
 
