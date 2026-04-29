@@ -7,16 +7,19 @@ export async function POST(req: Request) {
     if (body.password === process.env.ADMIN_PASSWORD) {
       const response = NextResponse.json({ success: true });
       
-      // Salva a senha correta como um token de sessão
       response.cookies.set('admin_token', body.password, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 60 * 60 * 24 * 7, // Mantém logado por 7 dias
+        maxAge: 60 * 60 * 24 * 7,
         path: '/',
+        sameSite: 'lax'
       });
       
       return response;
     }
+    
+    // Proteção contra Brute Force: Delay de 2 segundos em caso de erro
+    await new Promise(resolve => setTimeout(resolve, 2000));
     
     return NextResponse.json(
       { error: 'Senha incorreta. Tente novamente.' }, 
