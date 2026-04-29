@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { RevenueChart } from "./RevenueChart";
 import { OrdersTable } from "./OrdersTable";
+import { DashboardHeader } from "./DashboardHeader";
 import { 
   DollarSign, 
   Calendar, 
@@ -16,11 +17,43 @@ import {
 // Forçamos a renderização dinâmica desta página (não usar cache estático)
 export const dynamic = "force-dynamic";
 
-export default async function AdministracaoPage() {
-  // Buscar todos os pedidos
-  const orders = await prisma.order.findMany({
+export default async function AdministracaoPage({
+  searchParams,
+}: {
+  searchParams: { month?: string; year?: string };
+}) {
+  const selectedMonth = searchParams.month ? parseInt(searchParams.month) : null;
+  const selectedYear = searchParams.year ? parseInt(searchParams.year) : null;
+
+  // Buscar todos os pedidos para gerar a lista de meses disponíveis
+  const allOrders = await prisma.order.findMany({
     orderBy: { createdAt: "desc" },
     include: { plan: true }
+  });
+
+  // Gerar lista de meses disponíveis (Únicos)
+  const availableMonthsMap = new Map();
+  allOrders.forEach(order => {
+    const d = new Date(order.createdAt);
+    const label = d.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+    const key = `${d.getMonth() + 1}-${d.getFullYear()}`;
+    if (!availableMonthsMap.has(key)) {
+      availableMonthsMap.set(key, { 
+        label: label.charAt(0).toUpperCase() + label.slice(1), 
+        month: d.getMonth() + 1, 
+        year: d.getFullYear() 
+      });
+    }
+  });
+  const availableMonthsList = Array.from(availableMonthsMap.values());
+
+  // Filtrar ordens baseadas na seleção
+  const orders = allOrders.filter(order => {
+    if (selectedMonth !== null && selectedYear !== null) {
+      const d = new Date(order.createdAt);
+      return (d.getMonth() + 1) === selectedMonth && d.getFullYear() === selectedYear;
+    }
+    return true;
   });
 
   const now = new Date();
@@ -34,6 +67,7 @@ export default async function AdministracaoPage() {
   const startOfYear = new Date(now.getFullYear(), 0, 1);
 
   // Variáveis de Faturamento
+  let filteredRevenue = 0;
   let revToday = 0;
   let revWeek = 0;
   let revMonth = 0;
@@ -47,15 +81,24 @@ export default async function AdministracaoPage() {
   // Quantidade de views vendidas
   let totalViewsDelivered = 0;
 
-  // Preparar dados para o gráfico (últimos 7 dias)
-  const last7DaysData = Array.from({ length: 7 }).map((_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() - (6 - i));
-    return {
-      date: d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
-      revenue: 0
-    };
-  });
+  // Preparar dados para o gráfico (últimos 7 dias se for "Todo Período", ou dias do mês se for filtrado)
+  const isFiltered = selectedMonth !== null;
+  
+  // Se estiver filtrado, o gráfico mostra os dias do mês selecionado
+  // Caso contrário, mostra os últimos 7 dias como antes
+  const chartData = isFiltered 
+    ? Array.from({ length: new Date(selectedYear!, selectedMonth!, 0).getDate() }).map((_, i) => ({
+        date: `${i + 1}/${selectedMonth?.toString().padStart(2, '0')}`,
+        revenue: 0
+      }))
+    : Array.from({ length: 7 }).map((_, i) => {
+        const d = new Date();
+        d.setDate(d.getDate() - (6 - i));
+        return {
+          date: d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+          revenue: 0
+        };
+      });
 
   orders.forEach(order => {
     const val = Number(order.price);
@@ -63,15 +106,21 @@ export default async function AdministracaoPage() {
     if (order.status === "SUCCESS") {
       totalSuccess++;
       totalViewsDelivered += order.amount;
+      filteredRevenue += val;
       
+      // Apenas para métricas globais se não estiver filtrado
       if (order.createdAt >= startOfDay) revToday += val;
       if (order.createdAt >= startOfWeek) revWeek += val;
       if (order.createdAt >= startOfMonth) revMonth += val;
       if (order.createdAt >= startOfYear) revYear += val;
 
       // Popula dados do Gráfico
-      const orderDateStr = new Date(order.createdAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-      const dayData = last7DaysData.find(d => d.date === orderDateStr);
+      const d = new Date(order.createdAt);
+      const orderDateStr = isFiltered 
+        ? `${d.getDate()}/${selectedMonth?.toString().padStart(2, '0')}`
+        : d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+        
+      const dayData = chartData.find(cd => cd.date === orderDateStr);
       if (dayData) {
         dayData.revenue += val;
       }
@@ -87,18 +136,15 @@ export default async function AdministracaoPage() {
 
   return (
     <div className="space-y-10">
-      <div>
-        <h1 className="text-3xl font-[1000] text-white tracking-tighter uppercase">Insights & Faturamento</h1>
-        <p className="text-zinc-400 font-medium text-sm mt-1">Acompanhe as métricas de conversão e receita em tempo real.</p>
-      </div>
+      <DashboardHeader availableMonths={availableMonthsList} />
 
       {/* Cards de Faturamento (Power BI Style) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard 
-          title="Faturamento Hoje" 
-          value={formatMoney(revToday)} 
+          title={isFiltered ? "Faturamento Filtrado" : "Faturamento Hoje"} 
+          value={formatMoney(isFiltered ? filteredRevenue : revToday)} 
           icon={<DollarSign className="w-6 h-6 text-emerald-400" />} 
-          trend="Hoje"
+          trend={isFiltered ? "No Período" : "Hoje"}
           color="emerald"
         />
         <MetricCard 
@@ -129,8 +175,10 @@ export default async function AdministracaoPage() {
         
         {/* Gráfico Ocupando 2 Colunas */}
         <div className="lg:col-span-2 bg-[#0b111e] border border-white/5 p-8 rounded-[2rem] shadow-2xl">
-          <h2 className="text-xl font-black text-white tracking-tight mb-6">Receita (Últimos 7 Dias)</h2>
-          <RevenueChart data={last7DaysData} />
+          <h2 className="text-xl font-black text-white tracking-tight mb-6">
+            Receita ({isFiltered ? `Dias do Mês ${selectedMonth}` : "Últimos 7 Dias"})
+          </h2>
+          <RevenueChart data={chartData} />
         </div>
 
         {/* Estatísticas Secundárias */}
