@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { Check } from "lucide-react";
 
@@ -14,7 +15,13 @@ const usernames = [
 const plans = ["5.000 views", "10.000 views", "1.000 views", "50.000 views", "100.000 views"];
 
 export function PurchaseNotifications() {
+  const pathname = usePathname();
+
   useEffect(() => {
+    // Se estiver na administração, não ativa o timer
+    if (pathname?.startsWith('/administracao')) {
+      return;
+    }
     const showNotification = () => {
       const user = usernames[Math.floor(Math.random() * usernames.length)];
       const plan = plans[Math.floor(Math.random() * plans.length)];
@@ -61,7 +68,7 @@ export function PurchaseNotifications() {
       clearTimeout(initialTimer);
       clearInterval(interval);
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }
