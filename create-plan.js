@@ -30,6 +30,20 @@ async function main() {
   for (const plan of plans) {
     await prisma.plan.create({ data: plan });
   }
+
+  console.log("Verificando configurações do sistema...");
+  const settingsCount = await prisma.systemSetting.count();
+  if (settingsCount === 0) {
+    await prisma.systemSetting.create({
+      data: {
+        siteTitle: "Viraliza Reels - Comprar Visualizações Instagram",
+        siteDescription: "Aumente seu engajamento no Reels de forma rápida e segura.",
+        siteKeywords: "comprar visualizações, instagram reels, engajamento, redes sociais",
+        faviconUrl: "/icon.svg"
+      }
+    });
+    console.log("✅ Configurações iniciais criadas!");
+  }
   
   console.log("✅ 18 planos criados com sucesso!");
 }
