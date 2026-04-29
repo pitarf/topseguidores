@@ -8,14 +8,31 @@ export async function POST(req: Request) {
     const urlToken = searchParams.get("token");
     const urlOrderId = searchParams.get("orderId");
     
-    // 1. Tentar ler o body com segurança
-    let body: any;
+    const contentType = req.headers.get("content-type") || "";
+    console.log(`🌐 Webhook Content-Type: ${contentType}`);
+
+    // 1. Tentar ler o body de forma flexível
+    let body: any = {};
     try {
-      body = await req.json();
-      console.log("📦 PushinPay Webhook Body:", JSON.stringify(body));
+      const rawBody = await req.text();
+      console.log("📦 Raw Webhook Body:", rawBody);
+      
+      if (contentType.includes("application/json")) {
+        body = JSON.parse(rawBody);
+      } else if (contentType.includes("application/x-www-form-urlencoded")) {
+        const params = new URLSearchParams(rawBody);
+        body = Object.fromEntries(params.entries());
+      } else {
+        // Tenta parsear como JSON mesmo se o header estiver errado
+        try {
+          body = JSON.parse(rawBody);
+        } catch {
+          console.warn("⚠️ Formato de body desconhecido e não é JSON válido.");
+        }
+      }
     } catch (e) {
-      console.error("❌ Erro ao ler JSON do body:", e);
-      return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+      console.error("❌ Erro ao ler body da requisição:", e);
+      return NextResponse.json({ error: "Could not read request body" }, { status: 400 });
     }
 
     // 2. Validar Token de Segurança
