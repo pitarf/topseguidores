@@ -22,6 +22,33 @@ export function CheckoutModal() {
 
   const [pixCode, setPixCode] = useState("");
   const [pixQrCodeBase64, setPixQrCodeBase64] = useState("");
+  const [orderId, setOrderId] = useState<string | null>(null);
+
+  // Polling para verificar se o PIX foi pago
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (step === 2 && orderId) {
+      interval = setInterval(async () => {
+        try {
+          const response = await fetch(`/api/checkout/status?orderId=${orderId}`);
+          const data = await response.json();
+          
+          if (data.status === "SUCCESS") {
+            setStep(3);
+            toast.success("Pagamento confirmado!");
+            clearInterval(interval);
+          }
+        } catch (error) {
+          console.error("Erro ao verificar status:", error);
+        }
+      }, 5000); // Verifica a cada 5 segundos
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [step, orderId]);
 
   const handleGeneratePix = async () => {
     if (!url.trim()) {
@@ -51,6 +78,7 @@ export function CheckoutModal() {
         throw new Error(data.error || "Erro ao gerar PIX");
       }
 
+      setOrderId(data.orderId);
       setPixCode(data.pixCode);
       setPixQrCodeBase64(data.pixQrCodeBase64);
       setStep(2);
@@ -182,7 +210,7 @@ export function CheckoutModal() {
                   {loading ? "GERANDO..." : "GERAR PIX"}
                 </button>
               </div>
-            ) : (
+            ) : step === 2 ? (
               <div className="text-center space-y-4 py-2">
                 <div className="inline-flex w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20 text-green-500 items-center justify-center mb-1">
                   <motion.div
@@ -230,7 +258,49 @@ export function CheckoutModal() {
                   VOCÊ RECEBERÁ AS VIEWS ASSIM QUE O PIX FOR CONFIRMADO.
                 </div>
               </div>
+            ) : (
+              <div className="text-center py-10 space-y-6">
+                <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto shadow-[0_0_50px_rgba(34,197,94,0.4)]">
+                  <motion.div
+                    initial={{ scale: 0, rotate: -45 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: "spring", damping: 12 }}
+                  >
+                    <ShieldCheck className="w-16 h-16 text-white" />
+                  </motion.div>
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className="text-3xl font-black text-white tracking-tighter uppercase">Pagamento Confirmado!</h3>
+                  <p className="text-zinc-400 font-bold text-sm">
+                    Suas views já foram solicitadas e entrarão em breve.
+                  </p>
+                </div>
+
+                <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-6 text-left space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center text-[10px] font-black text-white">1</div>
+                    <p className="text-xs text-zinc-300 font-medium">O sistema já identificou seu pagamento.</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center text-[10px] font-black text-white">2</div>
+                    <p className="text-xs text-zinc-300 font-medium">A ordem foi enviada para nossos servidores de entrega.</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center text-[10px] font-black text-white">3</div>
+                    <p className="text-xs text-zinc-300 font-medium">O prazo de início é de 1 a 30 minutos.</p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={closeCheckout}
+                  className="w-full py-5 bg-zinc-800 hover:bg-zinc-700 text-white font-black rounded-2xl transition-all uppercase tracking-widest text-sm"
+                >
+                  FECHAR E AGUARDAR
+                </button>
+              </div>
             )}
+
           </div>
         </motion.div>
       </div>
