@@ -49,18 +49,26 @@ export function Pricing({ initialPlans }: { initialPlans: Plan[] }) {
                 </div>
               )}
               
-              <div className="relative group w-full p-px rounded-[1.5rem] transition-all duration-300 hover:scale-[1.02] bg-[#20283c] hover:bg-primary">
-                <div className="bg-[#0b111e] rounded-[1.4rem] p-8 flex-1 flex flex-col items-center text-center">
+              <div className={`relative group w-full p-px rounded-[1.5rem] transition-all duration-300 hover:scale-[1.02] ${
+                plan.popular 
+                  ? "bg-gradient-to-b from-primary via-primary/50 to-primary/20 shadow-[0_0_50px_rgba(255,0,0,0.15)]" 
+                  : "bg-[#20283c] hover:bg-primary"
+              }`}>
+                <div className={`rounded-[1.4rem] p-8 flex-1 flex flex-col items-center text-center ${
+                  plan.popular 
+                    ? "bg-gradient-to-b from-[#1a0505] to-[#0b111e]" 
+                    : "bg-[#0b111e]"
+                }`}>
                   <div className="flex items-center gap-2 mb-2">
-                    <Star className="w-4 h-4 text-primary fill-current" />
-                    <span className="text-sm font-black text-zinc-400 uppercase tracking-widest">
+                    <Star className={`w-4 h-4 fill-current ${plan.popular ? "text-primary animate-pulse" : "text-primary"}`} />
+                    <span className={`text-sm font-black uppercase tracking-widest ${plan.popular ? "text-white" : "text-zinc-400"}`}>
                       {plan.name}
                     </span>
-                    <Star className="w-4 h-4 text-primary fill-current" />
+                    <Star className={`w-4 h-4 fill-current ${plan.popular ? "text-primary animate-pulse" : "text-primary"}`} />
                   </div>
 
-                  <div className="bg-primary/10 px-4 py-1 rounded-full mb-6">
-                    <span className="text-[10px] font-black text-primary uppercase tracking-wider">
+                  <div className={`${plan.popular ? "bg-primary" : "bg-primary/10"} px-4 py-1 rounded-full mb-6 shadow-lg`}>
+                    <span className={`text-[10px] font-black uppercase tracking-wider ${plan.popular ? "text-white" : "text-primary"}`}>
                       Visualizações Reels
                     </span>
                   </div>
@@ -72,7 +80,7 @@ export function Pricing({ initialPlans }: { initialPlans: Plan[] }) {
                     <p className="text-zinc-500 text-xs font-bold mt-1">Entrega rápida e segura</p>
                   </div>
 
-                  <div className="mb-8 flex items-center justify-center gap-2 text-primary">
+                  <div className={`mb-8 flex items-center justify-center gap-2 ${plan.popular ? "text-primary" : "text-primary/70"}`}>
                     <Users className="w-4 h-4" />
                     <span className="text-xs font-bold">
                       {(plan.viewers * 100) + (plan.viewers * 17 % 89) + 14} pessoas estão vendo agora
@@ -102,7 +110,11 @@ export function Pricing({ initialPlans }: { initialPlans: Plan[] }) {
 
                   <button
                     onClick={() => openCheckout(plan)}
-                    className="w-full py-5 font-black text-white rounded-2xl transition-all bg-primary hover:brightness-125 active:scale-95 shadow-[0_10px_20px_-10px_rgba(255,0,0,0.5)] hover:shadow-[0_0_30px_rgba(255,0,0,0.6)] uppercase tracking-widest text-sm"
+                    className={`w-full py-5 font-black text-white rounded-2xl transition-all uppercase tracking-widest text-sm shadow-xl ${
+                      plan.popular 
+                        ? "bg-primary hover:scale-[1.02] hover:brightness-125 shadow-primary/20" 
+                        : "bg-primary hover:brightness-125 active:scale-95"
+                    }`}
                   >
                     COMPRAR AGORA
                   </button>
