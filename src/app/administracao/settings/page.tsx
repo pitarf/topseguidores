@@ -3,7 +3,7 @@ import { SettingsForm } from "./SettingsForm";
 
 export default async function SettingsPage() {
   const settings = await prisma.systemSetting.findFirst() || {
-    siteTitle: "Cresce Reels - Comprar Visualizações Instagram",
+    siteTitle: "Viraliza Reels - Comprar Visualizações Instagram",
     siteDescription: "Aumente seu engajamento no Reels de forma rápida e segura.",
     siteKeywords: "comprar visualizações, instagram reels, engajamento, redes sociais",
     faviconUrl: "",
