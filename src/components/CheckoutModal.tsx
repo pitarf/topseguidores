@@ -75,8 +75,33 @@ export function CheckoutModal() {
 
   const copyPix = () => {
     if (!pixCode) return;
-    navigator.clipboard.writeText(pixCode);
-    toast.success("Código PIX copiado!");
+    
+    // Tenta primeiro o método moderno
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(pixCode)
+        .then(() => toast.success("Código PIX copiado!"))
+        .catch(() => fallbackCopy(pixCode));
+    } else {
+      fallbackCopy(pixCode);
+    }
+  };
+
+  const fallbackCopy = (text: string) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-9999px";
+    textArea.style.top = "0";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand('copy');
+      toast.success("Código PIX copiado!");
+    } catch (err) {
+      toast.error("Não foi possível copiar automaticamente.");
+    }
+    document.body.removeChild(textArea);
   };
 
   if (!isOpen) return null;

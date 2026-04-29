@@ -60,7 +60,7 @@ export default async function RootLayout({
         <main className="min-h-screen">
           {children}
         </main>
-        <Toaster position="bottom-right" richColors theme="dark" />
+        <Toaster position="top-right" richColors theme="dark" />
         <PurchaseNotifications />
         <CheckoutModal />
         <HowItWorksWrapper />
