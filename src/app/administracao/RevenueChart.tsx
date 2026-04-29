@@ -44,7 +44,7 @@ export function RevenueChart({ data }: { data: { date: string; revenue: number }
           <Tooltip 
             contentStyle={{ backgroundColor: "#0b111e", borderColor: "#ffffff10", borderRadius: "12px", fontSize: "12px", color: "#fff" }}
             itemStyle={{ color: "#ef4444", fontWeight: "900" }}
-            formatter={(value: number) => [`R$ ${value.toFixed(2)}`, "Faturamento"]}
+            formatter={(value: any) => [`R$ ${Number(value || 0).toFixed(2)}`, "Faturamento"]}
             labelStyle={{ fontWeight: "bold", marginBottom: "4px", color: "#a1a1aa" }}
           />
           <Area 
