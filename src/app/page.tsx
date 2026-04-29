@@ -1,5 +1,6 @@
 import { Hero } from "@/components/Hero";
 import { Pricing } from "@/components/Pricing";
+import { Features } from "@/components/Features";
 import { getPlans } from "@/services/plans";
 
 export default async function Home() {
@@ -9,7 +10,7 @@ export default async function Home() {
     <div className="flex flex-col w-full overflow-hidden">
       <Hero />
       <Pricing initialPlans={plans} />
-      
+      <Features />
       {/* Footer Simples */}
       <footer className="py-12 border-t border-white/5 bg-black">
         <div className="container mx-auto px-4 text-center">
