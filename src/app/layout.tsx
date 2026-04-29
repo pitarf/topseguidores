@@ -44,6 +44,7 @@ import { PurchaseNotifications } from "@/components/PurchaseNotifications";
 import { CheckoutModal } from "@/components/CheckoutModal";
 import { HowItWorksWrapper } from "@/components/HowItWorksWrapper";
 import { FacebookPixel } from "@/components/FacebookPixel";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 export default async function RootLayout({
   children,
@@ -65,6 +66,7 @@ export default async function RootLayout({
         <CheckoutModal />
         <HowItWorksWrapper />
         <FacebookPixel pixelId={settings.fbPixelId} />
+        <WhatsAppButton number={settings.whatsappNumber} />
       </body>
     </html>
   );

@@ -12,6 +12,7 @@ model SystemSetting {
   siteDescription String   @default("Aumente seu engajamento no Reels de forma rápida e segura.")
   siteKeywords    String   @default("comprar visualizações, instagram reels, engajamento, redes sociais")
   faviconUrl      String?
+  whatsappNumber  String?
   logoUrl         String?
   fbPixelId       String?
   fbApiToken      String?

@@ -60,6 +60,17 @@ export function SettingsForm({ initialData }: { initialData: any }) {
               className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium focus:border-primary/50 outline-none"
             />
           </div>
+          <div>
+            <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">Número do WhatsApp (Suporte)</label>
+            <input 
+              type="text" 
+              placeholder="Ex: 5511999999999"
+              value={data.whatsappNumber || ""} 
+              onChange={e => setData({...data, whatsappNumber: e.target.value})}
+              className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium focus:border-green-500/50 outline-none"
+            />
+            <p className="text-[10px] text-zinc-500 mt-2 font-bold uppercase tracking-tighter">📌 Use o formato: código do país + DDD + número (ex: 5511988887777)</p>
+          </div>
         </div>
       </div>
 
