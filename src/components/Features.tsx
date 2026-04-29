@@ -12,8 +12,8 @@ export function Features() {
           {[
             {
               icon: <Zap className="w-6 h-6 text-primary fill-primary/20" />,
-              title: "Entrega Ninja",
-              desc: "Início imediato. Você verá os resultados em segundos após a confirmação.",
+              title: "Entrega em até 10 Minutos",
+              desc: "Início super rápido. Você verá os resultados logo após a confirmação do pagamento.",
             },
             {
               icon: <Users className="w-6 h-6 text-primary" />,
