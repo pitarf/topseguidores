@@ -13,6 +13,7 @@ model SystemSetting {
   siteKeywords    String   @default("comprar visualizações, instagram reels, engajamento, redes sociais")
   faviconUrl      String?
   whatsappNumber  String?
+  showNotifications Boolean @default(true)
   logoUrl         String?
   fbPixelId       String?
   fbApiToken      String?

@@ -14,12 +14,12 @@ const usernames = [
 
 const plans = ["5.000 views", "10.000 views", "1.000 views", "50.000 views", "100.000 views"];
 
-export function PurchaseNotifications() {
+export function PurchaseNotifications({ enabled = true }: { enabled?: boolean }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Se estiver na administração, não ativa o timer
-    if (pathname?.startsWith('/administracao')) {
+    // Se estiver desativado pelo admin ou se estiver na administração, não faz nada
+    if (!enabled || pathname?.startsWith('/administracao')) {
       return;
     }
     const showNotification = () => {

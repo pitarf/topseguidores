@@ -71,6 +71,22 @@ export function SettingsForm({ initialData }: { initialData: any }) {
             />
             <p className="text-[10px] text-zinc-500 mt-2 font-bold uppercase tracking-tighter">📌 Use o formato: código do país + DDD + número (ex: 5511988887777)</p>
           </div>
+
+          <div className="pt-4 border-t border-white/5">
+             <label className="flex items-center gap-3 cursor-pointer group">
+                <div className="relative">
+                  <input 
+                    type="checkbox" 
+                    className="sr-only"
+                    checked={data.showNotifications}
+                    onChange={e => setData({...data, showNotifications: e.target.checked})}
+                  />
+                  <div className={`w-12 h-6 rounded-full transition-colors ${data.showNotifications ? 'bg-primary' : 'bg-zinc-800'}`} />
+                  <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${data.showNotifications ? 'translate-x-6' : ''}`} />
+                </div>
+                <span className="text-xs font-black text-white uppercase tracking-widest">Mostrar Notificações de Venda (Prova Social)</span>
+             </label>
+          </div>
         </div>
       </div>
 

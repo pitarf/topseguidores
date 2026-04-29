@@ -62,7 +62,7 @@ export default async function RootLayout({
           {children}
         </main>
         <Toaster position="top-right" richColors theme="dark" />
-        <PurchaseNotifications />
+        <PurchaseNotifications enabled={settings.showNotifications} />
         <CheckoutModal />
         <HowItWorksWrapper />
         <FacebookPixel pixelId={settings.fbPixelId} />
