@@ -26,7 +26,7 @@ async function main() {
   await prisma.plan.deleteMany();
 
   const plansList = [
-    { name: "MINI", viewsAmount: 1000, price: 3.00, originalPrice: 5.00, isPopular: false, badge: null },
+    { name: "Pacote Teste", viewsAmount: 1000, price: 3.00, originalPrice: 5.00, isPopular: false, badge: null },
     { name: "STARTER", viewsAmount: 5000, price: 5.00, originalPrice: 9.00, isPopular: false, badge: null },
     { name: "BASIC", viewsAmount: 6000, price: 6.00, originalPrice: 11.00, isPopular: false, badge: null },
     { name: "GROWTH", viewsAmount: 7000, price: 7.00, originalPrice: 13.00, isPopular: false, badge: null },
