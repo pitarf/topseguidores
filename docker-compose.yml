@@ -1,16 +1,37 @@
+version: '3.8'
+
 services:
-  postgres:
-    image: postgres:15
-    container_name: socialfornece-db
+  # Banco de Dados (PostgreSQL)
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: topseguidores-db
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: socialfornece
+      POSTGRES_USER: admin_user
+      POSTGRES_PASSWORD: sua_senha_forte # Recomenda-se trocar em produção
+      POSTGRES_DB: topseguidores
     ports:
-      - "5436:5432"
+      - "5436:5432" # Porta externa 5436 para evitar conflito com padrão 5432
     volumes:
-      - postgres-data-social:/var/lib/postgresql/data
+      - topseguidores-data:/var/lib/postgresql/data
+
+  # Aplicação Next.js
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: topseguidores-app
+    restart: always
+    ports:
+      - "3010:3000" # Mapeia a porta 3010 para a aplicação
+    environment:
+      - DATABASE_URL=postgresql://admin_user:sua_senha_forte@postgres-db:5432/topseguidores?schema=public
+      - NEXTAUTH_SECRET=sua_secret_aqui
+      - NEXTAUTH_URL=http://localhost:3010
+      # Adicione outras variáveis do .env conforme necessário
+    depends_on:
+      - postgres-db
 
 volumes:
-  postgres-data-social:
+  topseguidores-data:
+    driver: local

@@ -80,7 +80,28 @@ npm run build
 
 ---
 
-## 3. Gerenciamento de Processo (PM2)
+## 3. Deploy via Docker (Recomendado) 🐳
+
+Se preferir rodar via Docker para facilitar a manutenção e isolamento:
+
+### Instalar Docker (Se não tiver)
+```bash
+sudo dnf install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+sudo systemctl enable --now docker
+```
+
+### Iniciar o Sistema
+```bash
+# Na raiz do projeto (/var/www/topseguidores)
+docker compose up -d --build
+```
+Isso iniciará o banco na porta **5436** e o app na porta **3010**.
+
+---
+
+## 4. Gerenciamento de Processo (Alternativa: PM2)
 
 Como você já tem algo na porta 3005, vamos rodar este sistema na porta **3010**.
 
