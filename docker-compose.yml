@@ -7,11 +7,11 @@ services:
     container_name: topseguidores-db
     restart: always
     environment:
-      POSTGRES_USER: admin_user
-      POSTGRES_PASSWORD: sua_senha_forte # Recomenda-se trocar em produção
-      POSTGRES_DB: topseguidores
+      POSTGRES_USER: ${POSTGRES_USER:-admin_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sua_senha_forte}
+      POSTGRES_DB: ${POSTGRES_DB:-topseguidores}
     ports:
-      - "5436:5432" # Porta externa 5436 para evitar conflito com padrão 5432
+      - "5436:5432"
     volumes:
       - topseguidores-data:/var/lib/postgresql/data
 
@@ -23,12 +23,14 @@ services:
     container_name: topseguidores-app
     restart: always
     ports:
-      - "3010:3000" # Mapeia a porta 3010 para a aplicação
+      - "3010:3000"
     environment:
-      - DATABASE_URL=postgresql://admin_user:sua_senha_forte@postgres-db:5432/topseguidores?schema=public
-      - NEXTAUTH_SECRET=sua_secret_aqui
-      - NEXTAUTH_URL=http://localhost:3010
-      # Adicione outras variáveis do .env conforme necessário
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-admin_user}:${POSTGRES_PASSWORD:-sua_senha_forte}@postgres-db:5432/${POSTGRES_DB:-topseguidores}?schema=public
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - RAPID_API_KEY=${RAPID_API_KEY}
+      - PUSHINPAY_TOKEN=${PUSHINPAY_TOKEN}
+      - PUSHINPAY_WEBHOOK_TOKEN=${PUSHINPAY_WEBHOOK_TOKEN}
     depends_on:
       - postgres-db
 
