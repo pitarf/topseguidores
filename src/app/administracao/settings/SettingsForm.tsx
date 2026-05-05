@@ -11,7 +11,7 @@ export function SettingsForm({ initialData }: { initialData: any }) {
   const handleSave = async () => {
     setLoading(true);
     try {
-      const { id, updatedAt, ...payload } = data; // removemos id e data de autoupdate para evitar erro no prisma
+      const { id, updatedAt, ...payload } = data;
       
       const res = await fetch("/api/admin/settings", {
         method: "POST",
@@ -91,37 +91,88 @@ export function SettingsForm({ initialData }: { initialData: any }) {
       </div>
 
       {/* Facebook Tracking */}
-      <div className="bg-[#0b111e] border border-white/5 p-8 rounded-[2rem] shadow-2xl space-y-6 flex flex-col justify-between">
-        <div>
-          <h2 className="text-xl font-black text-[#1877F2] tracking-tight uppercase mb-6 flex items-center gap-2">
-            Facebook Tracking
-          </h2>
-          
-          <div className="space-y-4">
+      <div className="bg-[#0b111e] border border-white/5 p-8 rounded-[2rem] shadow-2xl space-y-6">
+        <h2 className="text-xl font-black text-[#1877F2] tracking-tight uppercase mb-6 flex items-center gap-2">
+          Facebook Tracking
+        </h2>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">Pixel ID</label>
+            <input 
+              type="text" 
+              placeholder="Ex: 1234567890"
+              value={data.fbPixelId || ""} 
+              onChange={e => setData({...data, fbPixelId: e.target.value})}
+              className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium focus:border-[#1877F2]/50 outline-none"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">Conversions API Token (CAPI)</label>
+            <textarea 
+              placeholder="Ex: EAAB..."
+              value={data.fbApiToken || ""} 
+              onChange={e => setData({...data, fbApiToken: e.target.value})}
+              className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium focus:border-[#1877F2]/50 outline-none h-24 resize-none"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Integrações de API */}
+      <div className="bg-[#0b111e] border border-white/5 p-8 rounded-[2rem] shadow-2xl space-y-6">
+        <h2 className="text-xl font-black text-primary tracking-tight uppercase">Chaves de API</h2>
+        
+        <div className="space-y-6">
+          <div>
+            <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">X-RapidAPI-Key (TikTok/Insta)</label>
+            <input 
+              type="password" 
+              value={data.rapidApiKey || ""} 
+              onChange={e => setData({...data, rapidApiKey: e.target.value})}
+              className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium focus:border-primary/50 outline-none"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">Pixel ID</label>
+              <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">PushinPay Token</label>
+              <input 
+                type="password" 
+                value={data.pushinpayToken || ""} 
+                onChange={e => setData({...data, pushinpayToken: e.target.value})}
+                className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium focus:border-emerald-500/50 outline-none"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">Webhook Token</label>
+              <input 
+                type="password" 
+                value={data.pushinpayWebhookToken || ""} 
+                onChange={e => setData({...data, pushinpayWebhookToken: e.target.value})}
+                className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium focus:border-emerald-500/50 outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">PerfectPanel URL</label>
               <input 
                 type="text" 
-                placeholder="Ex: 1234567890"
-                value={data.fbPixelId || ""} 
-                onChange={e => setData({...data, fbPixelId: e.target.value})}
-                className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium focus:border-[#1877F2]/50 outline-none"
+                value={data.perfectPanelUrl || ""} 
+                onChange={e => setData({...data, perfectPanelUrl: e.target.value})}
+                className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium focus:border-purple-500/50 outline-none"
               />
             </div>
             <div>
-              <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">Conversions API Token (CAPI)</label>
-              <textarea 
-                placeholder="Ex: EAAB..."
-                value={data.fbApiToken || ""} 
-                onChange={e => setData({...data, fbApiToken: e.target.value})}
-                className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium focus:border-[#1877F2]/50 outline-none h-24 resize-none"
+              <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">PerfectPanel Key</label>
+              <input 
+                type="password" 
+                value={data.perfectPanelKey || ""} 
+                onChange={e => setData({...data, perfectPanelKey: e.target.value})}
+                className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium focus:border-purple-500/50 outline-none"
               />
-            </div>
-            <div className="bg-[#1877F2]/10 border border-[#1877F2]/20 rounded-xl p-4 mt-4">
-              <p className="text-[10px] text-zinc-300 font-bold uppercase tracking-widest leading-relaxed">
-                📌 O evento de <span className="text-[#1877F2]">InitiateCheckout</span> é disparado automaticamente via script no navegador.<br/><br/>
-                📌 O evento de <span className="text-[#1877F2]">Purchase (Compra)</span> é disparado pelo Backend (CAPI) quando o webhook do PIX confirma o pagamento, garantindo 100% de rastreamento.
-              </p>
             </div>
           </div>
         </div>

@@ -1,16 +1,16 @@
 services:
   postgres:
     image: postgres:15
-    container_name: crescereels-db
+    container_name: socialfornece-db
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: crescereels
+      POSTGRES_DB: socialfornece
     ports:
-      - "5435:5432"
+      - "5436:5432"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data-social:/var/lib/postgresql/data
 
 volumes:
-  postgres-data:
+  postgres-data-social:

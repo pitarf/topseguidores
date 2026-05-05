@@ -1,10 +1,14 @@
-export async function sendOrderToPerfectPanel(link: string, quantity: number) {
-  const apiUrl = process.env.PERFECTPANEL_API_URL;
-  const apiKey = process.env.PERFECTPANEL_API_KEY;
-  const serviceId = process.env.PERFECTPANEL_SERVICE_ID;
+import { prisma } from "@/lib/prisma";
+
+export async function sendOrderToPerfectPanel(link: string, quantity: number, customServiceId?: string) {
+  const settings = await prisma.systemSetting.findFirst();
+  
+  const apiUrl = settings?.perfectPanelUrl || process.env.PERFECTPANEL_API_URL;
+  const apiKey = settings?.perfectPanelKey || process.env.PERFECTPANEL_API_KEY;
+  const serviceId = customServiceId || process.env.PERFECTPANEL_SERVICE_ID;
 
   if (!apiUrl || !apiKey || !serviceId) {
-    console.error("❌ PerfectPanel Error: Variáveis de ambiente ausentes.");
+    console.error("❌ PerfectPanel Error: Configurações ausentes no banco ou env.");
     return null;
   }
 

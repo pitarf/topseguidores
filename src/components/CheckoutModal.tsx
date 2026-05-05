@@ -2,308 +2,642 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useCheckout } from "@/hooks/useCheckout";
-import { X, Video, CheckCircle2, Copy, QrCode, ShieldCheck, ExternalLink } from "lucide-react";
+import { X, CheckCircle2, Copy, ShieldCheck, Search, ArrowLeft, ArrowRight, Heart, Play, Loader2, Star, RotateCcw, Check, Clock, Users, Zap } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { 
+  searchInstagramProfile, 
+  getInstagramFeed, 
+  searchTikTokProfile, 
+  getTikTokFeed 
+} from "@/app/actions/scrapers";
 
 export function CheckoutModal() {
-  const { isOpen, closeCheckout, selectedPlan } = useCheckout();
-  const [step, setStep] = useState(1); // 1: Input, 2: Payment
-  const [url, setUrl] = useState("");
+  const { isOpen, closeCheckout, platform, service, setService, selectedPlan, setSelectedPlan } = useCheckout();
+  
+  // Estado
+  const [step, setStep] = useState(2);
+  const [packageType, setPackageType] = useState<'brasileiros' | 'mundiais'>('brasileiros');
+  const [username, setUsername] = useState("");
+  const [profileData, setProfileData] = useState<any>(null);
+  const [searching, setSearching] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [pixCode, setPixCode] = useState("");
+  const [pixQrCodeBase64, setPixQrCodeBase64] = useState("");
+  const [email, setEmail] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [timeLeft, setTimeLeft] = useState(600);
+  const [posts, setPosts] = useState<any[]>([]);
+  const [selectedPost, setSelectedPost] = useState<any>(null);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [currentPackages, setCurrentPackages] = useState<any[]>([]);
+  const [loadingPlans, setLoadingPlans] = useState(false);
 
-  // Reseta o modal ao fechar
+  // Efeitos
   useEffect(() => {
     if (!isOpen) {
-      setStep(1);
-      setUrl("");
+      setStep(2);
+      setUsername("");
+      setProfileData(null);
+      setSearching(false);
+      setTimeLeft(600);
+      setSelectedPost(null);
+      setPosts([]);
     }
   }, [isOpen]);
 
-  const [pixCode, setPixCode] = useState("");
-  const [pixQrCodeBase64, setPixQrCodeBase64] = useState("");
-  const [orderId, setOrderId] = useState<string | null>(null);
-
-  // Polling para verificar se o PIX foi pago
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (step === 2 && orderId) {
-      interval = setInterval(async () => {
-        try {
-          const response = await fetch(`/api/checkout/status?orderId=${orderId}`);
-          const data = await response.json();
-          
-          if (data.status === "SUCCESS") {
-            setStep(3);
-            toast.success("Pagamento confirmado!");
-            clearInterval(interval);
-          }
-        } catch (error) {
-          console.error("Erro ao verificar status:", error);
-        }
-      }, 5000); // Verifica a cada 5 segundos
+    if (step === 6 && timeLeft > 0) {
+      const timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
+      return () => clearInterval(timer);
     }
+  }, [step, timeLeft]);
 
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [step, orderId]);
+  // Busca planos dinamicamente quando chega no step 5 ou muda filtros
+  useEffect(() => {
+    if (step === 5 && service) {
+      const fetchPlans = async () => {
+        setLoadingPlans(true);
+        try {
+          const res = await fetch(`/api/plans?platform=${platform}&type=${service}&packageType=${packageType}`);
+          const data = await res.json();
+          setCurrentPackages(data);
+        } catch (error) {
+          console.error("Erro ao buscar planos:", error);
+          toast.error("Erro ao carregar pacotes");
+        } finally {
+          setLoadingPlans(false);
+        }
+      };
+      fetchPlans();
+    }
+  }, [step, platform, service, packageType]);
+
+  // Handlers
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const prevStep = () => {
+    if (step === 2) closeCheckout();
+    else if (step === 5 && service === 'seguidores') setStep(3);
+    else setStep(prev => prev - 1);
+  };
+
+  const handleSelectService = (s: "seguidores" | "curtidas" | "visualizacoes") => {
+    setService(s);
+    setStep(3);
+  };
+
+  const handleSearchProfile = async () => {
+    if (!username.trim()) return toast.error("Insira seu @usuário");
+    setSearching(true);
+    
+    try {
+      if (platform === 'instagram') {
+        const resultP = await searchInstagramProfile(username);
+        if (!resultP.success) throw new Error(resultP.error);
+        
+        const dataP = resultP.data;
+        const user = dataP.data?.user || dataP.user;
+
+        if (user) {
+          setProfileData({
+            success: true,
+            profile_pic_url: user.profile_pic_url,
+            full_name: user.full_name,
+            username: user.username,
+            followers: user.follower_count?.toLocaleString('pt-BR') || "---",
+            userId: user.id
+          });
+
+          const mType = service === 'visualizacoes' ? 'reels' : 'posts';
+          const resultM = await getInstagramFeed(username, mType as any);
+          if (!resultM.success) throw new Error(resultM.error);
+
+          const dataM = resultM.data;
+          const list = dataM.data?.posts || dataM.data?.items || dataM.items || [];
+
+          if (list.length > 0) {
+            const mapped = list.map((m: any, idx: number) => ({
+              id: m.pk || m.id || `m-${idx}`,
+              url: m.image_versions2?.candidates?.[0]?.url || m.image_urls?.[0] || m.image?.[0]?.url || m.thumbnail_url, 
+              likes: (m.play_count || m.view_count || m.like_count || 0).toLocaleString('pt-BR'),
+              type: (m.product_type === "clips" || mType === 'reels') ? 'reels' : 'image',
+              code: m.code
+            }));
+            setPosts(mapped);
+            setNextCursor(dataM.data?.next_cursor || dataM.next_cursor || null);
+          }
+        } else {
+          toast.error("Perfil não encontrado");
+        }
+      } else {
+        // TikTok
+        const resultP = await searchTikTokProfile(username);
+        if (!resultP.success) throw new Error(resultP.error);
+
+        const dataP = resultP.data;
+        const user = dataP.data?.user;
+
+        if (user) {
+          setProfileData({
+            success: true,
+            profile_pic_url: user.avatar_larger?.url_list?.[0] || user.avatar_medium?.url_list?.[0] || user.avatar_thumb?.url_list?.[0],
+            full_name: user.nickname,
+            username: user.unique_id,
+            followers: user.follower_count?.toLocaleString('pt-BR') || "---",
+            userId: user.uid || user.id
+          });
+
+          const resultM = await getTikTokFeed(username);
+          if (!resultM.success) throw new Error(resultM.error);
+
+          const dataM = resultM.data;
+          const list = dataM.data?.aweme_list || [];
+
+          if (list.length > 0) {
+            const mapped = list.map((m: any, idx: number) => ({
+              id: m.aweme_id || `tk-${idx}`,
+              url: m.video?.cover?.url_list?.[0] || m.video?.dynamic_cover?.url_list?.[0],
+              likes: (service === 'visualizacoes' ? m.statistics?.play_count : m.statistics?.digg_count || 0).toLocaleString('pt-BR'),
+              type: 'reels',
+              code: m.aweme_id
+            }));
+            setPosts(mapped);
+            setNextCursor(dataM.data?.max_cursor || null);
+          }
+        } else {
+          toast.error("Perfil não encontrado no TikTok");
+        }
+      }
+    } catch (e: any) {
+      toast.error(e.message || "Erro na busca do perfil");
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const handleLoadMore = async () => {
+    if (!nextCursor || loadingMore) return;
+    setLoadingMore(true);
+    
+    try {
+      if (platform === 'instagram') {
+        const mType = service === 'visualizacoes' ? 'reels' : 'posts';
+        const resultM = await getInstagramFeed(username, mType as any, nextCursor);
+        if (!resultM.success) throw new Error(resultM.error);
+
+        const dataM = resultM.data;
+        const list = dataM.data?.posts || dataM.data?.items || dataM.items || [];
+
+        if (list.length > 0) {
+          const mapped = list.map((m: any, idx: number) => ({
+            id: m.pk || m.id || `m-more-${idx}-${Date.now()}`,
+            url: m.image_versions2?.candidates?.[0]?.url || m.image_urls?.[0] || m.image?.[0]?.url || m.thumbnail_url,
+            likes: (m.play_count || m.view_count || m.like_count || 0).toLocaleString('pt-BR'),
+            type: (m.product_type === "clips" || mType === 'reels') ? 'reels' : 'image',
+            code: m.code
+          }));
+          setPosts(prev => [...prev, ...mapped]);
+          setNextCursor(dataM.data?.next_cursor || dataM.next_cursor || null);
+        } else {
+          setNextCursor(null);
+        }
+      } else {
+        // TikTok
+        const resultM = await getTikTokFeed(username, nextCursor);
+        if (!resultM.success) throw new Error(resultM.error);
+
+        const dataM = resultM.data;
+        const list = dataM.data?.aweme_list || [];
+
+        if (list.length > 0) {
+          const mapped = list.map((m: any, idx: number) => ({
+            id: m.aweme_id || m.id || `tk-more-${idx}-${Date.now()}`,
+            url: m.video?.cover?.url_list?.[0] || m.video?.dynamic_cover?.url_list?.[0],
+            likes: (service === 'visualizacoes' ? m.statistics?.play_count : m.statistics?.digg_count || 0).toLocaleString('pt-BR'),
+            type: 'reels',
+            code: m.aweme_id || m.id
+          }));
+          setPosts(prev => [...prev, ...mapped]);
+          setNextCursor(dataM.data?.max_cursor || null);
+        } else {
+          setNextCursor(null);
+        }
+      }
+    } catch (e: any) {
+      toast.error(e.message || "Erro ao carregar mais");
+    } finally {
+      setLoadingMore(false);
+    }
+  };
 
   const handleGeneratePix = async () => {
-    if (!url.trim()) {
-      toast.error("Por favor, insira o link do seu Reel.");
-      return;
-    }
-
-    if (!url.includes("instagram.com")) {
-      toast.error("O link parece inválido. Use um link do Instagram Reels.");
-      return;
-    }
-    
+    if (!email || !whatsapp) return toast.error("Preencha os campos");
     setLoading(true);
     try {
-      const response = await fetch("/api/checkout", {
+      const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           planId: selectedPlan?.id,
-          instagramUrl: url,
+          instagramUrl: `https://instagram.com/${username.replace("@", "")}`,
+          email, whatsapp
         }),
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Erro ao gerar PIX");
-      }
-
-      setOrderId(data.orderId);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
       setPixCode(data.pixCode);
       setPixQrCodeBase64(data.pixQrCodeBase64);
-      setStep(2);
-      toast.success("PIX gerado com sucesso!");
-
-      // Dispara o evento de InitiateCheckout pro Facebook Pixel
-      // @ts-ignore
-      if (typeof window !== "undefined" && window.fbq) {
-        // @ts-ignore
-        window.fbq("track", "InitiateCheckout", {
-          value: selectedPlan?.price,
-          currency: "BRL"
-        });
-      }
-
-    } catch (error: any) {
-      toast.error(error.message || "Ocorreu um erro inesperado.");
+      setStep(7);
+    } catch (e) {
+      toast.error("Erro no PIX");
     } finally {
       setLoading(false);
     }
   };
 
-  const copyPix = () => {
-    if (!pixCode) return;
-    
-    // Tenta primeiro o método moderno
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(pixCode)
-        .then(() => toast.success("Código PIX copiado!"))
-        .catch(() => fallbackCopy(pixCode));
-    } else {
-      fallbackCopy(pixCode);
-    }
-  };
-
-  const fallbackCopy = (text: string) => {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    textArea.style.position = "fixed";
-    textArea.style.left = "-9999px";
-    textArea.style.top = "0";
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    try {
-      document.execCommand('copy');
-      toast.success("Código PIX copiado!");
-    } catch (err) {
-      toast.error("Não foi possível copiar automaticamente.");
-    }
-    document.body.removeChild(textArea);
-  };
-
+  // Renderização condicional para o Modal
   if (!isOpen) return null;
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 30 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 30 }}
-          className="relative w-full max-w-lg bg-[#0a0a0a] border border-white/10 rounded-[2rem] shadow-2xl overflow-y-auto max-h-[95vh] scrollbar-hide"
-        >
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[200] bg-[#0b111e] flex flex-col items-center p-6 md:p-12 overflow-y-auto"
+      >
+        <div className="w-full max-w-4xl mx-auto flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-8 border-b border-white/5">
-            <h2 className="text-2xl font-black text-white px-2">Finalizar Compra</h2>
-            <button
-              onClick={closeCheckout}
-              className="p-2 text-zinc-500 hover:text-white transition-colors"
-            >
-              <X className="w-6 h-6" />
+          <div className="flex items-center justify-between mb-12">
+            <button onClick={prevStep} className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-sm font-bold">
+              <ArrowLeft className="w-4 h-4" /> Voltar
+            </button>
+            <button onClick={closeCheckout} className="p-2 text-zinc-500 hover:text-white transition-colors">
+              <X className="w-8 h-8" />
             </button>
           </div>
 
-          <div className="p-8">
-            {step === 1 ? (
-              <div className="space-y-6">
-                {/* Plano Selecionado */}
-                <div className="bg-[#080c16] rounded-2xl p-6 border border-[#20283c] flex items-center justify-between relative overflow-hidden">
-                  <div>
-                    <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{selectedPlan?.name}</span>
-                    <h3 className="text-2xl font-black text-white">{selectedPlan?.views} Views</h3>
-                  </div>
-                  <div className="text-4xl font-[1000] text-primary tracking-tighter">
-                    R$ {selectedPlan?.price}
-                  </div>
-                </div>
-
-                {/* Aviso Perfil Público */}
-                <div className="bg-primary/5 border border-primary/30 rounded-xl p-4 text-center animate-pulse">
-                  <p className="text-primary font-black text-xs uppercase tracking-tight">
-                    ⚠️ PERFIL PRECISA ESTAR PÚBLICO! ⚠️
-                  </p>
-                </div>
-
-                {/* Input de Link */}
-                <div className="space-y-3">
-                  <label className="text-sm font-bold text-zinc-400 ml-1">
-                    Link do Reel Instagram
-                  </label>
-                  <div className="relative group">
-                    <input
-                      type="text"
-                      placeholder="https://www.instagram.com/reel/..."
-                      value={url}
-                      onChange={(e) => setUrl(e.target.value)}
-                      className="w-full bg-[#080c16] border border-[#20283c] focus:border-primary/50 text-white rounded-xl py-4 px-4 outline-none transition-all font-medium placeholder:text-zinc-600"
-                    />
-                  </div>
-                  <div className="space-y-2 ml-1">
-                    <p className="text-[11px] text-zinc-500 font-bold flex items-center gap-2">
-                       📌 Cole APENAS o link do REEL que deseja turbinar
-                    </p>
-                    <p className="text-[11px] text-zinc-500 font-bold flex items-center gap-2">
-                       ⚠️ Links de stories, perfil ou posts NÃO são aceitos
-                    </p>
-                    <p className="text-[11px] text-zinc-500 font-bold flex items-center gap-2">
-                       🔓 Conta privada não funciona
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleGeneratePix}
-                  disabled={loading}
-                  className="w-full py-5 font-black text-white rounded-2xl bg-primary hover:brightness-125 active:scale-95 transition-all shadow-[0_10px_20px_-10px_rgba(255,0,0,0.5)] hover:shadow-[0_0_30px_rgba(255,0,0,0.6)] uppercase tracking-widest text-sm"
-                >
-                  {loading ? "GERANDO..." : "GERAR PIX"}
-                </button>
+          {/* Stepper */}
+          <div className="flex items-center justify-center gap-2 md:gap-4 mb-16">
+            {[2, 3, 4, 5, 6, 7].map((num) => (
+              <div key={num} className="flex items-center gap-2 md:gap-4">
+                <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
+                  step === num ? "bg-primary text-white shadow-[0_0_20px_#3b82f6]" : 
+                  step > num ? "bg-primary/40 text-white" : "bg-zinc-800/50 text-zinc-600"
+                }`}>{num - 1}</div>
+                {num < 7 && <div className={`w-6 md:w-12 h-0.5 rounded-full ${step > num ? "bg-primary/40" : "bg-zinc-800/50"}`} />}
               </div>
-            ) : step === 2 ? (
-              <div className="text-center space-y-4 py-2">
-                <div className="inline-flex w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20 text-green-500 items-center justify-center mb-1">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", damping: 10 }}
-                  >
-                    <CheckCircle2 className="w-10 h-10" />
-                  </motion.div>
-                </div>
-                
-                <div>
-                  <h3 className="text-2xl font-black text-white tracking-tight mb-1">Quase lá!</h3>
-                  <p className="text-zinc-400 text-xs font-medium max-w-xs mx-auto">
-                    Escaneie o QR Code abaixo ou copie o código para finalizar.
-                  </p>
-                </div>
+            ))}
+          </div>
 
-                <div className="bg-white p-4 rounded-[1.5rem] inline-block mx-auto shadow-[0_0_50px_rgba(255,255,255,0.1)]">
-                  {pixQrCodeBase64 ? (
-                    <img src={pixQrCodeBase64} alt="QR Code PIX" className="w-40 h-40" />
-                  ) : (
-                    <QrCode className="w-40 h-40 text-black" />
-                  )}
+          {/* Conteúdo dinâmico baseado no step */}
+          <div className="flex-1 flex flex-col items-center">
+            {step === 2 && (
+              <div className="w-full space-y-12">
+                <div className="text-center">
+                  <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight">Escolha o serviço</h1>
+                  <p className="text-zinc-500">Selecione o que deseja impulsionar no {platform === 'instagram' ? 'Instagram' : 'TikTok'}</p>
                 </div>
-
-                <div className="space-y-3">
-                  <button
-                    onClick={copyPix}
-                    className="w-full py-4 bg-white text-black font-black text-lg rounded-xl hover:bg-zinc-200 transition-all flex items-center justify-center gap-3 shadow-xl"
-                  >
-                    <Copy className="w-6 h-6" /> COPIAR CÓDIGO PIX
-                  </button>
-                  
-                  <button
-                    onClick={() => setStep(1)}
-                    className="text-zinc-500 hover:text-white font-bold text-[10px] uppercase tracking-widest transition-colors block w-full"
-                  >
-                    VOLTAR E ALTERAR DADOS
-                  </button>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {[
+                    { id: 'seguidores', label: 'Seguidores', icon: Heart },
+                    { id: 'curtidas', label: 'Curtidas', icon: Heart },
+                    { id: 'visualizacoes', label: 'Visualizações', icon: Play },
+                  ].map((s) => (
+                    <button key={s.id} onClick={() => handleSelectService(s.id as any)} className="group p-10 rounded-[2rem] border border-white/5 bg-[#121826]/40 hover:border-primary transition-all flex flex-col items-center">
+                      <div className="w-16 h-16 rounded-2xl bg-[#0b111e] flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+                        <s.icon className="w-8 h-8" />
+                      </div>
+                      <span className="text-xl font-black text-white">{s.label}</span>
+                    </button>
+                  ))}
                 </div>
-
-                <div className="p-3 rounded-xl bg-primary/5 border border-primary/10 text-[10px] text-primary/70 font-bold leading-relaxed">
-                  NOSSO SISTEMA É AUTOMÁTICO.<br />
-                  VOCÊ RECEBERÁ AS VIEWS ASSIM QUE O PIX FOR CONFIRMADO.
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-10 space-y-6">
-                <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto shadow-[0_0_50px_rgba(34,197,94,0.4)]">
-                  <motion.div
-                    initial={{ scale: 0, rotate: -45 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: "spring", damping: 12 }}
-                  >
-                    <ShieldCheck className="w-16 h-16 text-white" />
-                  </motion.div>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="text-3xl font-black text-white tracking-tighter uppercase">Pagamento Confirmado!</h3>
-                  <p className="text-zinc-400 font-bold text-sm">
-                    Suas views já foram solicitadas e entrarão em breve.
-                  </p>
-                </div>
-
-                <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-6 text-left space-y-4">
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center text-[10px] font-black text-white">1</div>
-                    <p className="text-xs text-zinc-300 font-medium">O sistema já identificou seu pagamento.</p>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center text-[10px] font-black text-white">2</div>
-                    <p className="text-xs text-zinc-300 font-medium">A ordem foi enviada para nossos servidores de entrega.</p>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center text-[10px] font-black text-white">3</div>
-                    <p className="text-xs text-zinc-300 font-medium">O prazo de início é de 1 a 30 minutos.</p>
-                  </div>
-                </div>
-
-                <button
-                  onClick={closeCheckout}
-                  className="w-full py-5 bg-zinc-800 hover:bg-zinc-700 text-white font-black rounded-2xl transition-all uppercase tracking-widest text-sm"
-                >
-                  FECHAR E AGUARDAR
-                </button>
               </div>
             )}
 
+            {step === 3 && (
+              <div className="w-full max-w-xl mx-auto space-y-10">
+                <div className="text-center">
+                  <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight">Buscar perfil</h1>
+                  <p className="text-zinc-500">Digite o @usuário abaixo</p>
+                </div>
+                <div className="bg-[#121826]/60 border border-white/5 rounded-[2.5rem] p-8 md:p-10 space-y-6">
+                  <div className="flex gap-3">
+                    <input type="text" placeholder="_rafaelpita" value={username} onChange={(e) => setUsername(e.target.value)} className="flex-1 bg-[#0b111e] border border-white/10 rounded-2xl py-5 px-6 text-white outline-none font-bold text-lg focus:border-primary/50 transition-all" />
+                    <button onClick={handleSearchProfile} disabled={searching} className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg active:scale-95 transition-all">
+                      {searching ? <Loader2 className="animate-spin w-6 h-6" /> : <Search className="w-6 h-6" />}
+                    </button>
+                  </div>
+                  {profileData && (
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-5 rounded-2xl border border-primary/30 bg-primary/5 flex items-center gap-4">
+                      <img src={`https://images.weserv.nl/?url=${encodeURIComponent(profileData.profile_pic_url)}`} className="w-16 h-16 rounded-full border-2 border-primary/50 object-cover" alt="Avatar" />
+                      <div className="flex-1 min-w-0 text-left">
+                        <h3 className="text-white font-black text-lg truncate">@{profileData.username}</h3>
+                        <p className="text-zinc-600 font-bold text-xs uppercase tracking-widest">{profileData.followers} seguidores</p>
+                      </div>
+                      <CheckCircle2 className="text-green-500 w-6 h-6" />
+                    </motion.div>
+                  )}
+                  {profileData && (
+                    <button onClick={() => setStep(service === 'seguidores' ? 5 : 4)} className="w-full py-6 bg-primary text-white font-black rounded-2xl shadow-xl flex items-center justify-center gap-2 group hover:scale-[1.02] active:scale-95 transition-all">
+                      Confirmar perfil <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {step === 4 && (
+              <div className="w-full max-w-xl mx-auto space-y-10">
+                <div className="text-center">
+                  <h1 className="text-4xl font-black text-white mb-4 tracking-tight">Selecione a publicação</h1>
+                  <p className="text-zinc-500">Escolha onde deseja receber as {service}</p>
+                </div>
+                <div className="bg-[#121826]/60 border border-white/5 rounded-[2.5rem] p-6 space-y-8">
+                  <div className="grid grid-cols-3 gap-3">
+                    {posts.map((post) => (
+                      <button key={post.id} onClick={() => setSelectedPost(post)} className={`relative aspect-square rounded-xl overflow-hidden border-[3px] transition-all group ${selectedPost?.id === post.id ? 'border-primary shadow-[0_0_15px_rgba(59,130,246,0.3)]' : 'border-transparent'}`}>
+                        <img src={`https://images.weserv.nl/?url=${encodeURIComponent(post.url)}&w=400&h=400&fit=cover`} className="w-full h-full object-cover group-hover:scale-110 transition-transform" alt="Post" />
+                        {selectedPost?.id === post.id && (
+                          <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in duration-300">
+                            <Check className="text-white stroke-[4] w-8 h-8" />
+                          </div>
+                        )}
+                        <div className="absolute bottom-1 left-1 flex items-center gap-1 text-white text-[8px] font-bold bg-black/50 px-1 rounded shadow-sm">
+                          {post.type === 'reels' ? <Play className="w-2 h-2 fill-white" /> : <Heart className="w-2 h-2 fill-white" />} {post.likes}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  {nextCursor && (
+                    <button 
+                      onClick={handleLoadMore}
+                      disabled={loadingMore}
+                      className="w-full py-4 text-primary font-black text-sm border-b border-white/5 flex items-center justify-center gap-2 hover:bg-primary/5 transition-all rounded-xl mt-2"
+                    >
+                      {loadingMore ? <Loader2 className="animate-spin w-4 h-4" /> : "Ver mais publicações"}
+                    </button>
+                  )}
+
+                  <button onClick={() => setStep(5)} disabled={!selectedPost} className="w-full py-6 bg-primary text-white font-black rounded-2xl shadow-xl flex items-center justify-center gap-2 group hover:scale-[1.02] active:scale-95 disabled:opacity-50 transition-all mt-4">
+                    Confirmar seleção <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {step === 5 && (
+              <div className="w-full space-y-10">
+                <div className="text-center">
+                  <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight">Qual o pacote?</h1>
+                  <p className="text-zinc-500">Quanto mais você compra, maior o desconto</p>
+                </div>
+
+                {/* Seletor de Tipo de Pacote */}
+                <div className="flex justify-center mb-8">
+                  <div className="bg-[#121826] p-1.5 rounded-2xl border border-white/5 flex gap-1">
+                    <button 
+                      onClick={() => setPackageType('brasileiros')}
+                      className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+                        packageType === 'brasileiros' ? "bg-primary text-white shadow-lg" : "text-zinc-500 hover:text-white"
+                      }`}
+                    >
+                      Brasileiros
+                    </button>
+                    <button 
+                      onClick={() => setPackageType('mundiais')}
+                      className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+                        packageType === 'mundiais' ? "bg-primary text-white shadow-lg" : "text-zinc-500 hover:text-white"
+                      }`}
+                    >
+                      Mundiais
+                    </button>
+                  </div>
+                </div>
+
+                {loadingPlans ? (
+                  <div className="flex flex-col items-center py-20">
+                    <Loader2 className="w-12 h-12 text-primary animate-spin" />
+                    <p className="mt-4 text-zinc-500 animate-pulse font-bold uppercase tracking-widest text-xs">Buscando pacotes atualizados...</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {currentPackages.map((pkg: any) => (
+                      <button
+                        key={pkg.id}
+                        onClick={() => { setSelectedPlan(pkg); setStep(6); }}
+                        className={`group relative p-6 rounded-3xl border transition-all text-left flex flex-col justify-between h-full ${
+                          selectedPlan?.id === pkg.id 
+                            ? "bg-primary border-primary shadow-[0_0_30px_rgba(59,130,246,0.4)]" 
+                            : "bg-[#121826]/40 border-white/5 hover:border-primary/50"
+                        }`}
+                      >
+                        {pkg.badge && (
+                          <div className={`absolute -top-2 left-4 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-wider ${
+                            selectedPlan?.id === pkg.id ? "bg-white text-primary" : "bg-primary text-white"
+                          }`}>
+                            {pkg.badge}
+                          </div>
+                        )}
+                        
+                        <div>
+                          <div className={`text-2xl font-black mb-1 ${selectedPlan?.id === pkg.id ? "text-white" : "text-white"}`}>
+                            {pkg.quantity.toLocaleString('pt-BR')}
+                          </div>
+                          <div className={`text-[10px] font-bold uppercase tracking-widest mb-4 ${selectedPlan?.id === pkg.id ? "text-white/70" : "text-zinc-500"}`}>
+                            {service} {platform}
+                          </div>
+                        </div>
+
+                        <div className="mt-4">
+                          {pkg.oldPrice && (
+                            <div className={`text-[10px] line-through font-bold ${selectedPlan?.id === pkg.id ? "text-white/50" : "text-zinc-600"}`}>
+                              R$ {pkg.oldPrice.toFixed(2).replace('.', ',')}
+                            </div>
+                          )}
+                          <div className={`text-xl font-black ${selectedPlan?.id === pkg.id ? "text-white" : "text-[#10b981]"}`}>
+                            R$ {pkg.price}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                
+                {currentPackages.length === 0 && !loadingPlans && (
+                  <div className="text-center py-20 bg-white/5 rounded-[2rem] border border-dashed border-white/10">
+                    <p className="text-zinc-500 font-bold">Nenhum pacote encontrado para esta seleção.</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {step === 6 && (
+              <div className="w-full max-w-lg mx-auto space-y-6 pb-12">
+                <div className="text-center mb-8">
+                  <h1 className="text-2xl md:text-3xl font-black text-white mb-2 tracking-tight">Faça seu negócio crescer!</h1>
+                  <p className="text-zinc-500 text-sm">Complete seu pedido em poucos passos</p>
+                </div>
+
+                <div className="bg-[#121826]/60 border border-white/5 rounded-[2.5rem] p-6 md:p-8 space-y-6 shadow-2xl relative overflow-hidden">
+                  
+                  {/* Timer Box */}
+                  <div className="bg-red-500/5 border border-red-500/20 p-4 rounded-2xl text-center space-y-1">
+                    <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+                      <Clock className="w-3 h-3 text-red-500" /> Sua reserva expira em
+                    </p>
+                    <p className="text-red-500 font-mono text-3xl font-black">{formatTime(timeLeft)}</p>
+                    <p className="text-zinc-500 text-[9px]">Finalize agora para garantir o preço promocional</p>
+                  </div>
+
+                  {/* Plan Summary */}
+                  <div className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
+                      <Zap className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-white font-bold text-sm">
+                        {selectedPlan?.quantity?.toLocaleString('pt-BR')}x {service === 'visualizacoes' ? 'Visualizações Reels' : service} {packageType === 'mundiais' ? 'mundiais' : 'brasileiros'}
+                      </p>
+                      <p className="text-primary font-black text-lg">R$ {selectedPlan?.price}</p>
+                    </div>
+                  </div>
+
+                  {/* Profile Preview */}
+                  {profileData && (
+                    <div className="bg-white/5 border border-white/5 p-4 rounded-2xl flex items-center gap-4 text-left">
+                      <img src={`https://images.weserv.nl/?url=${encodeURIComponent(profileData.profile_pic_url)}`} className="w-14 h-14 rounded-full border-2 border-primary/30 object-cover" alt="Avatar" />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-white font-black text-base truncate">@{profileData.username}</h3>
+                        <p className="text-zinc-500 font-bold text-[10px] uppercase tracking-widest">{profileData.followers} seguidores</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Form */}
+                  <div className="space-y-4">
+                    <div className="space-y-1.5">
+                      <label className="text-white text-[10px] font-black uppercase tracking-widest ml-1">Endereço de Email *</label>
+                      <input type="email" placeholder="Por favor, insira seu endereço de email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-[#0b111e] border border-white/10 rounded-2xl py-4 px-6 text-white outline-none focus:border-primary/50 font-bold transition-all text-sm" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-white text-[10px] font-black uppercase tracking-widest ml-1">Seu WhatsApp *</label>
+                      <input type="text" placeholder="(11) 94762-4948" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} className="w-full bg-[#0b111e] border border-white/10 rounded-2xl py-4 px-6 text-white outline-none focus:border-primary/50 font-bold transition-all text-sm" />
+                    </div>
+                  </div>
+
+                  {/* Pix Box */}
+                  <div className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-500">
+                      <Zap className="w-5 h-5 fill-current" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-white font-bold text-sm">Pix</p>
+                      <p className="text-zinc-500 text-[10px]">Pagamento rápido e aprovado na hora</p>
+                    </div>
+                  </div>
+
+                  {/* Social Proof */}
+                  <div className="bg-white/5 p-3 rounded-2xl flex items-center justify-center gap-2">
+                    <Users className="w-4 h-4 text-primary" />
+                    <span className="text-white font-bold text-xs">+245 pedidos realizados <span className="text-emerald-500">●</span></span>
+                  </div>
+
+                  {/* Testimonials Mini */}
+                  <div className="space-y-3">
+                    <p className="text-zinc-500 text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
+                      <Star className="w-3 h-3 text-primary fill-primary" /> O que dizem nossos clientes
+                    </p>
+                    <div className="space-y-2">
+                      {[
+                        { name: 'Lucas M.', text: 'Recebi em menos de 1 hora, muito rápido!', initial: 'L' },
+                        { name: 'Ana C.', text: 'Já é meu terceiro pedido, sempre entrega certinho.', initial: 'A' },
+                        { name: 'Pedro S.', text: 'Excelente atendimento e entrega garantida!', initial: 'P' },
+                      ].map((t, i) => (
+                        <div key={i} className="bg-white/5 p-3 rounded-xl flex items-start gap-3 text-left">
+                          <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black text-[10px] shrink-0">{t.initial}</div>
+                          <div className="space-y-0.5">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-white font-bold text-[10px]">{t.name}</span>
+                              <div className="flex gap-0.5"><Star className="w-2 h-2 text-orange-500 fill-orange-500" /><Star className="w-2 h-2 text-orange-500 fill-orange-500" /><Star className="w-2 h-2 text-orange-500 fill-orange-500" /><Star className="w-2 h-2 text-orange-500 fill-orange-500" /><Star className="w-2 h-2 text-orange-500 fill-orange-500" /></div>
+                            </div>
+                            <p className="text-zinc-500 text-[9px] leading-tight">{t.text}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Trust Badges */}
+                  <div className="flex justify-center gap-6 py-2">
+                    <div className="flex items-center gap-1.5 text-zinc-500 text-[9px] font-bold">
+                      <ShieldCheck className="w-3 h-3 text-primary" /> Compra Segura
+                    </div>
+                    <div className="flex items-center gap-1.5 text-zinc-500 text-[9px] font-bold">
+                      <CheckCircle2 className="w-3 h-3 text-primary" /> Garantia 90 dias
+                    </div>
+                  </div>
+
+                  {/* Replacement Guarantee */}
+                  <div className="bg-emerald-500/5 border border-emerald-500/20 p-4 rounded-2xl text-left flex items-start gap-3">
+                    <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-500 mt-0.5">
+                      <Check className="w-4 h-4 stroke-[3]" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <p className="text-emerald-500 font-black text-xs">Garantia de reposição gratuita</p>
+                      <p className="text-zinc-500 text-[9px] leading-snug font-medium">Se não atingir a quantidade contratada, repomos sem custo adicional.</p>
+                    </div>
+                  </div>
+
+                  {/* Pay Button */}
+                  <button 
+                    onClick={handleGeneratePix} 
+                    disabled={loading} 
+                    className="w-full py-5 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-black rounded-2xl shadow-[0_10px_30px_rgba(59,130,246,0.4)] active:scale-95 transition-all flex flex-col items-center justify-center gap-0.5 group"
+                  >
+                    <div className="flex items-center gap-2">
+                      {loading ? <Loader2 className="animate-spin w-6 h-6" /> : (
+                        <>
+                          <Zap className="w-5 h-5 fill-white" />
+                          <span className="text-base uppercase tracking-tight">Pagar agora com Pix</span>
+                        </>
+                      )}
+                    </div>
+                    {!loading && <span className="text-[9px] opacity-70 font-medium">Aprovação instantânea • Entrega automática</span>}
+                  </button>
+
+                  <button onClick={() => setStep(2)} className="w-full py-4 text-zinc-500 hover:text-white font-bold text-[10px] uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2">
+                    <RotateCcw className="w-3 h-3" /> Voltar aos serviços
+                  </button>
+
+                </div>
+              </div>
+            )}
+
+            {step === 7 && (
+              <div className="w-full max-w-xl space-y-8 text-center animate-in fade-in duration-700">
+                <h1 className="text-4xl font-black text-white tracking-tight">QR Code Gerado! 🚀</h1>
+                <div className="bg-white p-6 rounded-3xl inline-block mx-auto shadow-[0_0_50px_rgba(255,255,255,0.1)]">
+                  {pixQrCodeBase64 && <img src={pixQrCodeBase64} alt="QR Code Pix" className="w-56 h-56" />}
+                </div>
+                <div className="space-y-4">
+                  <button onClick={() => { navigator.clipboard.writeText(pixCode); toast.success("Copiado com sucesso!"); }} className="w-full py-6 bg-white text-black font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-zinc-200 transition-all active:scale-95">
+                    <Copy className="w-6 h-6" /> COPIAR CÓDIGO PIX
+                  </button>
+                  <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest">Liberação instantânea após o pagamento</p>
+                </div>
+              </div>
+            )}
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </AnimatePresence>
   );
 }

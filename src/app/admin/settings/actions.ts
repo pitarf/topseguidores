@@ -8,6 +8,11 @@ export async function updateSettings(data: {
   siteDescription: string;
   siteKeywords: string;
   faviconUrl: string | null;
+  rapidApiKey: string | null;
+  pushinpayToken: string | null;
+  pushinpayWebhookToken: string | null;
+  perfectPanelUrl: string | null;
+  perfectPanelKey: string | null;
 }) {
   try {
     const updated = await prisma.systemSetting.update({
@@ -17,6 +22,11 @@ export async function updateSettings(data: {
         siteDescription: data.siteDescription,
         siteKeywords: data.siteKeywords,
         faviconUrl: data.faviconUrl,
+        rapidApiKey: data.rapidApiKey,
+        pushinpayToken: data.pushinpayToken,
+        pushinpayWebhookToken: data.pushinpayWebhookToken,
+        perfectPanelUrl: data.perfectPanelUrl,
+        perfectPanelKey: data.perfectPanelKey,
       },
     });
 

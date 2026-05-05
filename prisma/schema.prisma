@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -7,28 +8,40 @@ datasource db {
 }
 
 model SystemSetting {
-  id              String   @id @default("1")
-  siteTitle       String   @default("Cresce Reels - Comprar Visualizações Instagram")
-  siteDescription String   @default("Aumente seu engajamento no Reels de forma rápida e segura.")
-  siteKeywords    String   @default("comprar visualizações, instagram reels, engajamento, redes sociais")
-  faviconUrl      String?
-  whatsappNumber  String?
-  showNotifications Boolean @default(true)
-  logoUrl         String?
-  fbPixelId       String?
-  fbApiToken      String?
-  updatedAt       DateTime @updatedAt
+  id                  String   @id @default("1")
+  siteTitle           String   @default("Cresce Reels - Comprar Visualizações Instagram")
+  siteDescription     String   @default("Aumente seu engajamento no Reels de forma rápida e segura.")
+  siteKeywords        String   @default("comprar visualizações, instagram reels, engajamento, redes sociais")
+  faviconUrl          String?
+  whatsappNumber      String?
+  showNotifications   Boolean  @default(true)
+  logoUrl             String?
+  
+  // Chaves de API (Configuráveis via Admin)
+  rapidApiKey         String?
+  pushinpayToken      String?
+  pushinpayWebhookToken String?
+  perfectPanelUrl     String?
+  perfectPanelKey     String?
+  
+  fbPixelId           String?
+  fbApiToken          String?
+  updatedAt           DateTime @updatedAt
 }
 
 model Plan {
   id          String   @id @default(cuid())
   name        String
+  platform    String   @default("instagram") // instagram, tiktok
+  type        String   @default("visualizacoes") // seguidores, curtidas, visualizacoes
+  packageType String   @default("brasileiros") // brasileiros, mundiais
   viewsAmount Int
   price       Decimal
   originalPrice Decimal?
-  isPopular   Boolean  @default(false)
-  badge       String?
-  createdAt   DateTime @default(now())
+  isPopular         Boolean  @default(false)
+  badge             String?
+  providerServiceId String?  // ID do serviço no Duke Fornecedor (ex: 379)
+  createdAt         DateTime @default(now())
   updatedAt   DateTime @updatedAt
   orders      Order[]
 }
@@ -36,6 +49,8 @@ model Plan {
 model Order {
   id              String      @id @default(cuid())
   instagramUrl    String
+  customerEmail   String?     // Novo: Email do cliente
+  customerWhatsapp String?    // Novo: WhatsApp do cliente
   amount          Int
   price           Decimal
   status          OrderStatus @default(PENDING)

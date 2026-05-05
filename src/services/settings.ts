@@ -21,8 +21,8 @@ export async function getSystemSettings() {
     console.error("Erro ao buscar configurações do sistema:", error);
     return {
       id: "fallback",
-      siteTitle: "Viraliza Reels",
-      siteDescription: "Impulsione seu Instagram",
+      siteTitle: "Topseguidores",
+      siteDescription: "A melhor plataforma para comprar seguidores, curtidas e visualizações.",
       siteKeywords: "instagram, reels, views",
       faviconUrl: null,
       logoUrl: null,

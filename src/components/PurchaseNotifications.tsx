@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
-import { Check } from "lucide-react";
+import { Instagram } from "lucide-react";
 
 const usernames = [
   "lucas_silva", "mariah_oficial", "joao.pedro", "ana_influencer",
@@ -29,29 +29,23 @@ export function PurchaseNotifications({ enabled = true }: { enabled?: boolean })
       
       toast(
         <div className="flex items-center gap-4 py-1">
-          <div className="relative">
-            <div className="w-12 h-12 rounded-full border-2 border-primary/30 overflow-hidden bg-zinc-800">
-              <img 
-                src={`https://i.pravatar.cc/150?u=${user}`} 
-                alt={user} 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green-500 border-2 border-zinc-950 flex items-center justify-center">
-              <Check className="w-3 h-3 text-white stroke-[4px]" />
-            </div>
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white shrink-0">
+            <Instagram className="w-7 h-7" />
           </div>
-          <div className="flex flex-col">
-            <p className="text-sm font-black text-white leading-tight">@{user}</p>
-            <p className="text-xs text-zinc-400 font-medium tracking-tight">
-              Acabou de comprar <span className="text-primary font-bold">{plan}</span>
+          <div className="flex-1">
+            <div className="flex justify-between items-center mb-0.5">
+               <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Instagram</span>
+               <span className="text-[10px] font-bold text-zinc-600">Agora</span>
+            </div>
+            <p className="text-[12px] font-medium text-zinc-400 leading-snug">
+               <span className="font-black text-white">{user}</span> acabou de comprar <span className="font-black text-white">{plan}</span>
             </p>
-            <p className="text-[10px] text-zinc-500 mt-0.5 font-bold uppercase">Confirmado agora</p>
           </div>
         </div>,
         {
           duration: 5000,
-          className: "glass-morphism !bg-black/80 !border-white/10 !rounded-2xl shadow-2xl",
+          className: "!bg-[#0a0f1e]/95 !border-white/5 !rounded-2xl shadow-2xl pointer-events-none",
+          position: "bottom-left",
         }
       );
     };

@@ -3,9 +3,10 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
-    const { planId, instagramUrl } = await req.json();
+    const { planId, instagramUrl, email, whatsapp } = await req.json();
+    console.log(`🛒 Checkout Request: ${planId} | ${instagramUrl} | ${email} | ${whatsapp}`);
 
-    if (!planId || !instagramUrl) {
+    if (!planId || !instagramUrl || !email || !whatsapp) {
       return NextResponse.json({ error: "Dados incompletos" }, { status: 400 });
     }
 
@@ -21,6 +22,8 @@ export async function POST(req: Request) {
     const order = await prisma.order.create({
       data: {
         instagramUrl,
+        customerEmail: email,
+        customerWhatsapp: whatsapp,
         amount: plan.viewsAmount,
         price: plan.price,
         planId: plan.id,
@@ -29,8 +32,9 @@ export async function POST(req: Request) {
     });
 
     // 2. Chamar API da PushinPay
-    const PUSHINPAY_TOKEN = process.env.PUSHINPAY_TOKEN;
-    const WEBHOOK_TOKEN = process.env.PUSHINPAY_WEBHOOK_TOKEN;
+    const settings = await prisma.systemSetting.findFirst();
+    const PUSHINPAY_TOKEN = settings?.pushinpayToken || process.env.PUSHINPAY_TOKEN;
+    const WEBHOOK_TOKEN = settings?.pushinpayWebhookToken || process.env.PUSHINPAY_WEBHOOK_TOKEN;
     const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://viralizareels.com';
     const WEBHOOK_URL = `${APP_URL}/api/webhooks/pushinpay?orderId=${order.id}&token=${WEBHOOK_TOKEN}`;
 

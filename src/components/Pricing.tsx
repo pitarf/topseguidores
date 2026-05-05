@@ -1,10 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Star, Users, Flame, Clock, ArrowRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Check, Star, TrendingUp, Zap, ShieldCheck } from "lucide-react";
 import { useCheckout } from "@/hooks/useCheckout";
-import { CountdownTimer } from "./CountdownTimer";
+import { useState } from "react";
 
 interface Plan {
   id: string;
@@ -14,109 +13,81 @@ interface Plan {
   originalPrice?: string;
   popular: boolean;
   badge: string;
-  viewers: number;
 }
 
 export function Pricing({ initialPlans }: { initialPlans: Plan[] }) {
   const { openCheckout } = useCheckout();
   
-  const plans = initialPlans;
+  const getBadgeColor = (badge: string) => {
+    const text = badge.toLowerCase();
+    if (text.includes('vendido')) return 'bg-orange-500 shadow-[0_0_20px_rgba(249,115,22,0.4)]';
+    if (text.includes('custo') || text.includes('benefício')) return 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.4)]';
+    if (text.includes('desconto')) return 'bg-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)]';
+    return 'bg-primary shadow-[0_0_20px_rgba(59,130,246,0.5)]';
+  };
 
   return (
-    <section id="precos" className="py-24 bg-[#080c16] relative">
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-      
+    <section id="precos" className="py-8 bg-[#030712]">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-10">
-          <CountdownTimer />
-        </div>
-
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {plans.map((plan, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {initialPlans.map((plan, index) => (
             <motion.div
               key={plan.id}
-              // Animação desativada a pedido do cliente (manter comentado para o futuro):
-              // initial={{ opacity: 0, y: 30 }}
-              // whileInView={{ opacity: 1, y: 0 }}
-              // transition={{ duration: 0.5, delay: index * 0.1 }}
-              // viewport={{ once: true }}
-              className="relative flex flex-col items-center"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              onClick={() => openCheckout(plan)}
+              className="group relative cursor-pointer"
             >
-              {plan.badge && (
-                <div className="absolute -top-4 z-10 bg-gradient-to-r from-orange-400 to-red-500 px-4 py-1 rounded-lg flex items-center gap-1 shadow-lg">
-                  <Star className="w-3 h-3 text-white fill-current" />
-                  <span className="text-[10px] font-black text-white uppercase tracking-wider">{plan.badge}</span>
-                </div>
-              )}
-              
-              <div className={`relative group w-full p-px rounded-[1.5rem] transition-all duration-300 hover:scale-[1.02] ${
-                plan.popular 
-                  ? "bg-gradient-to-b from-primary via-primary/50 to-primary/20 shadow-[0_0_50px_rgba(255,0,0,0.15)]" 
-                  : "bg-[#20283c] hover:bg-primary"
-              }`}>
-                <div className={`rounded-[1.4rem] p-8 flex-1 flex flex-col items-center text-center ${
-                  plan.popular 
-                    ? "bg-gradient-to-b from-[#1a0505] to-[#0b111e]" 
-                    : "bg-[#0b111e]"
-                }`}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Star className={`w-4 h-4 fill-current ${plan.popular ? "text-primary animate-pulse" : "text-primary"}`} />
-                    <span className={`text-sm font-black uppercase tracking-widest ${plan.popular ? "text-white" : "text-zinc-400"}`}>
-                      {plan.name}
-                    </span>
-                    <Star className={`w-4 h-4 fill-current ${plan.popular ? "text-primary animate-pulse" : "text-primary"}`} />
-                  </div>
-
-                  <div className={`${plan.popular ? "bg-primary" : "bg-primary/10"} px-4 py-1 rounded-full mb-6 shadow-lg`}>
-                    <span className={`text-[10px] font-black uppercase tracking-wider ${plan.popular ? "text-white" : "text-primary"}`}>
-                      Visualizações Reels
+              <div className="h-full bg-secondary/40 backdrop-blur-md border-2 border-white/5 rounded-[2.5rem] p-8 transition-all duration-300 group-hover:border-primary/50 group-hover:bg-primary/5 group-hover:-translate-y-2">
+                
+                {/* Badge Superior */}
+                {(plan.popular || plan.badge) && (
+                  <div className={`absolute -top-3 left-1/2 -translate-x-1/2 px-6 py-1.5 rounded-full whitespace-nowrap z-10 ${getBadgeColor(plan.badge)}`}>
+                    <span className="text-[10px] font-black text-white uppercase tracking-[0.2em]">
+                      {plan.badge}
                     </span>
                   </div>
+                )}
 
-                  <div className="mb-2">
-                    <h3 className="text-[30px] font-bold text-white tracking-tighter">
-                      {plan.views} Views
+                <div className="flex flex-col items-center text-center">
+                  <div className="flex items-end gap-1 mb-2">
+                    <h3 className="text-6xl font-[1000] text-white tracking-tighter leading-none">
+                      {plan.views}
                     </h3>
-                    <p className="text-zinc-500 text-xs font-bold mt-1">Entrega rápida e segura</p>
                   </div>
 
-                  <div className={`mb-8 flex items-center justify-center gap-2 ${plan.popular ? "text-primary" : "text-primary/70"}`}>
-                    <Users className="w-4 h-4" />
-                    <span className="text-xs font-bold">
-                      {(plan.viewers * 100) + (plan.viewers * 17 % 89) + 14} pessoas estão vendo agora
-                    </span>
-                  </div>
+                  <span className="text-zinc-500 font-bold uppercase tracking-widest text-[10px] mb-6">
+                    Instagram visualizações em reels
+                  </span>
 
-                  <div className="mb-8 space-y-1">
-                    <div className="text-white text-[36px] font-[900] tracking-tighter">
-                      R$ {plan.price}
+                  <div className="w-full h-px bg-white/5 mb-6" />
+
+                  <div className="space-y-4 w-full mb-8">
+                    <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest">
+                      <span className="text-zinc-500">Entrega</span>
+                      <span className="text-white flex items-center gap-1"><Zap className="w-3 h-3 text-primary" /> Imediata</span>
                     </div>
-                    <div className="text-zinc-500 text-[10px] font-bold">
-                      de <span className="line-through">R$ {plan.originalPrice}</span> por <span className="text-primary">R$ {plan.price}</span> - Oferta exclusiva
+                    <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest">
+                      <span className="text-zinc-500">Reposição</span>
+                      <span className="text-white flex items-center gap-1"><ShieldCheck className="w-3 h-3 text-primary" /> 90 Dias</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest">
+                      <span className="text-zinc-500">Qualidade</span>
+                      <span className="text-white">Premium</span>
                     </div>
                   </div>
 
-                  <ul className="mb-10 space-y-4 flex-1 w-full">
-                    {[
-                      "📌 Cole o link do seu vídeo",
-                      "🔓 Vídeo privado não funciona",
-                      "⚡ Entrega em até 10 minutos",
-                    ].map((feature, fIndex) => (
-                      <li key={fIndex} className="flex items-center gap-2 text-xs font-bold text-zinc-400 text-left">
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="flex flex-col items-center mb-8">
+                    {plan.originalPrice && (
+                      <span className="text-zinc-500 text-xs font-bold line-through mb-1">R$ {plan.originalPrice}</span>
+                    )}
+                    <span className="text-4xl font-[1000] text-[#10b981] tracking-tighter">R$ {plan.price}</span>
+                  </div>
 
-                  <button
-                    onClick={() => openCheckout(plan)}
-                    className={`w-full py-5 font-black text-white rounded-2xl transition-all uppercase tracking-widest text-sm shadow-xl ${
-                      plan.popular 
-                        ? "bg-primary hover:scale-[1.02] hover:brightness-125 shadow-primary/20" 
-                        : "bg-primary hover:brightness-125 active:scale-95"
-                    }`}
-                  >
-                    COMPRAR AGORA
+                  <button className="w-full py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-2xl transition-all group-hover:bg-primary group-hover:text-white group-hover:shadow-[0_10px_20px_rgba(59,130,246,0.3)]">
+                    Comprar Agora
                   </button>
                 </div>
               </div>

@@ -1,9 +1,10 @@
 import { Metadata } from "next";
-import { LayoutDashboard, Settings, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import Link from "next/link";
+import { SidebarNav } from "./SidebarNav";
 
 export const metadata: Metadata = {
-  title: "Administração - Viraliza Reels",
+  title: "Administração - Topseguidores",
   robots: {
     index: false,
     follow: false,
@@ -28,7 +29,7 @@ export default function AdministracaoLayout({
                 <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-primary animate-pulse" />
                 Admin<span className="text-primary">Panel</span>
               </h2>
-              <p className="text-[9px] md:text-[10px] font-bold text-zinc-500 tracking-widest uppercase mt-1">Viraliza Reels System</p>
+              <p className="text-[9px] md:text-[10px] font-bold text-zinc-500 tracking-widest uppercase mt-1">Topseguidores System</p>
             </div>
             
             {/* Botão Sair - Mobile */}
@@ -40,23 +41,7 @@ export default function AdministracaoLayout({
             </Link>
           </div>
 
-          <nav className="flex flex-row md:flex-col gap-2 md:gap-0 md:space-y-3 flex-none md:flex-1 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
-            <Link 
-              href="/administracao" 
-              className="flex-1 md:flex-none flex items-center justify-center md:justify-start gap-2 px-3 md:px-4 py-3 md:py-4 rounded-xl md:rounded-2xl bg-primary/10 text-primary border border-primary/20 font-black transition-all hover:bg-primary/20 shadow-[0_0_20px_rgba(255,0,0,0.1)] uppercase tracking-wider text-[10px] md:text-xs whitespace-nowrap"
-            >
-              <LayoutDashboard className="w-4 h-4 md:w-5 md:h-5" />
-              <span>Dashboard</span>
-            </Link>
-            
-            <Link 
-              href="/administracao/settings" 
-              className="flex-1 md:flex-none flex items-center justify-center md:justify-start gap-2 px-3 md:px-4 py-3 md:py-4 rounded-xl md:rounded-2xl text-zinc-400 font-bold transition-all hover:bg-white/5 hover:text-white uppercase tracking-wider text-[10px] md:text-xs whitespace-nowrap"
-            >
-              <Settings className="w-4 h-4 md:w-5 md:h-5" />
-              <span>Ajustes<span className="hidden md:inline"> (SEO)</span></span>
-            </Link>
-          </nav>
+          <SidebarNav />
           
           <div className="hidden md:block pt-6 border-t border-white/5 mt-auto">
              <Link 

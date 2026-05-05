@@ -36,7 +36,8 @@ export async function POST(req: Request) {
     }
 
     // 2. Validar Token de Segurança
-    const WEBHOOK_TOKEN = process.env.PUSHINPAY_WEBHOOK_TOKEN;
+    const settings = await prisma.systemSetting.findFirst();
+    const WEBHOOK_TOKEN = settings?.pushinpayWebhookToken || process.env.PUSHINPAY_WEBHOOK_TOKEN;
     if (!urlToken || urlToken !== WEBHOOK_TOKEN) {
       console.warn(`⚠️ Tentativa de acesso não autorizada! Token recebido: ${urlToken}`);
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -76,7 +77,10 @@ export async function POST(req: Request) {
       }
 
       // 5. Buscar dados do pedido para entrega
-      const order = await prisma.order.findUnique({ where: { id: orderId } });
+      const order = await prisma.order.findUnique({ 
+        where: { id: orderId },
+        include: { plan: true }
+      });
       if (!order) {
         console.error(`❌ Pedido ${orderId} não encontrado no banco após update!`);
         return NextResponse.json({ error: "Order not found" }, { status: 404 });
@@ -85,7 +89,11 @@ export async function POST(req: Request) {
       // 6. Entrega SMM (PerfectPanel)
       try {
         console.log(`🚀 Disparando entrega SMM para: ${order.instagramUrl}`);
-        const panelOrderId = await sendOrderToPerfectPanel(order.instagramUrl, order.amount);
+        const panelOrderId = await sendOrderToPerfectPanel(
+          order.instagramUrl, 
+          order.amount,
+          order.plan.providerServiceId || undefined
+        );
         
         if (panelOrderId) {
           await prisma.order.update({

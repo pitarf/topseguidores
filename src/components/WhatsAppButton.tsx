@@ -8,7 +8,7 @@ export function WhatsAppButton({ number }: { number?: string | null }) {
 
   // Limpa o número de qualquer caractere não numérico
   const cleanNumber = number.replace(/\D/g, "");
-  const whatsappUrl = `https://wa.me/${cleanNumber}?text=Olá! Vim pelo site Viraliza Reels e tenho uma dúvida.`;
+  const whatsappUrl = `https://wa.me/${cleanNumber}?text=Olá! Vim pelo site Social Fornece e tenho uma dúvida.`;
 
   return (
     <motion.a
