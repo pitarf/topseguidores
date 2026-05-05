@@ -1,137 +1,81 @@
-# Guia de Deploy VPS (AlmaLinux - Hostinger) 🚀
+# Guia de Deploy VPS (Docker) - Top Seguidores 🐳
 
-Este guia detalha como colocar o sistema **Top Seguidores** em produção na sua VPS AlmaLinux, garantindo que ele coexista com o sistema que já roda na porta 3005.
+Este guia foca na implantação profissional via **Docker**, garantindo isolamento total, persistência de dados e facilidade de atualização.
 
 ---
 
-## 1. Preparação do Servidor
+## 1. Preparação do Servidor (Instalar Docker)
 
-Acesse sua VPS via SSH e instale as dependências básicas.
+Acesse sua VPS via SSH e instale o motor do Docker.
 
-### Instalar Node.js (v20+)
 ```bash
-# Adicionar repositório do Node.js
-curl -sL https://rpm.nodesource.com/setup_20.x | sudo bash -
-sudo dnf install -y nodejs
+# Instalar utilitários e repositório
+sudo dnf install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
-# Verificar versão
-node -v
-```
+# Instalar Docker e Docker Compose
+sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
-### Instalar Git e PM2
-```bash
-sudo dnf install -y git
-sudo npm install -g pm2
-```
-
-### Instalar PostgreSQL (Caso ainda não tenha)
-```bash
-sudo dnf install -y postgresql-server postgresql-contrib
-sudo postgresql-setup --initdb
-sudo systemctl enable --now postgresql
-
-# Criar banco de dados e usuário
-sudo -u postgres psql
-# No terminal do Postgres:
-CREATE DATABASE topseguidores;
-CREATE USER admin_user WITH PASSWORD 'sua_senha_forte';
-GRANT ALL PRIVILEGES ON DATABASE topseguidores TO admin_user;
-\q
+# Iniciar e habilitar
+sudo systemctl enable --now docker
 ```
 
 ---
 
 ## 2. Configuração da Aplicação
 
-### Clonar e Instalar
+### Clonar o Projeto
 ```bash
 cd /var/www
-# Se o diretório não existir: sudo mkdir -p /var/www && sudo chown $USER:$USER /var/www
 git clone https://github.com/pitarf/topseguidores.git
 cd topseguidores
-npm install
 ```
 
 ### Configurar Variáveis de Ambiente
-Crie o arquivo `.env` baseado no seu `.env.example`:
+Crie o arquivo `.env` para que o Docker possa ler as configurações:
 ```bash
 nano .env
 ```
-**Campos essenciais:**
+**Campos obrigatórios:**
 ```env
-DATABASE_URL="postgresql://admin_user:sua_senha_forte@localhost:5432/topseguidores?schema=public"
+# Banco de Dados (Use os mesmos valores do docker-compose.yml)
+DATABASE_URL="postgresql://admin_user:sua_senha_forte@postgres-db:5432/topseguidores?schema=public"
+
+# Auth e Segurança
 NEXTAUTH_SECRET="gere_um_segredo_aleatorio"
 NEXTAUTH_URL="https://seu-dominio.com"
 
-# API Keys (RapidAPI, PushinPay, etc)
-RAPID_API_KEY="sua_chave"
-PUSHINPAY_TOKEN="seu_token"
-```
-
-### Build do Sistema
-```bash
-# Sincronizar banco de dados
-npx prisma db push
-npx prisma db seed
-
-# Build para produção
-npm run build
+# Integrações
+RAPID_API_KEY="sua_chave_aqui"
+PUSHINPAY_TOKEN="seu_token_aqui"
+PUSHINPAY_WEBHOOK_TOKEN="seu_token_webhook"
 ```
 
 ---
 
-## 3. Deploy via Docker (Recomendado) 🐳
+## 3. Subir o Sistema (Container)
 
-Se preferir rodar via Docker para facilitar a manutenção e isolamento:
+Agora basta subir os containers de Banco de Dados e Aplicação. O Docker cuidará de tudo (incluindo o Node.js interno).
 
-### Instalar Docker (Se não tiver)
 ```bash
-sudo dnf install -y yum-utils
-sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-sudo systemctl enable --now docker
-```
-
-### Iniciar o Sistema
-```bash
-# Na raiz do projeto (/var/www/topseguidores)
+# Iniciar em modo background e compilar a imagem
 docker compose up -d --build
 ```
-Isso iniciará o banco na porta **5436** e o app na porta **3010**.
+
+> **Nota:** O sistema estará rodando internamente na porta **3010**. O banco de dados estará na porta **5436**.
 
 ---
 
-## 4. Gerenciamento de Processo (Alternativa: PM2)
+## 4. Proxy Reverso (Nginx)
 
-Como você já tem algo na porta 3005, vamos rodar este sistema na porta **3010**.
+Como você já tem outros sistemas, o Nginx servirá como o "maestro", enviando o tráfego do domínio para o container correto.
 
-```bash
-# Iniciar com PM2 definindo a porta
-PORT=3010 pm2 start npm --name "topseguidores" -- start
-
-# Salvar para iniciar automaticamente no reboot
-pm2 save
-pm2 startup
-```
-
----
-
-## 4. Configuração do Proxy Reverso (Nginx)
-
-Precisamos do Nginx para encaminhar o tráfego do seu domínio para a porta 3010.
-
-### Instalar Nginx
-```bash
-sudo dnf install -y nginx
-sudo systemctl enable --now nginx
-```
-
-### Criar Configuração do Site
+### Configurar Site
 ```bash
 sudo nano /etc/nginx/conf.d/topseguidores.conf
 ```
 
-**Cole o seguinte conteúdo (ajustando o domínio):**
+**Conteúdo:**
 ```nginx
 server {
     listen 80;
@@ -156,20 +100,24 @@ sudo systemctl restart nginx
 
 ---
 
-## 5. SSL (HTTPS) com Certbot
+## 5. SSL e Firewall
 
+### Ativar HTTPS
 ```bash
 sudo dnf install -y epel-release
 sudo dnf install -y certbot python3-certbot-nginx
 sudo certbot --nginx -d seu-dominio.com
 ```
 
+### Abrir Portas no Firewall
+Certifique-se de que as portas **80** (HTTP) e **443** (HTTPS) estão abertas no painel da Hostinger.
+
 ---
 
-## Resumo de Comandos Úteis
-- **Ver Logs:** `pm2 logs topseguidores`
-- **Reiniciar App:** `pm2 restart topseguidores`
-- **Status do Banco:** `npx prisma studio` (localmente via túnel SSH se necessário)
-
-> [!IMPORTANT]
-> Lembre-se de liberar as portas **80** e **443** no firewall da Hostinger (Painel de Controle -> VPS -> Firewall).
+## 🔄 Como Atualizar o Sistema
+Sempre que fizer alterações no GitHub:
+```bash
+git pull
+docker compose up -d --build
+```
+O Docker atualizará apenas o que mudou, mantendo seus dados salvos no volume configurado.
