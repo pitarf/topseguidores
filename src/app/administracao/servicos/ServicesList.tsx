@@ -10,7 +10,8 @@ import {
   ArrowUpDown,
   Filter,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Zap
 } from "lucide-react";
 
 export function ServicesList({ initialPlans }: { initialPlans: any[] }) {
@@ -50,6 +51,108 @@ export function ServicesList({ initialPlans }: { initialPlans: any[] }) {
 
   return (
     <div className="space-y-6">
+      {/* Atualização em Massa de IDs */}
+      <div className="bg-[#0b111e] p-8 rounded-[2rem] border border-purple-500/20 shadow-2xl space-y-6">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-400">
+            <Zap className="w-6 h-6" />
+          </div>
+          <div>
+            <h2 className="text-xl font-black text-white tracking-tight uppercase">Atualização em Massa (IDs Duke)</h2>
+            <p className="text-zinc-500 font-bold text-[10px] uppercase tracking-widest">Altere o ID de todos os pacotes de uma categoria de uma só vez</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Plataforma</label>
+            <select 
+              id="bulk-platform"
+              className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-bold outline-none focus:border-primary/50"
+            >
+              <option value="instagram">Instagram</option>
+              <option value="tiktok">TikTok</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Tipo</label>
+            <select 
+              id="bulk-type"
+              className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-bold outline-none focus:border-primary/50"
+            >
+              <option value="seguidores">Seguidores</option>
+              <option value="curtidas">Curtidas</option>
+              <option value="visualizacoes">Visualizações</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Origem</label>
+            <select 
+              id="bulk-package"
+              className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-bold outline-none focus:border-primary/50"
+            >
+              <option value="brasileiros">Brasileiros</option>
+              <option value="mundiais">Mundiais</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Novo ID Duke</label>
+            <div className="flex gap-2">
+              <input 
+                id="bulk-id"
+                type="text" 
+                placeholder="Ex: 405"
+                className="flex-1 bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-purple-400 text-sm font-black outline-none focus:border-purple-500/50"
+              />
+              <button 
+                onClick={async () => {
+                  const platform = (document.getElementById('bulk-platform') as HTMLSelectElement).value;
+                  const type = (document.getElementById('bulk-type') as HTMLSelectElement).value;
+                  const packageType = (document.getElementById('bulk-package') as HTMLSelectElement).value;
+                  const newId = (document.getElementById('bulk-id') as HTMLInputElement).value;
+
+                  if (!newId) return toast.error("Insira o novo ID");
+                  
+                  const plansToUpdate = plans.filter(p => p.platform === platform && p.type === type && p.packageType === packageType);
+                  
+                  if (plansToUpdate.length === 0) return toast.error("Nenhum plano encontrado nesta categoria");
+
+                  setLoading("bulk");
+                  try {
+                    let successCount = 0;
+                    for (const plan of plansToUpdate) {
+                      const res = await fetch(`/api/admin/plans/${plan.id}`, {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ providerServiceId: newId })
+                      });
+                      if (res.ok) successCount++;
+                    }
+                    
+                    if (successCount > 0) {
+                      toast.success(`${successCount} pacotes atualizados com sucesso!`);
+                      setPlans(plans.map(p => 
+                        (p.platform === platform && p.type === type && p.packageType === packageType) 
+                        ? { ...p, providerServiceId: newId } 
+                        : p
+                      ));
+                    }
+                  } catch (e) {
+                    toast.error("Erro na atualização em massa");
+                  } finally {
+                    setLoading(null);
+                  }
+                }}
+                disabled={loading === "bulk"}
+                className="px-6 bg-purple-600 hover:bg-purple-500 text-white font-black rounded-xl transition-all disabled:opacity-50"
+              >
+                {loading === "bulk" ? "..." : "OK"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Filtros */}
       <div className="flex flex-col md:flex-row gap-4 bg-[#0b111e] p-6 rounded-[2rem] border border-white/5 shadow-xl">
         <div className="flex-1 relative">
