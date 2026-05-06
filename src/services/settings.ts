@@ -9,9 +9,9 @@ export async function getSystemSettings() {
       return await prisma.systemSetting.create({
         data: {
           id: "1",
-          siteTitle: "Cresce Reels - Comprar Visualizações Instagram",
-          siteDescription: "Aumente seu engajamento no Reels de forma rápida e segura.",
-          siteKeywords: "comprar visualizações, instagram reels, engajamento, redes sociais",
+          siteTitle: "Top Seguidores - Comprar Seguidores e Curtidas",
+          siteDescription: "A melhor plataforma para aumentar seu engajamento no Instagram e TikTok de forma rápida e segura.",
+          siteKeywords: "comprar seguidores, instagram, tiktok, curtidas, visualizações, engajamento",
         },
       });
     }
@@ -21,9 +21,9 @@ export async function getSystemSettings() {
     console.error("Erro ao buscar configurações do sistema:", error);
     return {
       id: "fallback",
-      siteTitle: "Topseguidores",
+      siteTitle: "Top Seguidores",
       siteDescription: "A melhor plataforma para comprar seguidores, curtidas e visualizações.",
-      siteKeywords: "instagram, reels, views",
+      siteKeywords: "comprar seguidores, instagram, tiktok, curtidas, visualizações",
       faviconUrl: null,
       logoUrl: null,
       fbPixelId: null,

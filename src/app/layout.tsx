@@ -18,24 +18,48 @@ const inter = Inter({
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSystemSettings();
+  const url = process.env.NEXT_PUBLIC_APP_URL || "https://topseguidores.net";
 
   return {
-    title: settings.siteTitle,
+    metadataBase: new URL(url),
+    title: {
+      default: settings.siteTitle,
+      template: `%s | ${settings.siteTitle}`
+    },
     description: settings.siteDescription,
     keywords: settings.siteKeywords,
+    alternates: {
+      canonical: "/",
+    },
     icons: {
       icon: settings.faviconUrl || "/favicon.png",
+      apple: settings.faviconUrl || "/favicon.png",
     },
     openGraph: {
       title: settings.siteTitle,
       description: settings.siteDescription,
+      url: "./",
+      siteName: settings.siteTitle,
+      locale: "pt_BR",
+      type: "website",
       images: [
         {
           url: settings.logoUrl || "/og-image.png",
           width: 1200,
           height: 630,
+          alt: settings.siteTitle,
         },
       ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: settings.siteTitle,
+      description: settings.siteDescription,
+      images: [settings.logoUrl || "/og-image.png"],
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
   };
 }

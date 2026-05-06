@@ -5,7 +5,11 @@ import { Instagram, Smartphone, CheckCircle, Users, Zap, Search, Clock } from "l
 import { useState, useEffect } from "react";
 import { useCheckout } from "@/hooks/useCheckout";
 
-export function Hero() {
+interface HeroProps {
+  title?: string;
+}
+
+export function Hero({ title }: HeroProps) {
   const { openCheckout } = useCheckout();
   const [timeLeft, setTimeLeft] = useState("13:42");
   const [platform, setPlatform] = useState<"instagram" | "tiktok">("instagram");
@@ -37,7 +41,7 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             className="text-2xl md:text-5xl font-[1000] leading-tight tracking-tighter text-white mb-2 neon-text-blue px-4 drop-shadow-[0_0_20px_rgba(59,130,246,0.3)]"
           >
-            Aumente seus seguidores e faça seu perfil crescer de verdade 🚀
+            {title || "Aumente seus seguidores e faça seu perfil crescer de verdade 🚀"}
           </motion.h1>
 
           <motion.p 
