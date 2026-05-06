@@ -1,10 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-import pg from "pg";
 
-const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 async function main() {
   console.log("🌱 Iniciando seed de PRODUÇÃO (Instagram e TikTok)...");
@@ -102,7 +98,7 @@ async function main() {
   console.log(`🚀 Sincronizando ${plans.length} planos com perfil de produção...`);
   
   for (const planData of plans) {
-    await prisma.plan.create({ data: planData });
+    await prisma.plan.create({ data: planData as any });
   }
 
   console.log("✅ Banco de dados atualizado com catálogo de produção.");
@@ -115,5 +111,4 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
-    await pool.end();
   });
