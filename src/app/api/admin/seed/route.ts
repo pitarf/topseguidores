@@ -134,8 +134,25 @@ export async function GET(req: Request) {
       { name: "7000 Curtidas TK M", platform: "tiktok", type: "curtidas", packageType: "mundiais", viewsAmount: 7000, price: 48.29, originalPrice: 54.87, badge: "12% DE DESCONTO", providerServiceId: "474" },
       { name: "20000 Curtidas TK M", platform: "tiktok", type: "curtidas", packageType: "mundiais", viewsAmount: 20000, price: 104.00, originalPrice: 148.57, badge: "30% DE DESCONTO", providerServiceId: "474" },
       { name: "30000 Curtidas TK M", platform: "tiktok", type: "curtidas", packageType: "mundiais", viewsAmount: 30000, price: 144.80, originalPrice: 222.77, badge: "35% DE DESCONTO", providerServiceId: "474" },
-      { name: "1000 Visualizações TK", platform: "tiktok", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 1000, price: 3.90, originalPrice: 8.00, badge: "START", providerServiceId: "476" },
-      { name: "10000 Visualizações TK", platform: "tiktok", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 10000, price: 29.90, originalPrice: 55.00, badge: "POPULAR", isPopular: true, providerServiceId: "476" },
+      // TIKTOK - VISUALIZAÇÕES BRASILEIRAS (+200% do valor base)
+      { name: "1000 Visualizações TK BR", platform: "tiktok", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 1000, price: 3.00, originalPrice: 5.00, badge: "MAIS VENDIDO 🎯", isPopular: true, providerServiceId: "476" },
+      { name: "5000 Visualizações TK BR", platform: "tiktok", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 5000, price: 14.55, originalPrice: 15.00, badge: "3% DE DESCONTO", providerServiceId: "476" },
+      { name: "10000 Visualizações TK BR", platform: "tiktok", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 10000, price: 28.50, originalPrice: 47.50, badge: "+ CUSTO / BENEFÍCIO 🏆", providerServiceId: "476" },
+      { name: "30000 Visualizações TK BR", platform: "tiktok", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 30000, price: 83.70, originalPrice: 90.00, badge: "7% DE DESCONTO", providerServiceId: "476" },
+      { name: "50000 Visualizações TK BR", platform: "tiktok", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 50000, price: 135.00, originalPrice: 150.00, badge: "10% DE DESCONTO", providerServiceId: "476" },
+      { name: "100000 Visualizações TK BR", platform: "tiktok", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 100000, price: 261.00, originalPrice: 300.00, badge: "13% DE DESCONTO", providerServiceId: "476" },
+      { name: "250000 Visualizações TK BR", platform: "tiktok", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 250000, price: 636.00, originalPrice: 748.23, badge: "15% DE DESCONTO", providerServiceId: "476" },
+      { name: "1000000 Visualizações TK BR", platform: "tiktok", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 1000000, price: 2099.70, originalPrice: 2999.57, badge: "30% DE DESCONTO", providerServiceId: "476" },
+
+      // TIKTOK - VISUALIZAÇÕES MUNDIAIS (+150% do valor base)
+      { name: "1000 Visualizações TK M", platform: "tiktok", type: "visualizacoes", packageType: "mundiais", viewsAmount: 1000, price: 2.50, originalPrice: 4.17, badge: "MAIS VENDIDO 🎯", isPopular: true, providerServiceId: "476" },
+      { name: "5000 Visualizações TK M", platform: "tiktok", type: "visualizacoes", packageType: "mundiais", viewsAmount: 5000, price: 12.12, originalPrice: 12.50, badge: "3% DE DESCONTO", providerServiceId: "476" },
+      { name: "10000 Visualizações TK M", platform: "tiktok", type: "visualizacoes", packageType: "mundiais", viewsAmount: 10000, price: 23.75, originalPrice: 39.58, badge: "+ CUSTO / BENEFÍCIO 🏆", providerServiceId: "476" },
+      { name: "30000 Visualizações TK M", platform: "tiktok", type: "visualizacoes", packageType: "mundiais", viewsAmount: 30000, price: 69.75, originalPrice: 75.00, badge: "7% DE DESCONTO", providerServiceId: "476" },
+      { name: "50000 Visualizações TK M", platform: "tiktok", type: "visualizacoes", packageType: "mundiais", viewsAmount: 50000, price: 112.50, originalPrice: 125.00, badge: "10% DE DESCONTO", providerServiceId: "476" },
+      { name: "100000 Visualizações TK M", platform: "tiktok", type: "visualizacoes", packageType: "mundiais", viewsAmount: 100000, price: 217.50, originalPrice: 250.00, badge: "13% DE DESCONTO", providerServiceId: "476" },
+      { name: "250000 Visualizações TK M", platform: "tiktok", type: "visualizacoes", packageType: "mundiais", viewsAmount: 250000, price: 530.00, originalPrice: 623.53, badge: "15% DE DESCONTO", providerServiceId: "476" },
+      { name: "1000000 Visualizações TK M", platform: "tiktok", type: "visualizacoes", packageType: "mundiais", viewsAmount: 1000000, price: 1749.75, originalPrice: 2499.64, badge: "30% DE DESCONTO", providerServiceId: "476" },
     ];
 
     for (const planData of plans) {
