@@ -13,6 +13,10 @@ interface Plan {
   originalPrice?: string;
   popular: boolean;
   badge: string;
+  platform: "instagram" | "tiktok";
+  type: string;
+  packageType: string;
+  quantity: number;
 }
 
 export function Pricing({ initialPlans }: { initialPlans: Plan[] }) {
@@ -37,7 +41,7 @@ export function Pricing({ initialPlans }: { initialPlans: Plan[] }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              onClick={() => openCheckout(plan)}
+              onClick={() => openCheckout(plan.platform, plan)}
               className="group relative cursor-pointer"
             >
               <div className="h-full bg-secondary/40 backdrop-blur-md border-2 border-white/5 rounded-[2.5rem] p-8 transition-all duration-300 group-hover:border-primary/50 group-hover:bg-primary/5 group-hover:-translate-y-2">
