@@ -18,11 +18,19 @@ export async function searchInstagramProfile(username: string) {
         "X-RapidAPI-Host": "instagram-scraper21.p.rapidapi.com"
       }
     });
+    
+    console.log(`[Instagram API] Status: ${res.status}`);
     const data = await res.json();
+    
+    if (!res.ok) {
+      console.error("[Instagram API] Erro:", data);
+      return { success: false, error: data.message || "Erro na API do Instagram" };
+    }
+
     return { success: true, data };
   } catch (error) {
     console.error("Instagram Profile Search Error:", error);
-    return { success: false, error: "Falha na busca do Instagram" };
+    return { success: false, error: "Falha na conexão com Instagram API" };
   }
 }
 
@@ -61,11 +69,19 @@ export async function searchTikTokProfile(username: string) {
         "X-RapidAPI-Host": "tiktok-api-fast-reliable-data-scraper.p.rapidapi.com"
       }
     });
+    
+    console.log(`[TikTok API] Status: ${res.status}`);
     const data = await res.json();
+
+    if (!res.ok) {
+      console.error("[TikTok API] Erro:", data);
+      return { success: false, error: data.message || "Erro na API do TikTok" };
+    }
+
     return { success: true, data };
   } catch (error) {
     console.error("TikTok Profile Search Error:", error);
-    return { success: false, error: "Falha na busca do TikTok" };
+    return { success: false, error: "Falha na conexão com TikTok API" };
   }
 }
 
