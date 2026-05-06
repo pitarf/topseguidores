@@ -94,11 +94,25 @@ export async function GET(req: Request) {
       { name: "100000 Visualizações M", platform: "instagram", type: "visualizacoes", packageType: "mundiais", viewsAmount: 100000, price: 74.90, originalPrice: 115.23, badge: "35% DE DESCONTO", providerServiceId: "379" },
       { name: "2000000 Visualizações M", platform: "instagram", type: "visualizacoes", packageType: "mundiais", viewsAmount: 2000000, price: 140.00, originalPrice: 933.33, badge: "85% DE DESCONTO", providerServiceId: "379" },
 
-      // TIKTOK
-      { name: "100 Seguidores TK", platform: "tiktok", type: "seguidores", packageType: "brasileiros", viewsAmount: 100, price: 5.90, originalPrice: 9.00, badge: "START", providerServiceId: "855" },
-      { name: "500 Seguidores TK", platform: "tiktok", type: "seguidores", packageType: "brasileiros", viewsAmount: 500, price: 21.90, originalPrice: 35.00, badge: "OFERTA", providerServiceId: "855" },
-      { name: "1000 Seguidores TK", platform: "tiktok", type: "seguidores", packageType: "brasileiros", viewsAmount: 1000, price: 40.69, originalPrice: 65.00, badge: "MAIS VENDIDO", isPopular: true, providerServiceId: "855" },
-      { name: "5000 Seguidores TK", platform: "tiktok", type: "seguidores", packageType: "brasileiros", viewsAmount: 5000, price: 169.90, originalPrice: 280.00, badge: "PREMIUM", providerServiceId: "855" },
+      // TIKTOK - SEGUIDORES BRASILEIROS
+      { name: "100 Seguidores TK BR", platform: "tiktok", type: "seguidores", packageType: "brasileiros", viewsAmount: 100, price: 4.79, originalPrice: 7.90, badge: "PACOTE BÁSICO ✅", providerServiceId: "855" },
+      { name: "250 Seguidores TK BR", platform: "tiktok", type: "seguidores", packageType: "brasileiros", viewsAmount: 250, price: 11.29, originalPrice: 11.88, badge: "5% DE DESCONTO", providerServiceId: "855" },
+      { name: "500 Seguidores TK BR", platform: "tiktok", type: "seguidores", packageType: "brasileiros", viewsAmount: 500, price: 21.49, originalPrice: 23.87, badge: "10% DE DESCONTO", providerServiceId: "855" },
+      { name: "1000 Seguidores TK BR", platform: "tiktok", type: "seguidores", packageType: "brasileiros", viewsAmount: 1000, price: 40.69, originalPrice: 67.90, badge: "MAIS VENDIDO 🎯", isPopular: true, providerServiceId: "855" },
+      { name: "2500 Seguidores TK BR", platform: "tiktok", type: "seguidores", packageType: "brasileiros", viewsAmount: 2500, price: 94.90, originalPrice: 118.62, badge: "20% DE DESCONTO", providerServiceId: "855" },
+      { name: "5000 Seguidores TK BR", platform: "tiktok", type: "seguidores", packageType: "brasileiros", viewsAmount: 5000, price: 166.90, originalPrice: 238.42, badge: "30% DE DESCONTO", providerServiceId: "855" },
+      { name: "7500 Seguidores TK BR", platform: "tiktok", type: "seguidores", packageType: "brasileiros", viewsAmount: 7500, price: 229.90, originalPrice: 364.92, badge: "37% DE DESCONTO", providerServiceId: "855" },
+      { name: "10000 Seguidores TK BR", platform: "tiktok", type: "seguidores", packageType: "brasileiros", viewsAmount: 10000, price: 262.90, originalPrice: 438.16, badge: "+ CUSTO / BENEFÍCIO 🏆", providerServiceId: "855" },
+
+      // TIKTOK - SEGUIDORES MUNDIAIS (20% mais baratos)
+      { name: "100 Seguidores TK M", platform: "tiktok", type: "seguidores", packageType: "mundiais", viewsAmount: 100, price: 3.83, originalPrice: 6.32, badge: "PACOTE BÁSICO ✅", providerServiceId: "855" },
+      { name: "250 Seguidores TK M", platform: "tiktok", type: "seguidores", packageType: "mundiais", viewsAmount: 250, price: 9.03, originalPrice: 9.50, badge: "5% DE DESCONTO", providerServiceId: "855" },
+      { name: "500 Seguidores TK M", platform: "tiktok", type: "seguidores", packageType: "mundiais", viewsAmount: 500, price: 17.19, originalPrice: 19.10, badge: "10% DE DESCONTO", providerServiceId: "855" },
+      { name: "1000 Seguidores TK M", platform: "tiktok", type: "seguidores", packageType: "mundiais", viewsAmount: 1000, price: 32.55, originalPrice: 54.32, badge: "MAIS VENDIDO 🎯", isPopular: true, providerServiceId: "855" },
+      { name: "2500 Seguidores TK M", platform: "tiktok", type: "seguidores", packageType: "mundiais", viewsAmount: 2500, price: 75.92, originalPrice: 94.90, badge: "20% DE DESCONTO", providerServiceId: "855" },
+      { name: "5000 Seguidores TK M", platform: "tiktok", type: "seguidores", packageType: "mundiais", viewsAmount: 5000, price: 133.52, originalPrice: 190.74, badge: "30% DE DESCONTO", providerServiceId: "855" },
+      { name: "7500 Seguidores TK M", platform: "tiktok", type: "seguidores", packageType: "mundiais", viewsAmount: 7500, price: 183.92, originalPrice: 291.93, badge: "37% DE DESCONTO", providerServiceId: "855" },
+      { name: "10000 Seguidores TK M", platform: "tiktok", type: "seguidores", packageType: "mundiais", viewsAmount: 10000, price: 210.32, originalPrice: 350.53, badge: "+ CUSTO / BENEFÍCIO 🏆", providerServiceId: "855" },
       { name: "100 Curtidas TK", platform: "tiktok", type: "curtidas", packageType: "brasileiros", viewsAmount: 100, price: 3.90, originalPrice: 7.00, badge: "RÁPIDO", providerServiceId: "474" },
       { name: "1000 Curtidas TK", platform: "tiktok", type: "curtidas", packageType: "brasileiros", viewsAmount: 1000, price: 11.47, originalPrice: 22.00, badge: "MAIS VENDIDO", isPopular: true, providerServiceId: "474" },
       { name: "1000 Visualizações TK", platform: "tiktok", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 1000, price: 3.90, originalPrice: 8.00, badge: "START", providerServiceId: "476" },
