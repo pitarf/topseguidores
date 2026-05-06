@@ -63,7 +63,7 @@ export function ServicesList({ initialPlans }: { initialPlans: any[] }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
           <div className="space-y-2">
             <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Plataforma</label>
             <select 
@@ -97,59 +97,58 @@ export function ServicesList({ initialPlans }: { initialPlans: any[] }) {
           </div>
           <div className="space-y-2">
             <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Novo ID Duke</label>
-            <div className="flex gap-2">
-              <input 
-                id="bulk-id"
-                type="text" 
-                placeholder="Ex: 405"
-                className="flex-1 bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-purple-400 text-sm font-black outline-none focus:border-purple-500/50"
-              />
-              <button 
-                onClick={async () => {
-                  const platform = (document.getElementById('bulk-platform') as HTMLSelectElement).value;
-                  const type = (document.getElementById('bulk-type') as HTMLSelectElement).value;
-                  const packageType = (document.getElementById('bulk-package') as HTMLSelectElement).value;
-                  const newId = (document.getElementById('bulk-id') as HTMLInputElement).value;
-
-                  if (!newId) return toast.error("Insira o novo ID");
-                  
-                  const plansToUpdate = plans.filter(p => p.platform === platform && p.type === type && p.packageType === packageType);
-                  
-                  if (plansToUpdate.length === 0) return toast.error("Nenhum plano encontrado nesta categoria");
-
-                  setLoading("bulk");
-                  try {
-                    let successCount = 0;
-                    for (const plan of plansToUpdate) {
-                      const res = await fetch(`/api/admin/plans/${plan.id}`, {
-                        method: "PATCH",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ providerServiceId: newId })
-                      });
-                      if (res.ok) successCount++;
-                    }
-                    
-                    if (successCount > 0) {
-                      toast.success(`${successCount} pacotes atualizados com sucesso!`);
-                      setPlans(plans.map(p => 
-                        (p.platform === platform && p.type === type && p.packageType === packageType) 
-                        ? { ...p, providerServiceId: newId } 
-                        : p
-                      ));
-                    }
-                  } catch (e) {
-                    toast.error("Erro na atualização em massa");
-                  } finally {
-                    setLoading(null);
-                  }
-                }}
-                disabled={loading === "bulk"}
-                className="px-6 bg-purple-600 hover:bg-purple-500 text-white font-black rounded-xl transition-all disabled:opacity-50"
-              >
-                {loading === "bulk" ? "..." : "OK"}
-              </button>
-            </div>
+            <input 
+              id="bulk-id"
+              type="text" 
+              placeholder="Ex: 405"
+              className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-purple-400 text-sm font-black outline-none focus:border-purple-500/50"
+            />
           </div>
+          
+          <button 
+            onClick={async () => {
+              const platform = (document.getElementById('bulk-platform') as HTMLSelectElement).value;
+              const type = (document.getElementById('bulk-type') as HTMLSelectElement).value;
+              const packageType = (document.getElementById('bulk-package') as HTMLSelectElement).value;
+              const newId = (document.getElementById('bulk-id') as HTMLInputElement).value;
+
+              if (!newId) return toast.error("Insira o novo ID");
+              
+              const plansToUpdate = plans.filter(p => p.platform === platform && p.type === type && p.packageType === packageType);
+              
+              if (plansToUpdate.length === 0) return toast.error("Nenhum plano encontrado nesta categoria");
+
+              setLoading("bulk");
+              try {
+                let successCount = 0;
+                for (const plan of plansToUpdate) {
+                  const res = await fetch(`/api/admin/plans/${plan.id}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ providerServiceId: newId })
+                  });
+                  if (res.ok) successCount++;
+                }
+                
+                if (successCount > 0) {
+                  toast.success(`${successCount} pacotes atualizados com sucesso!`);
+                  setPlans(plans.map(p => 
+                    (p.platform === platform && p.type === type && p.packageType === packageType) 
+                    ? { ...p, providerServiceId: newId } 
+                    : p
+                  ));
+                }
+              } catch (e) {
+                toast.error("Erro na atualização em massa");
+              } finally {
+                setLoading(null);
+              }
+            }}
+            disabled={loading === "bulk"}
+            className="w-full py-3.5 bg-purple-600 hover:bg-purple-500 text-white font-black rounded-xl transition-all disabled:opacity-50 uppercase text-xs tracking-widest shadow-lg shadow-purple-500/20"
+          >
+            {loading === "bulk" ? "..." : "Atualizar"}
+          </button>
         </div>
       </div>
 

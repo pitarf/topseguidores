@@ -164,8 +164,11 @@ export async function GET(req: Request) {
       message: "✅ Seed finalizado com sucesso! Banco de dados populado.",
       plansCount: plans.length 
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erro no Seed API:", error);
-    return NextResponse.json({ error: "Erro ao processar seed" }, { status: 500 });
+    return NextResponse.json({ 
+      error: "Erro ao processar seed", 
+      details: error.message || "Erro desconhecido"
+    }, { status: 500 });
   }
 }
