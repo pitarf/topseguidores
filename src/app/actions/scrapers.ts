@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 async function getApiKey() {
   const settings = await prisma.systemSetting.findFirst();
-  return settings?.rapidApiKey || process.env.NEXT_PUBLIC_RAPIDAPI_KEY || "";
+  return settings?.rapidApiKey || process.env.RAPID_API_KEY || process.env.NEXT_PUBLIC_RAPIDAPI_KEY || "";
 }
 
 export async function searchInstagramProfile(username: string) {
