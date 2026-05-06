@@ -1,8 +1,11 @@
 "use client";
 
 import { Instagram, Smartphone, Youtube } from "lucide-react";
+import { useCheckout } from "@/hooks/useCheckout";
 
 export function Footer() {
+  const { openCheckout } = useCheckout();
+
   return (
     <footer className="py-24 bg-[#030712] border-t border-zinc-900">
       <div className="container mx-auto px-4">
@@ -11,13 +14,28 @@ export function Footer() {
             <h4 className="text-white font-black uppercase tracking-[0.2em] text-xs mb-8">Serviços</h4>
             <ul className="space-y-4">
               <li>
-                <a href="#precos" className="text-zinc-500 hover:text-white transition-colors font-bold text-sm">Instagram</a>
+                <button 
+                  onClick={() => openCheckout("instagram")}
+                  className="text-zinc-500 hover:text-white transition-colors font-bold text-sm"
+                >
+                  Instagram
+                </button>
               </li>
               <li>
-                <a href="#precos" className="text-zinc-500 hover:text-white transition-colors font-bold text-sm">TikTok</a>
+                <button 
+                  onClick={() => openCheckout("tiktok")}
+                  className="text-zinc-500 hover:text-white transition-colors font-bold text-sm"
+                >
+                  TikTok
+                </button>
               </li>
               <li>
-                <a href="#precos" className="text-zinc-500 hover:text-white transition-colors font-bold text-sm">YouTube</a>
+                <button 
+                  className="text-zinc-500 hover:text-white transition-colors font-bold text-sm cursor-not-allowed opacity-50"
+                  disabled
+                >
+                  YouTube (Em breve)
+                </button>
               </li>
             </ul>
           </div>
