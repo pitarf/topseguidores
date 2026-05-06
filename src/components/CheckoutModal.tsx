@@ -428,19 +428,19 @@ export function CheckoutModal() {
                     <p className="mt-4 text-zinc-500 animate-pulse font-bold uppercase tracking-widest text-xs">Buscando pacotes atualizados...</p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4">
                     {currentPackages.map((pkg: any) => (
                       <button
                         key={pkg.id}
                         onClick={() => { setSelectedPlan(pkg); setStep(6); }}
-                        className={`group relative p-6 rounded-3xl border transition-all text-left flex flex-col justify-between h-full ${
+                        className={`group relative p-3 md:p-6 rounded-2xl md:rounded-3xl border transition-all text-left flex flex-col justify-between h-full ${
                           selectedPlan?.id === pkg.id 
                             ? "bg-primary border-primary shadow-[0_0_30px_rgba(59,130,246,0.4)]" 
                             : "bg-[#121826]/40 border-white/5 hover:border-primary/50"
                         }`}
                       >
                         {pkg.badge && (
-                          <div className={`absolute -top-2 left-4 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-wider ${
+                          <div className={`absolute -top-2 left-2 md:left-4 px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[6px] md:text-[8px] font-black uppercase tracking-wider ${
                             selectedPlan?.id === pkg.id ? "bg-white text-primary" : "bg-primary text-white"
                           }`}>
                             {pkg.badge}
@@ -448,21 +448,21 @@ export function CheckoutModal() {
                         )}
                         
                         <div>
-                          <div className={`text-2xl font-black mb-1 ${selectedPlan?.id === pkg.id ? "text-white" : "text-white"}`}>
+                          <div className={`text-lg md:text-2xl font-black mb-0.5 md:mb-1 ${selectedPlan?.id === pkg.id ? "text-white" : "text-white"}`}>
                             {pkg.quantity.toLocaleString('pt-BR')}
                           </div>
-                          <div className={`text-[10px] font-bold uppercase tracking-widest mb-4 ${selectedPlan?.id === pkg.id ? "text-white/70" : "text-zinc-500"}`}>
-                            {service} {platform}
+                          <div className={`text-[8px] md:text-[10px] font-bold uppercase tracking-widest mb-2 md:mb-4 ${selectedPlan?.id === pkg.id ? "text-white/70" : "text-zinc-500"}`}>
+                            {service}
                           </div>
                         </div>
 
-                        <div className="mt-4">
+                        <div className="mt-2 md:mt-4">
                           {pkg.oldPrice && (
-                            <div className={`text-[10px] line-through font-bold ${selectedPlan?.id === pkg.id ? "text-white/50" : "text-zinc-600"}`}>
+                            <div className={`text-[8px] md:text-[10px] line-through font-bold ${selectedPlan?.id === pkg.id ? "text-white/50" : "text-zinc-600"}`}>
                               R$ {pkg.oldPrice.toFixed(2).replace('.', ',')}
                             </div>
                           )}
-                          <div className={`text-xl font-black ${selectedPlan?.id === pkg.id ? "text-white" : "text-[#10b981]"}`}>
+                          <div className={`text-base md:text-xl font-black ${selectedPlan?.id === pkg.id ? "text-white" : "text-[#10b981]"}`}>
                             R$ {pkg.price}
                           </div>
                         </div>
