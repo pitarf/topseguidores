@@ -6,6 +6,13 @@ interface Plan {
   views: string;
   price: string;
   originalPrice?: string;
+  quantity: number;
+  popular?: boolean;
+  badge?: string;
+  viewers?: number;
+  platform?: string;
+  type?: string;
+  packageType?: string;
 }
 
 interface CheckoutStore {
