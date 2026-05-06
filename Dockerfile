@@ -1,6 +1,7 @@
 # Estágio de dependências
 FROM node:20-alpine AS deps
 WORKDIR /app
+RUN apk add --no-cache openssl
 COPY package*.json ./
 RUN npm install
 
@@ -19,6 +20,7 @@ RUN npm run build
 # Estágio de produção
 FROM node:20-alpine AS runner
 WORKDIR /app
+RUN apk add --no-cache openssl
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
@@ -31,6 +33,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/node_modules/pg ./node_modules/pg
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
