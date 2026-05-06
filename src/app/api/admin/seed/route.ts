@@ -33,22 +33,24 @@ export async function GET(req: Request) {
     // 3. Catálogo de Planos
     const plans = [
       // INSTAGRAM - SEGUIDORES BRASILEIROS
-      { name: "100 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 100, price: 5.88, originalPrice: 7.90, badge: "START ✅", providerServiceId: "398" },
-      { name: "250 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 250, price: 9.90, originalPrice: 14.90, badge: "OFERTA", providerServiceId: "398" },
-      { name: "500 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 500, price: 13.49, originalPrice: 22.00, badge: "MAIS VENDIDO", isPopular: true, providerServiceId: "398" },
-      { name: "1000 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 1000, price: 26.45, originalPrice: 39.00, badge: "MELHOR CUSTO", providerServiceId: "398" },
-      { name: "2500 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 2500, price: 45.90, originalPrice: 79.00, badge: "RECOMENDADO", providerServiceId: "398" },
-      { name: "5000 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 5000, price: 74.62, originalPrice: 129.00, badge: "SUPER DESCONTO", providerServiceId: "398" },
-      { name: "10000 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 10000, price: 164.90, originalPrice: 249.00, badge: "PREMIUM 🏆", providerServiceId: "398" },
-      { name: "25000 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 25000, price: 399.00, originalPrice: 599.00, badge: "INFLUENCER", providerServiceId: "398" },
+      { name: "100 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 100, price: 11.80, originalPrice: 19.90, badge: "PACOTE BÁSICO ✅", providerServiceId: "398" },
+      { name: "250 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 250, price: 29.30, originalPrice: 30.84, badge: "5% DE DESCONTO", providerServiceId: "398" },
+      { name: "500 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 500, price: 44.00, originalPrice: 48.88, badge: "10% DE DESCONTO", providerServiceId: "398" },
+      { name: "1000 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 1000, price: 76.39, originalPrice: 99.90, badge: "MAIS VENDIDO 🎯", isPopular: true, providerServiceId: "398" },
+      { name: "2500 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 2500, price: 186.10, originalPrice: 265.85, badge: "30% DE DESCONTO", providerServiceId: "398" },
+      { name: "5000 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 5000, price: 352.70, originalPrice: 542.61, badge: "35% DE DESCONTO", providerServiceId: "398" },
+      { name: "7500 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 7500, price: 480.19, originalPrice: 800.31, badge: "40% DE DESCONTO", providerServiceId: "398" },
+      { name: "10000 Seguidores BR", platform: "instagram", type: "seguidores", packageType: "brasileiros", viewsAmount: 10000, price: 538.90, originalPrice: 899.90, badge: "+ CUSTO / BENEFÍCIO 🏆", providerServiceId: "398" },
 
-      // INSTAGRAM - SEGUIDORES MUNDIAIS
-      { name: "500 Seguidores M", platform: "instagram", type: "seguidores", packageType: "mundiais", viewsAmount: 500, price: 14.90, originalPrice: 19.00, badge: "ECONÔMICO", providerServiceId: "123" },
-      { name: "1000 Seguidores M", platform: "instagram", type: "seguidores", packageType: "mundiais", viewsAmount: 1000, price: 24.90, originalPrice: 35.00, badge: "POPULAR", providerServiceId: "123" },
-      { name: "2500 Seguidores M", platform: "instagram", type: "seguidores", packageType: "mundiais", viewsAmount: 2500, price: 54.90, originalPrice: 89.00, badge: "RECOMENDADO", providerServiceId: "123" },
-      { name: "5000 Seguidores M", platform: "instagram", type: "seguidores", packageType: "mundiais", viewsAmount: 5000, price: 99.00, originalPrice: 159.00, badge: "OFERTA", providerServiceId: "123" },
-      { name: "10000 Seguidores M", platform: "instagram", type: "seguidores", packageType: "mundiais", viewsAmount: 10000, price: 189.00, originalPrice: 299.00, badge: "ESCALA", providerServiceId: "123" },
-      { name: "50000 Seguidores M", platform: "instagram", type: "seguidores", packageType: "mundiais", viewsAmount: 50000, price: 849.00, originalPrice: 1299.00, badge: "ESTRELA 🌟", providerServiceId: "123" },
+      // INSTAGRAM - SEGUIDORES MUNDIAIS (20% mais baratos)
+      { name: "100 Seguidores M", platform: "instagram", type: "seguidores", packageType: "mundiais", viewsAmount: 100, price: 9.44, originalPrice: 15.90, badge: "PACOTE BÁSICO ✅", providerServiceId: "123" },
+      { name: "250 Seguidores M", platform: "instagram", type: "seguidores", packageType: "mundiais", viewsAmount: 250, price: 23.44, originalPrice: 24.67, badge: "5% DE DESCONTO", providerServiceId: "123" },
+      { name: "500 Seguidores M", platform: "instagram", type: "seguidores", packageType: "mundiais", viewsAmount: 500, price: 35.20, originalPrice: 39.11, badge: "10% DE DESCONTO", providerServiceId: "123" },
+      { name: "1000 Seguidores M", platform: "instagram", type: "seguidores", packageType: "mundiais", viewsAmount: 1000, price: 61.11, originalPrice: 79.90, badge: "MAIS VENDIDO 🎯", isPopular: true, providerServiceId: "123" },
+      { name: "2500 Seguidores M", platform: "instagram", type: "seguidores", packageType: "mundiais", viewsAmount: 2500, price: 148.88, originalPrice: 212.68, badge: "30% DE DESCONTO", providerServiceId: "123" },
+      { name: "5000 Seguidores M", platform: "instagram", type: "seguidores", packageType: "mundiais", viewsAmount: 5000, price: 282.16, originalPrice: 434.09, badge: "35% DE DESCONTO", providerServiceId: "123" },
+      { name: "7500 Seguidores M", platform: "instagram", type: "seguidores", packageType: "mundiais", viewsAmount: 7500, price: 384.15, originalPrice: 640.25, badge: "40% DE DESCONTO", providerServiceId: "123" },
+      { name: "10000 Seguidores M", platform: "instagram", type: "seguidores", packageType: "mundiais", viewsAmount: 10000, price: 431.12, originalPrice: 719.90, badge: "+ CUSTO / BENEFÍCIO 🏆", providerServiceId: "123" },
 
       // INSTAGRAM - CURTIDAS BRASILEIRAS
       { name: "100 Curtidas BR", platform: "instagram", type: "curtidas", packageType: "brasileiros", viewsAmount: 100, price: 5.88, originalPrice: 9.90, badge: "RÁPIDO", providerServiceId: "402" },
