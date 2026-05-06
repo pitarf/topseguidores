@@ -274,24 +274,24 @@ export function CheckoutModal() {
       >
         <div className="w-full max-w-4xl mx-auto flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between mb-12">
-            <button onClick={prevStep} className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-sm font-bold">
-              <ArrowLeft className="w-4 h-4" /> Voltar
+          <div className="flex items-center justify-between mb-8 md:mb-12">
+            <button onClick={prevStep} className="flex items-center gap-1.5 text-zinc-500 hover:text-white transition-colors text-[10px] md:text-sm font-bold uppercase tracking-widest">
+              <ArrowLeft className="w-3 h-3 md:w-4 md:h-4" /> Voltar
             </button>
             <button onClick={closeCheckout} className="p-2 text-zinc-500 hover:text-white transition-colors">
-              <X className="w-8 h-8" />
+              <X className="w-6 h-6 md:w-8 md:h-8" />
             </button>
           </div>
 
           {/* Stepper */}
-          <div className="flex items-center justify-center gap-2 md:gap-4 mb-16">
+          <div className="flex items-center justify-center gap-1.5 md:gap-4 mb-10 md:mb-16">
             {[2, 3, 4, 5, 6, 7].map((num) => (
-              <div key={num} className="flex items-center gap-2 md:gap-4">
-                <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
+              <div key={num} className="flex items-center gap-1.5 md:gap-4">
+                <div className={`w-7 h-7 md:w-10 md:h-10 rounded-full flex items-center justify-center font-bold text-[10px] md:text-sm transition-all ${
                   step === num ? "bg-primary text-white shadow-[0_0_20px_#3b82f6]" : 
                   step > num ? "bg-primary/40 text-white" : "bg-zinc-800/50 text-zinc-600"
                 }`}>{num - 1}</div>
-                {num < 7 && <div className={`w-6 md:w-12 h-0.5 rounded-full ${step > num ? "bg-primary/40" : "bg-zinc-800/50"}`} />}
+                {num < 7 && <div className={`w-4 md:w-12 h-0.5 rounded-full ${step > num ? "bg-primary/40" : "bg-zinc-800/50"}`} />}
               </div>
             ))}
           </div>
@@ -301,20 +301,20 @@ export function CheckoutModal() {
             {step === 2 && (
               <div className="w-full space-y-12">
                 <div className="text-center">
-                  <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight">Escolha o serviço</h1>
-                  <p className="text-zinc-500">Selecione o que deseja impulsionar no {platform === 'instagram' ? 'Instagram' : 'TikTok'}</p>
+                  <h1 className="text-3xl md:text-6xl font-black text-white mb-3 md:mb-4 tracking-tight">Escolha o serviço</h1>
+                  <p className="text-zinc-500 text-sm md:text-base">Selecione o que deseja impulsionar no {platform === 'instagram' ? 'Instagram' : 'TikTok'}</p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                   {[
                     { id: 'seguidores', label: 'Seguidores', icon: Heart },
                     { id: 'curtidas', label: 'Curtidas', icon: Heart },
                     { id: 'visualizacoes', label: 'Visualizações', icon: Play },
                   ].map((s) => (
-                    <button key={s.id} onClick={() => handleSelectService(s.id as any)} className="group p-10 rounded-[2rem] border border-white/5 bg-[#121826]/40 hover:border-primary transition-all flex flex-col items-center">
-                      <div className="w-16 h-16 rounded-2xl bg-[#0b111e] flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
-                        <s.icon className="w-8 h-8" />
+                    <button key={s.id} onClick={() => handleSelectService(s.id as any)} className="group p-6 md:p-10 rounded-[1.5rem] md:rounded-[2rem] border border-white/5 bg-[#121826]/40 hover:border-primary transition-all flex flex-col items-center">
+                      <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-[#0b111e] flex items-center justify-center text-primary mb-4 md:mb-6 group-hover:scale-110 transition-transform">
+                        <s.icon className="w-6 h-6 md:w-8 md:h-8" />
                       </div>
-                      <span className="text-xl font-black text-white">{s.label}</span>
+                      <span className="text-lg md:text-xl font-black text-white">{s.label}</span>
                     </button>
                   ))}
                 </div>
@@ -324,14 +324,14 @@ export function CheckoutModal() {
             {step === 3 && (
               <div className="w-full max-w-xl mx-auto space-y-10">
                 <div className="text-center">
-                  <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight">Buscar perfil</h1>
-                  <p className="text-zinc-500">Digite o @usuário abaixo</p>
+                  <h1 className="text-3xl md:text-6xl font-black text-white mb-2 md:mb-4 tracking-tight">Buscar perfil</h1>
+                  <p className="text-zinc-500 text-sm md:text-base">Digite o @usuário abaixo</p>
                 </div>
-                <div className="bg-[#121826]/60 border border-white/5 rounded-[2.5rem] p-8 md:p-10 space-y-6">
-                  <div className="flex gap-3">
-                    <input type="text" placeholder="neymarjr" value={username} onChange={(e) => setUsername(e.target.value)} className="flex-1 bg-[#0b111e] border border-white/10 rounded-2xl py-5 px-6 text-white outline-none font-bold text-lg focus:border-primary/50 transition-all" />
-                    <button onClick={handleSearchProfile} disabled={searching} className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg active:scale-95 transition-all">
-                      {searching ? <Loader2 className="animate-spin w-6 h-6" /> : <Search className="w-6 h-6" />}
+                <div className="bg-[#121826]/60 border border-white/5 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 space-y-6">
+                  <div className="flex gap-2 md:gap-3">
+                    <input type="text" placeholder="neymarjr" value={username} onChange={(e) => setUsername(e.target.value)} className="flex-1 bg-[#0b111e] border border-white/10 rounded-2xl py-4 md:py-5 px-5 md:px-6 text-white outline-none font-bold text-base md:text-lg focus:border-primary/50 transition-all" />
+                    <button onClick={handleSearchProfile} disabled={searching} className="w-14 h-14 md:w-16 md:h-16 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg active:scale-95 transition-all">
+                      {searching ? <Loader2 className="animate-spin w-5 h-5 md:w-6 md:h-6" /> : <Search className="w-5 h-5 md:w-6 md:h-6" />}
                     </button>
                   </div>
                   {profileData && (
@@ -356,10 +356,10 @@ export function CheckoutModal() {
             {step === 4 && (
               <div className="w-full max-w-xl mx-auto space-y-10">
                 <div className="text-center">
-                  <h1 className="text-4xl font-black text-white mb-4 tracking-tight">Selecione a publicação</h1>
-                  <p className="text-zinc-500">Escolha onde deseja receber as {service}</p>
+                  <h1 className="text-2xl md:text-4xl font-black text-white mb-2 md:mb-4 tracking-tight">Selecione a publicação</h1>
+                  <p className="text-zinc-500 text-sm md:text-base">Escolha onde deseja receber as {service}</p>
                 </div>
-                <div className="bg-[#121826]/60 border border-white/5 rounded-[2.5rem] p-6 space-y-8">
+                <div className="bg-[#121826]/60 border border-white/5 rounded-[2rem] p-4 md:p-6 space-y-8">
                   <div className="grid grid-cols-3 gap-3">
                     {posts.map((post) => (
                       <button key={post.id} onClick={() => setSelectedPost(post)} className={`relative aspect-square rounded-xl overflow-hidden border-[3px] transition-all group ${selectedPost?.id === post.id ? 'border-primary shadow-[0_0_15px_rgba(59,130,246,0.3)]' : 'border-transparent'}`}>
@@ -396,8 +396,8 @@ export function CheckoutModal() {
             {step === 5 && (
               <div className="w-full space-y-10">
                 <div className="text-center">
-                  <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight">Qual o pacote?</h1>
-                  <p className="text-zinc-500">Quanto mais você compra, maior o desconto</p>
+                  <h1 className="text-3xl md:text-6xl font-black text-white mb-2 md:mb-4 tracking-tight">Qual o pacote?</h1>
+                  <p className="text-zinc-500 text-sm md:text-base">Quanto mais você compra, maior o desconto</p>
                 </div>
 
                 {/* Seletor de Tipo de Pacote */}
@@ -481,12 +481,12 @@ export function CheckoutModal() {
 
             {step === 6 && (
               <div className="w-full max-w-lg mx-auto space-y-6 pb-12">
-                <div className="text-center mb-8">
-                  <h1 className="text-2xl md:text-3xl font-black text-white mb-2 tracking-tight">Faça seu negócio crescer!</h1>
-                  <p className="text-zinc-500 text-sm">Complete seu pedido em poucos passos</p>
+                <div className="text-center mb-6 md:mb-8">
+                  <h1 className="text-xl md:text-3xl font-black text-white mb-1 md:mb-2 tracking-tight uppercase tracking-widest">Finalizar Pedido</h1>
+                  <p className="text-zinc-500 text-xs md:text-sm">Complete seu pedido em poucos passos</p>
                 </div>
 
-                <div className="bg-[#121826]/60 border border-white/5 rounded-[2.5rem] p-6 md:p-8 space-y-6 shadow-2xl relative overflow-hidden">
+                <div className="bg-[#121826]/60 border border-white/5 rounded-[2rem] md:rounded-[2.5rem] p-5 md:p-8 space-y-5 md:y-6 shadow-2xl relative overflow-hidden">
                   
                   {/* Timer Box */}
                   <div className="bg-red-500/5 border border-red-500/20 p-4 rounded-2xl text-center space-y-1">
@@ -600,17 +600,17 @@ export function CheckoutModal() {
                   <button 
                     onClick={handleGeneratePix} 
                     disabled={loading} 
-                    className="w-full py-5 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-black rounded-2xl shadow-[0_10px_30px_rgba(59,130,246,0.4)] active:scale-95 transition-all flex flex-col items-center justify-center gap-0.5 group"
+                    className="w-full py-4 md:py-5 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-black rounded-2xl shadow-[0_10px_30px_rgba(59,130,246,0.4)] active:scale-95 transition-all flex flex-col items-center justify-center gap-0.5 group"
                   >
                     <div className="flex items-center gap-2">
-                      {loading ? <Loader2 className="animate-spin w-6 h-6" /> : (
+                      {loading ? <Loader2 className="animate-spin w-5 h-5 md:w-6 md:h-6" /> : (
                         <>
-                          <Zap className="w-5 h-5 fill-white" />
-                          <span className="text-base uppercase tracking-tight">Pagar agora com Pix</span>
+                          <Zap className="w-4 h-4 md:w-5 md:h-5 fill-white" />
+                          <span className="text-sm md:text-base uppercase tracking-tight">Pagar agora com Pix</span>
                         </>
                       )}
                     </div>
-                    {!loading && <span className="text-[9px] opacity-70 font-medium">Aprovação instantânea • Entrega automática</span>}
+                    {!loading && <span className="text-[8px] md:text-[9px] opacity-70 font-medium">Aprovação instantânea • Entrega automática</span>}
                   </button>
 
                   <button onClick={() => setStep(2)} className="w-full py-4 text-zinc-500 hover:text-white font-bold text-[10px] uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2">

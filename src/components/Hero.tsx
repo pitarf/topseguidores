@@ -39,7 +39,7 @@ export function Hero({ title }: HeroProps) {
           <motion.h1 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-2xl md:text-5xl font-[1000] leading-tight tracking-tighter text-white mb-2 neon-text-blue px-4 drop-shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+            className="text-2xl md:text-5xl font-[1000] leading-tight tracking-tighter text-white mb-2 neon-text-blue px-2 md:px-4 drop-shadow-[0_0_20px_rgba(59,130,246,0.3)]"
           >
             {title || "Aumente seus seguidores e faça seu perfil crescer de verdade 🚀"}
           </motion.h1>
@@ -58,24 +58,24 @@ export function Hero({ title }: HeroProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="flex flex-wrap justify-center gap-1.5 md:gap-2 mb-6 px-4"
+            className="flex flex-wrap justify-center gap-1.5 md:gap-2 mb-6 px-2 w-full"
           >
-            <div className="flex items-center gap-1.5 bg-[#0a0f1e]/80 border border-white/5 py-1 px-3 rounded-full text-zinc-300 text-[8px] md:text-[10px] font-bold">
-              <Users className="w-3 h-3 text-blue-400" /> +10.000 clientes atendidos
+            <div className="flex items-center gap-1 bg-[#0a0f1e]/80 border border-white/5 py-1 px-2.5 rounded-full text-zinc-300 text-[8px] md:text-[10px] font-bold">
+              <Users className="w-2.5 h-2.5 text-blue-400" /> +10k clientes
             </div>
-            <div className="flex items-center gap-1.5 bg-[#0a0f1e]/80 border border-white/5 py-1 px-3 rounded-full text-zinc-300 text-[8px] md:text-[10px] font-bold">
-              <Zap className="w-3 h-3 text-blue-400" /> Entrega em até 5 min
+            <div className="flex items-center gap-1 bg-[#0a0f1e]/80 border border-white/5 py-1 px-2.5 rounded-full text-zinc-300 text-[8px] md:text-[10px] font-bold">
+              <Zap className="w-2.5 h-2.5 text-blue-400" /> Entrega 5 min
             </div>
-            <div className="flex items-center gap-1.5 bg-[#0a0f1e]/80 border border-white/5 py-1 px-3 rounded-full text-zinc-300 text-[8px] md:text-[10px] font-bold">
-              <Zap className="w-3 h-3 text-[#10b981]" /> A partir de R$ 3,29
+            <div className="flex items-center gap-1 bg-[#0a0f1e]/80 border border-white/5 py-1 px-2.5 rounded-full text-zinc-300 text-[8px] md:text-[10px] font-bold">
+              <Zap className="w-2.5 h-2.5 text-[#10b981]" /> R$ 3,29
             </div>
-            <div className="flex items-center gap-1.5 bg-[#0a0f1e]/80 border border-white/5 py-1 px-3 rounded-full text-zinc-300 text-[8px] md:text-[10px] font-bold">
-              <Search className="w-3 h-3 text-orange-400" /> Rastrear meu pedido
+            <div className="flex items-center gap-1 bg-[#0a0f1e]/80 border border-white/5 py-1 px-2.5 rounded-full text-zinc-300 text-[8px] md:text-[10px] font-bold">
+              <Search className="w-2.5 h-2.5 text-orange-400" /> Rastrear
             </div>
           </motion.div>
 
           {/* Platform Selector Section - Compacto */}
-          <div className="w-full max-w-2xl bg-secondary/20 backdrop-blur-sm border border-white/5 rounded-[2rem] p-4 md:p-8 mb-6 mx-4">
+          <div className="w-full max-w-2xl bg-secondary/20 backdrop-blur-sm border border-white/5 rounded-[2rem] p-5 md:p-8 mb-6">
             <h2 className="text-base md:text-xl font-black text-white mb-0.5">Escolha a melhor opção</h2>
             <p className="text-zinc-500 text-[9px] md:text-xs font-medium mb-4">Encontre o serviço certo para você e comece agora.</p>
             
