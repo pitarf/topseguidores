@@ -329,7 +329,7 @@ export function CheckoutModal() {
                 </div>
                 <div className="bg-[#121826]/60 border border-white/5 rounded-[2.5rem] p-8 md:p-10 space-y-6">
                   <div className="flex gap-3">
-                    <input type="text" placeholder="_rafaelpita" value={username} onChange={(e) => setUsername(e.target.value)} className="flex-1 bg-[#0b111e] border border-white/10 rounded-2xl py-5 px-6 text-white outline-none font-bold text-lg focus:border-primary/50 transition-all" />
+                    <input type="text" placeholder="neymarjr" value={username} onChange={(e) => setUsername(e.target.value)} className="flex-1 bg-[#0b111e] border border-white/10 rounded-2xl py-5 px-6 text-white outline-none font-bold text-lg focus:border-primary/50 transition-all" />
                     <button onClick={handleSearchProfile} disabled={searching} className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg active:scale-95 transition-all">
                       {searching ? <Loader2 className="animate-spin w-6 h-6" /> : <Search className="w-6 h-6" />}
                     </button>
