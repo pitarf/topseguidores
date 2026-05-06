@@ -72,14 +72,27 @@ export async function GET(req: Request) {
       { name: "7500 Curtidas M", platform: "instagram", type: "curtidas", packageType: "mundiais", viewsAmount: 7500, price: 119.12, originalPrice: 198.53, badge: "40% DE DESCONTO", providerServiceId: "124" },
       { name: "10000 Curtidas M", platform: "instagram", type: "curtidas", packageType: "mundiais", viewsAmount: 10000, price: 131.92, originalPrice: 219.90, badge: "+ CUSTO / BENEFÍCIO 🏆", providerServiceId: "124" },
 
-      // INSTAGRAM - VISUALIZAÇÕES REELS
-      { name: "1000 Visualizações", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 1000, price: 4.90, originalPrice: 9.00, badge: "START", providerServiceId: "379" },
-      { name: "2500 Visualizações", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 2500, price: 9.90, originalPrice: 18.00, badge: "OFERTA", providerServiceId: "379" },
-      { name: "5000 Visualizações", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 5000, price: 14.90, originalPrice: 28.00, badge: "MAIS VENDIDO", isPopular: true, providerServiceId: "379" },
-      { name: "10000 Visualizações", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 10000, price: 24.90, originalPrice: 45.00, badge: "POPULAR", providerServiceId: "379" },
-      { name: "50000 Visualizações", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 50000, price: 89.90, originalPrice: 160.00, badge: "VIRAL", providerServiceId: "379" },
-      { name: "100000 Visualizações", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 100000, price: 149.90, originalPrice: 280.00, badge: "FAMOSO", providerServiceId: "379" },
-      { name: "500000 Visualizações", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 500000, price: 599.00, originalPrice: 999.00, badge: "EXPLOSÃO", providerServiceId: "379" },
+      // INSTAGRAM - VISUALIZAÇÕES REELS (BR)
+      { name: "1000 Visualizações BR", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 1000, price: 4.90, originalPrice: 5.90, badge: "MAIS VENDIDO 🎯", isPopular: true, providerServiceId: "379" },
+      { name: "2500 Visualizações BR", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 2500, price: 6.70, originalPrice: 7.05, badge: "5% DE DESCONTO", providerServiceId: "379" },
+      { name: "5000 Visualizações BR", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 5000, price: 8.88, originalPrice: 9.86, badge: "10% DE DESCONTO", providerServiceId: "379" },
+      { name: "10000 Visualizações BR", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 10000, price: 14.90, originalPrice: 24.90, badge: "+ CUSTO / BENEFÍCIO 🏆", providerServiceId: "379" },
+      { name: "25000 Visualizações BR", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 25000, price: 19.90, originalPrice: 24.87, badge: "20% DE DESCONTO", providerServiceId: "379" },
+      { name: "50000 Visualizações BR", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 50000, price: 38.56, originalPrice: 51.41, badge: "25% DE DESCONTO", providerServiceId: "379" },
+      { name: "75000 Visualizações BR", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 75000, price: 57.56, originalPrice: 82.22, badge: "30% DE DESCONTO", providerServiceId: "379" },
+      { name: "100000 Visualizações BR", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 100000, price: 74.90, originalPrice: 115.23, badge: "35% DE DESCONTO", providerServiceId: "379" },
+      { name: "2000000 Visualizações BR", platform: "instagram", type: "visualizacoes", packageType: "brasileiros", viewsAmount: 2000000, price: 140.00, originalPrice: 933.33, badge: "85% DE DESCONTO", providerServiceId: "379" },
+
+      // INSTAGRAM - VISUALIZAÇÕES REELS (MUNDIAIS) - Mesmo preço
+      { name: "1000 Visualizações M", platform: "instagram", type: "visualizacoes", packageType: "mundiais", viewsAmount: 1000, price: 4.90, originalPrice: 5.90, badge: "MAIS VENDIDO 🎯", isPopular: true, providerServiceId: "379" },
+      { name: "2500 Visualizações M", platform: "instagram", type: "visualizacoes", packageType: "mundiais", viewsAmount: 2500, price: 6.70, originalPrice: 7.05, badge: "5% DE DESCONTO", providerServiceId: "379" },
+      { name: "5000 Visualizações M", platform: "instagram", type: "visualizacoes", packageType: "mundiais", viewsAmount: 5000, price: 8.88, originalPrice: 9.86, badge: "10% DE DESCONTO", providerServiceId: "379" },
+      { name: "10000 Visualizações M", platform: "instagram", type: "visualizacoes", packageType: "mundiais", viewsAmount: 10000, price: 14.90, originalPrice: 24.90, badge: "+ CUSTO / BENEFÍCIO 🏆", providerServiceId: "379" },
+      { name: "25000 Visualizações M", platform: "instagram", type: "visualizacoes", packageType: "mundiais", viewsAmount: 25000, price: 19.90, originalPrice: 24.87, badge: "20% DE DESCONTO", providerServiceId: "379" },
+      { name: "50000 Visualizações M", platform: "instagram", type: "visualizacoes", packageType: "mundiais", viewsAmount: 50000, price: 38.56, originalPrice: 51.41, badge: "25% DE DESCONTO", providerServiceId: "379" },
+      { name: "75000 Visualizações M", platform: "instagram", type: "visualizacoes", packageType: "mundiais", viewsAmount: 75000, price: 57.56, originalPrice: 82.22, badge: "30% DE DESCONTO", providerServiceId: "379" },
+      { name: "100000 Visualizações M", platform: "instagram", type: "visualizacoes", packageType: "mundiais", viewsAmount: 100000, price: 74.90, originalPrice: 115.23, badge: "35% DE DESCONTO", providerServiceId: "379" },
+      { name: "2000000 Visualizações M", platform: "instagram", type: "visualizacoes", packageType: "mundiais", viewsAmount: 2000000, price: 140.00, originalPrice: 933.33, badge: "85% DE DESCONTO", providerServiceId: "379" },
 
       // TIKTOK
       { name: "100 Seguidores TK", platform: "tiktok", type: "seguidores", packageType: "brasileiros", viewsAmount: 100, price: 5.90, originalPrice: 9.00, badge: "START", providerServiceId: "855" },
