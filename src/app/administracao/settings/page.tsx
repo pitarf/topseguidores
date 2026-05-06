@@ -1,16 +1,10 @@
-import { prisma } from "@/lib/prisma";
+import { getSystemSettings } from "@/services/settings";
 import { SettingsForm } from "./SettingsForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function SettingsPage() {
-  const settings = await prisma.systemSetting.findFirst() || {
-    siteTitle: "Topseguidores - Impulsione suas Redes",
-    siteDescription: "A melhor plataforma para comprar seguidores, curtidas e visualizações.",
-    siteKeywords: "comprar visualizações, instagram reels, engajamento, redes sociais",
-    faviconUrl: "",
-    logoUrl: "",
-    fbPixelId: "",
-    fbApiToken: ""
-  };
+  const settings = await getSystemSettings();
 
   return (
     <div className="space-y-10">
