@@ -614,6 +614,7 @@ export function CheckoutModal() {
                 <h1 className="text-4xl font-black text-white tracking-tight">QR Code Gerado! 🚀</h1>
                 <div className="bg-white p-6 rounded-3xl inline-block mx-auto shadow-[0_0_50px_rgba(255,255,255,0.1)]">
                   {pixQrCodeBase64 && <img src={pixQrCodeBase64} alt="QR Code Pix" className="w-56 h-56" />}
+                  <p className="text-black text-[10px] font-black mt-2 uppercase tracking-tighter">Início em até 3 minutos ⚡</p>
                 </div>
                 <div className="space-y-4">
                   <button onClick={() => { navigator.clipboard.writeText(pixCode); toast.success("Copiado com sucesso!"); }} className="w-full py-6 bg-white text-black font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-zinc-200 transition-all active:scale-95">
