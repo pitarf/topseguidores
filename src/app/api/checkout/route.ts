@@ -6,7 +6,7 @@ export async function POST(req: Request) {
     const { planId, instagramUrl, email, whatsapp } = await req.json();
     console.log(`🛒 Checkout Request: ${planId} | ${instagramUrl} | ${email} | ${whatsapp}`);
 
-    if (!planId || !instagramUrl || !email || !whatsapp) {
+    if (!planId || !instagramUrl) {
       return NextResponse.json({ error: "Dados incompletos" }, { status: 400 });
     }
 

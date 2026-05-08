@@ -24,8 +24,7 @@ export function CheckoutModal() {
   const [loading, setLoading] = useState(false);
   const [pixCode, setPixCode] = useState("");
   const [pixQrCodeBase64, setPixQrCodeBase64] = useState("");
-  const [email, setEmail] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
+
   const [timeLeft, setTimeLeft] = useState(600);
   const [posts, setPosts] = useState<any[]>([]);
   const [selectedPost, setSelectedPost] = useState<any>(null);
@@ -237,7 +236,7 @@ export function CheckoutModal() {
   };
 
   const handleGeneratePix = async () => {
-    if (!email || !whatsapp) return toast.error("Preencha os campos");
+
     setLoading(true);
     try {
       const res = await fetch("/api/checkout", {
@@ -246,7 +245,6 @@ export function CheckoutModal() {
         body: JSON.stringify({
           planId: selectedPlan?.id,
           instagramUrl: `https://instagram.com/${username.replace("@", "")}`,
-          email, whatsapp
         }),
       });
       const data = await res.json();
@@ -521,17 +519,7 @@ export function CheckoutModal() {
                     </div>
                   )}
 
-                  {/* Form */}
-                  <div className="space-y-4">
-                    <div className="space-y-1.5">
-                      <label className="text-white text-[10px] font-black uppercase tracking-widest ml-1">Endereço de Email *</label>
-                      <input type="email" placeholder="Por favor, insira seu endereço de email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-[#0b111e] border border-white/10 rounded-2xl py-4 px-6 text-white outline-none focus:border-primary/50 font-bold transition-all text-sm" />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-white text-[10px] font-black uppercase tracking-widest ml-1">Seu WhatsApp *</label>
-                      <input type="text" placeholder="(11) 94762-4948" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} className="w-full bg-[#0b111e] border border-white/10 rounded-2xl py-4 px-6 text-white outline-none focus:border-primary/50 font-bold transition-all text-sm" />
-                    </div>
-                  </div>
+
 
                   {/* Pix Box */}
                   <div className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center gap-4">
@@ -631,6 +619,12 @@ export function CheckoutModal() {
                   <button onClick={() => { navigator.clipboard.writeText(pixCode); toast.success("Copiado com sucesso!"); }} className="w-full py-6 bg-white text-black font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-zinc-200 transition-all active:scale-95">
                     <Copy className="w-6 h-6" /> COPIAR CÓDIGO PIX
                   </button>
+                  <div className="bg-emerald-500/5 border border-emerald-500/20 p-4 rounded-2xl">
+                    <p className="text-emerald-500 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+                      <Zap className="w-4 h-4 fill-current" /> Entrega ultrarrápida
+                    </p>
+                    <p className="text-zinc-400 text-[10px] mt-1">O seu pedido começará a chegar em até 3 minutos após a confirmação!</p>
+                  </div>
                   <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest">Liberação instantânea após o pagamento</p>
                 </div>
               </div>
