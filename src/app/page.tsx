@@ -1,6 +1,6 @@
-import { Hero } from "@/components/Hero";
-import { Testimonials } from "@/components/Testimonials";
-import { TrustSection } from "@/components/TrustSection";
+import { HeroWhite } from "@/components/HeroWhite";
+import { HowItWorks } from "@/components/HowItWorks";
+import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
 import { getSystemSettings } from "@/services/settings";
 
@@ -11,9 +11,12 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col w-full overflow-hidden">
-      <Hero title={settings.siteTitle} />
-      <TrustSection />
-      <Testimonials />
+      <HeroWhite 
+        title={settings.siteTitle} 
+        description={settings.siteDescription}
+      />
+      <HowItWorks />
+      <FAQ />
       <Footer />
     </div>
   );
