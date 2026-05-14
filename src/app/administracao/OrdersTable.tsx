@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search } from "lucide-react";
+import { Search, RefreshCcw, Loader2, Info } from "lucide-react";
+import { toast } from "sonner";
 
 type Order = any; // Simplificando tipagem para agilidade
 
@@ -10,6 +11,28 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
   const [search, setSearch] = useState("");
   const [smmData, setSmmData] = useState<Record<string, any>>({});
   const [loadingSmm, setLoadingSmm] = useState(true);
+  const [retrying, setRetrying] = useState<string | null>(null);
+
+  const handleRetry = async (id: string) => {
+    setRetrying(id);
+    try {
+      const res = await fetch(`/api/admin/orders/${id}/retry`, { method: "POST" });
+      const data = await res.json();
+      
+      if (res.ok) {
+        toast.success("Pedido reenviado com sucesso!");
+        // O useEffect de fetchStatuses vai atualizar o status automaticamente em alguns segundos
+        // mas podemos forçar um reload da página ou do estado se necessário.
+        window.location.reload(); 
+      } else {
+        toast.error(data.error || "Erro ao reenviar pedido.");
+      }
+    } catch (e) {
+      toast.error("Erro de conexão.");
+    } finally {
+      setRetrying(null);
+    }
+  };
 
   // Busca os status em tempo real no SMM Panel quando o componente monta
   useEffect(() => {
@@ -199,6 +222,33 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
                     }`}>
                       {order.finalStatus}
                     </span>
+                    
+                    {order.finalStatus === 'Erro SMM' && (
+                      <div className="flex items-center gap-1 mt-1">
+                        <button 
+                          onClick={() => handleRetry(order.id)}
+                          disabled={retrying === order.id}
+                          className="p-1.5 rounded-md bg-primary/20 text-primary hover:bg-primary/30 transition-all group/btn"
+                          title="Tentar reenviar para o painel SMM"
+                        >
+                          {retrying === order.id ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <RefreshCcw className="w-3 h-3 group-hover/btn:rotate-180 transition-transform duration-500" />
+                          )}
+                        </button>
+                        
+                        {order.smmError && (
+                          <div className="group/error relative">
+                            <Info className="w-3.5 h-3.5 text-zinc-500 hover:text-white transition-colors cursor-help" />
+                            <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 p-2 bg-black border border-white/10 rounded-lg text-[9px] text-zinc-300 font-medium leading-tight opacity-0 group-hover/error:opacity-100 transition-opacity pointer-events-none z-50 shadow-2xl">
+                              <span className="text-red-400 font-black block mb-1">ERRO DO FORNECEDOR:</span>
+                              {order.smmError}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </td>
                   <td className="p-6 text-center text-xs font-black text-zinc-400">
                     {order.remains}

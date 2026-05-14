@@ -60,6 +60,7 @@ model Order {
   pixQrCodeBase64 String?     @db.Text
   paymentId       String?     @unique
   panelOrderId    String?     // ID do pedido retornado pelo PerfectPanel
+  smmError        String?     @db.Text // Novo: Armazenar erro detalhado do fornecedor
   plan            Plan        @relation(fields: [planId], references: [id])
   planId          String
   createdAt       DateTime    @default(now())

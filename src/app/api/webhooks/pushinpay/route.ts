@@ -89,20 +89,27 @@ export async function POST(req: Request) {
       // 6. Entrega SMM (PerfectPanel)
       try {
         console.log(`🚀 Disparando entrega SMM para: ${order.instagramUrl}`);
-        const panelOrderId = await sendOrderToPerfectPanel(
+        const result = await sendOrderToPerfectPanel(
           order.instagramUrl, 
           order.amount,
           order.plan.providerServiceId || undefined
         );
         
-        if (panelOrderId) {
+        if (result.orderId) {
           await prisma.order.update({
             where: { id: orderId },
-            data: { panelOrderId },
+            data: { 
+              panelOrderId: result.orderId,
+              smmError: null 
+            },
           });
-          console.log(`✅ Pedido entregue! Painel ID: ${panelOrderId}`);
+          console.log(`✅ Pedido entregue! Painel ID: ${result.orderId}`);
         } else {
-          console.error("⚠️ Falha ao registrar ID do painel (API retornou vazio)");
+          await prisma.order.update({
+            where: { id: orderId },
+            data: { smmError: result.error || "Erro desconhecido no painel" },
+          });
+          console.error("⚠️ Falha ao registrar ID do painel:", result.error);
         }
       } catch (smmErr) {
         console.error("❌ Erro crítico na entrega SMM:", smmErr);

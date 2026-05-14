@@ -78,8 +78,8 @@ export default async function AdministracaoPage({
   let totalPending = 0;
   let totalFailed = 0;
   
-  // Quantidade de views vendidas
-  let totalViewsDelivered = 0;
+  // Quantidade de serviços entregues
+  let totalDelivered = 0;
 
   // Preparar dados para o gráfico (últimos 7 dias se for "Todo Período", ou dias do mês se for filtrado)
   const isFiltered = selectedMonth !== null;
@@ -105,7 +105,11 @@ export default async function AdministracaoPage({
     
     if (order.status === "SUCCESS") {
       totalSuccess++;
-      totalViewsDelivered += order.amount;
+      
+      // Só conta como entregue se tiver ID no painel SMM
+      if (order.panelOrderId) {
+        totalDelivered += order.amount;
+      }
       filteredRevenue += val;
       
       // Apenas para métricas globais se não estiver filtrado
@@ -195,8 +199,8 @@ export default async function AdministracaoPage({
             <div className="w-12 h-12 mb-4 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20 text-primary">
               <Target className="w-6 h-6" />
             </div>
-            <p className="text-zinc-400 font-bold text-xs uppercase tracking-wider mb-1">Views Entregues</p>
-            <p className="text-3xl font-black text-white">{(totalViewsDelivered).toLocaleString('pt-BR')}</p>
+            <p className="text-zinc-400 font-bold text-xs uppercase tracking-wider mb-1">Serviços Entregues</p>
+            <p className="text-3xl font-black text-white">{(totalDelivered).toLocaleString('pt-BR')}</p>
           </div>
         </div>
       </div>

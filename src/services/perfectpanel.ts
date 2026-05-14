@@ -8,8 +8,9 @@ export async function sendOrderToPerfectPanel(link: string, quantity: number, cu
   const serviceId = customServiceId || process.env.PERFECTPANEL_SERVICE_ID;
 
   if (!apiUrl || !apiKey || !serviceId) {
-    console.error("❌ PerfectPanel Error: Configurações ausentes no banco ou env.");
-    return null;
+    const msg = "Configurações do PerfectPanel (URL, Key ou ServiceID) ausentes.";
+    console.error(`❌ ${msg}`);
+    return { error: msg };
   }
 
   try {
@@ -34,13 +35,13 @@ export async function sendOrderToPerfectPanel(link: string, quantity: number, cu
 
     if (data.error) {
       console.error("❌ Erro retornado pela API do PerfectPanel:", data.error);
-      return null;
+      return { error: data.error };
     }
 
     console.log(`✅ Sucesso! Pedido enviado ao PerfectPanel. ID Retornado: ${data.order}`);
-    return data.order?.toString();
-  } catch (error) {
+    return { orderId: data.order?.toString() };
+  } catch (error: any) {
     console.error("❌ Falha crítica ao conectar com o PerfectPanel:", error);
-    return null;
+    return { error: error.message || "Falha na conexão com API" };
   }
 }
