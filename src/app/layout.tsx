@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { getSystemSettings } from "@/services/settings";
@@ -82,6 +83,18 @@ export default async function RootLayout({
       <body
         className={`${poppins.variable} ${inter.variable} antialiased selection:bg-primary selection:text-white`}
       >
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-Z6MPV4SH16"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-Z6MPV4SH16');
+          `}
+        </Script>
         <main className="min-h-screen">
           {children}
         </main>
