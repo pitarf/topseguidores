@@ -13,7 +13,7 @@ export default async function Home() {
     <div className="flex flex-col w-full overflow-hidden">
       <HeroWhite 
         title={settings.siteTitle} 
-        description={settings.siteDescription}
+        description="Aumente sua autoridade e destaque-se no mercado digital com as melhores ferramentas de crescimento estratégico do Brasil. Cresça seu perfil hoje."
       />
       <HowItWorks />
       <FAQ />

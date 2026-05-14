@@ -79,6 +79,24 @@ export function FAQ() {
             </div>
           ))}
         </div>
+
+        {/* CTA Button after FAQ */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-12 flex flex-col items-center"
+        >
+          <a 
+            href="/home"
+            className="w-full sm:w-auto px-12 py-5 bg-primary text-white font-black text-base md:text-lg rounded-2xl transition-all duration-300 btn-primary-gradient shadow-[0_20px_40px_rgba(255,0,0,0.2)] hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
+          >
+            Começar agora 🚀
+          </a>
+          <p className="mt-4 text-zinc-600 text-[10px] md:text-xs font-bold uppercase tracking-widest">
+            Entrega imediata em menos de 5 minutos
+          </p>
+        </motion.div>
       </div>
     </section>
   );
