@@ -11,6 +11,7 @@
 - [x] **Gestão de Serviços**: Painel `/administracao/servicos` para controle total de preços e IDs SMM.
 - [x] **Segurança Server-Side**: Proteção de chaves de API via Server Actions e Integração Segura no Checkout.
 - [x] **Captura de Leads**: Registro de Email e WhatsApp no checkout para CRM.
+- [x] **Correção Resiliente (Instagram)**: Fallback para carregamento de feed direto quando a API do perfil (/info) retornar nulo, garantindo que o checkout nunca trave.
 
 ## 🛠️ Próximos Passos
 - [ ] Implementação de sistema de cupons de desconto.

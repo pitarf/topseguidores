@@ -101,7 +101,37 @@ export function CheckoutModal() {
         if (!resultP.success) throw new Error(resultP.error);
         
         const dataP = resultP.data;
-        const user = dataP.data?.user || dataP.user;
+        let user = dataP.data?.user || dataP.user;
+        let feedList: any[] = [];
+        let feedNextCursor: string | null = null;
+        const mType = service === 'visualizacoes' ? 'reels' : 'posts';
+
+        if (!user) {
+          // Fallback: Se o perfil principal falhar, tentamos carregar as mídias diretamente!
+          const resultM = await getInstagramFeed(username, mType as any);
+          if (resultM.success) {
+            const dataM = resultM.data;
+            feedList = dataM.data?.posts || dataM.data?.items || dataM.items || [];
+            feedNextCursor = dataM.data?.next_cursor || dataM.next_cursor || null;
+            if (feedList.length > 0) {
+              user = {
+                profile_pic_url: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+                full_name: username.replace("@", ""),
+                username: username.replace("@", ""),
+                follower_count: 0,
+                id: feedList[0].user?.pk || feedList[0].user?.id || username.replace("@", "")
+              };
+            }
+          }
+        } else {
+          // Fluxo normal: Busca o feed de mídias
+          const resultM = await getInstagramFeed(username, mType as any);
+          if (resultM.success) {
+            const dataM = resultM.data;
+            feedList = dataM.data?.posts || dataM.data?.items || dataM.items || [];
+            feedNextCursor = dataM.data?.next_cursor || dataM.next_cursor || null;
+          }
+        }
 
         if (user) {
           setProfileData({
@@ -109,19 +139,12 @@ export function CheckoutModal() {
             profile_pic_url: user.profile_pic_url,
             full_name: user.full_name,
             username: user.username,
-            followers: user.follower_count?.toLocaleString('pt-BR') || "---",
+            followers: user.follower_count > 0 ? user.follower_count.toLocaleString('pt-BR') : "---",
             userId: user.id
           });
 
-          const mType = service === 'visualizacoes' ? 'reels' : 'posts';
-          const resultM = await getInstagramFeed(username, mType as any);
-          if (!resultM.success) throw new Error(resultM.error);
-
-          const dataM = resultM.data;
-          const list = dataM.data?.posts || dataM.data?.items || dataM.items || [];
-
-          if (list.length > 0) {
-            const mapped = list.map((m: any, idx: number) => ({
+          if (feedList.length > 0) {
+            const mapped = feedList.map((m: any, idx: number) => ({
               id: m.pk || m.id || `m-${idx}`,
               url: m.image_versions2?.candidates?.[0]?.url || m.image_urls?.[0] || m.image?.[0]?.url || m.thumbnail_url, 
               likes: (m.play_count || m.view_count || m.like_count || 0).toLocaleString('pt-BR'),
@@ -129,10 +152,13 @@ export function CheckoutModal() {
               code: m.code
             }));
             setPosts(mapped);
-            setNextCursor(dataM.data?.next_cursor || dataM.next_cursor || null);
+            setNextCursor(feedNextCursor);
+          } else {
+            setPosts([]);
+            setNextCursor(null);
           }
         } else {
-          toast.error("Perfil não encontrado");
+          toast.error("Perfil não encontrado ou sem publicações visíveis");
         }
       } else {
         // TikTok

@@ -2,6 +2,10 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [0.3.1] - 2026-05-30
+### Corrigido
+- **Busca Resiliente do Instagram (Fallback)**: Implementada lógica de fallback que carrega posts/reels diretamente caso o endpoint de perfil (`/info`) falhe ou retorne dados nulos. Isso contorna bloqueios de assinatura e oscilações do Instagram sem travar o checkout do cliente final.
+
 ## [0.3.0] - 2026-05-05
 ### Adicionado
 - **Plataforma Dinâmica (SaaS)**: Todas as chaves de API (`RapidAPI`, `PushinPay`, `PerfectPanel`) agora são configuráveis via banco de dados (`SystemSetting`).
