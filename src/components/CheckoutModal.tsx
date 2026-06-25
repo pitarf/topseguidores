@@ -97,40 +97,37 @@ export function CheckoutModal() {
     
     try {
       if (platform === 'instagram') {
-        const resultP = await searchInstagramProfile(username);
-        if (!resultP.success) throw new Error(resultP.error);
-        
-        const dataP = resultP.data;
-        let user = dataP.data?.user || dataP.user;
-        let feedList: any[] = [];
-        let feedNextCursor: string | null = null;
         const mType = service === 'visualizacoes' ? 'reels' : 'posts';
 
-        if (!user) {
-          // Fallback: Se o perfil principal falhar, tentamos carregar as mídias diretamente!
-          const resultM = await getInstagramFeed(username, mType as any);
-          if (resultM.success) {
-            const dataM = resultM.data;
-            feedList = dataM.data?.posts || dataM.data?.items || dataM.items || [];
-            feedNextCursor = dataM.data?.next_cursor || dataM.next_cursor || null;
-            if (feedList.length > 0) {
-              user = {
-                profile_pic_url: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-                full_name: username.replace("@", ""),
-                username: username.replace("@", ""),
-                follower_count: 0,
-                id: feedList[0].user?.pk || feedList[0].user?.id || username.replace("@", "")
-              };
-            }
-          }
-        } else {
-          // Fluxo normal: Busca o feed de mídias
-          const resultM = await getInstagramFeed(username, mType as any);
-          if (resultM.success) {
-            const dataM = resultM.data;
-            feedList = dataM.data?.posts || dataM.data?.items || dataM.items || [];
-            feedNextCursor = dataM.data?.next_cursor || dataM.next_cursor || null;
-          }
+        // Dispara as requisições em paralelo para maximizar a performance
+        const [resultP, resultM] = await Promise.all([
+          searchInstagramProfile(username).catch(() => ({ success: false, data: null })),
+          getInstagramFeed(username, mType as any).catch(() => ({ success: false, data: null }))
+        ]);
+        
+        let user: any = null;
+        if (resultP.success && resultP.data) {
+          const dataP = resultP.data;
+          user = dataP.data?.user || dataP.user;
+        }
+
+        let feedList: any[] = [];
+        let feedNextCursor: string | null = null;
+        if (resultM.success && resultM.data) {
+          const dataM = resultM.data;
+          feedList = dataM.data?.posts || dataM.data?.items || dataM.items || [];
+          feedNextCursor = dataM.data?.next_cursor || dataM.next_cursor || null;
+        }
+
+        // Se o perfil principal falhar (ou retornar nulo), mas temos mídias, aplicamos o Fallback
+        if (!user && feedList.length > 0) {
+          user = {
+            profile_pic_url: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+            full_name: username.replace("@", ""),
+            username: username.replace("@", ""),
+            follower_count: 0,
+            id: feedList[0].user?.pk || feedList[0].user?.id || username.replace("@", "")
+          };
         }
 
         if (user) {

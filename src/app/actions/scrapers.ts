@@ -16,7 +16,8 @@ export async function searchInstagramProfile(username: string) {
       headers: {
         "X-RapidAPI-Key": apiKey,
         "X-RapidAPI-Host": "instagram-scraper21.p.rapidapi.com"
-      }
+      },
+      signal: AbortSignal.timeout(3000)
     });
     
     console.log(`[Instagram API] Status: ${res.status}`);
@@ -48,7 +49,8 @@ export async function getInstagramFeed(username: string, type: 'reels' | 'posts'
       headers: {
         "X-RapidAPI-Key": apiKey,
         "X-RapidAPI-Host": "instagram-scraper21.p.rapidapi.com"
-      }
+      },
+      signal: AbortSignal.timeout(6000)
     });
     const data = await res.json();
     return { success: true, data };

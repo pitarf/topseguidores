@@ -12,6 +12,7 @@
 - [x] **Segurança Server-Side**: Proteção de chaves de API via Server Actions e Integração Segura no Checkout.
 - [x] **Captura de Leads**: Registro de Email e WhatsApp no checkout para CRM.
 - [x] **Correção Resiliente (Instagram)**: Fallback para carregamento de feed direto quando a API do perfil (/info) retornar nulo, garantindo que o checkout nunca trave.
+- [x] **Otimização de Velocidade (Instagram)**: Busca em paralelo com Promise.all e timeouts de 3s/6s para evitar lentidões e erros de timeout de rede no checkout.
 
 ## 🛠️ Próximos Passos
 - [ ] Implementação de sistema de cupons de desconto.

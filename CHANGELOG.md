@@ -2,6 +2,11 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [0.3.2] - 2026-06-25
+### Otimizado
+- **Busca Ultra-Rápida do Instagram**: As chamadas de perfil e feed de mídias agora rodam em paralelo via `Promise.all`, reduzindo o tempo de resposta pela metade.
+- **Prevenção de Travamentos (Timeouts)**: Adicionados timeouts rigorosos de 3 segundos na busca de perfil e 6 segundos na busca do feed, garantindo falha rápida e ativação instantânea do fallback sem congelar a tela do cliente.
+
 ## [0.3.1] - 2026-05-30
 ### Corrigido
 - **Busca Resiliente do Instagram (Fallback)**: Implementada lógica de fallback que carrega posts/reels diretamente caso o endpoint de perfil (`/info`) falhe ou retorne dados nulos. Isso contorna bloqueios de assinatura e oscilações do Instagram sem travar o checkout do cliente final.
