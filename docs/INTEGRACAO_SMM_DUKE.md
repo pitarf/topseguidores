@@ -153,3 +153,122 @@ export async function sendOrderToSMM(
   }
 }
 ```
+
+---
+
+## 🛡️ 5. Chamadas de API Avançadas (Recomendadas para Produção)
+
+Para que o novo sistema seja verdadeiramente profissional e seguro, é fundamental implementar os seguintes recursos adicionais oferecidos pela API PerfectPanel:
+
+### 💰 A. Consultar Saldo da Carteira (Action: `balance`)
+Permite ao sistema monitorar se a carteira com o fornecedor possui saldo suficiente para as transações. Recomenda-se criar um alerta de e-mail ou notificação no painel admin se o saldo cair abaixo de um limite de alerta (ex: R$ 50,00).
+
+#### Parâmetros do Corpo da Requisição (Form Data)
+*   `key`: API Key do fornecedor.
+*   `action`: `"balance"`.
+
+#### Exemplo de Resposta de Sucesso (200 OK)
+```json
+{
+  "balance": "145.82",
+  "currency": "BRL"
+}
+```
+
+#### Código de Exemplo (Node.js)
+```typescript
+export async function getSMMBalance(apiUrl: string, apiKey: string) {
+  try {
+    const formData = new URLSearchParams();
+    formData.append("key", apiKey);
+    formData.append("action", "balance");
+
+    const res = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) SMMClient/1.0",
+      },
+      body: formData.toString()
+    });
+
+    const data = await res.json();
+    if (data.error) return { success: false, error: data.error };
+
+    return { success: true, balance: parseFloat(data.balance), currency: data.currency };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Erro ao consultar saldo" };
+  }
+}
+```
+
+---
+
+### 📋 B. Listar Todos os Serviços Disponíveis (Action: `services`)
+Permite obter a tabela completa de serviços do fornecedor em tempo real. Útil para verificar a disponibilidade de um serviço ou sincronizar preços de custo automaticamente.
+
+#### Parâmetros do Corpo da Requisição (Form Data)
+*   `key`: API Key do fornecedor.
+*   `action`: `"services"`.
+
+#### Exemplo de Resposta de Sucesso (200 OK)
+```json
+[
+  {
+    "service": "398",
+    "name": "Seguidores Instagram Brasileiros Premium",
+    "type": "Default",
+    "category": "Instagram - Seguidores Brasileiros",
+    "rate": "4.20",
+    "min": "100",
+    "max": "50000",
+    "refill": true,
+    "cancel": false
+  },
+  {
+    "service": "402",
+    "name": "Curtidas Instagram Brasileiras Super Rápidas",
+    "type": "Default",
+    "category": "Instagram - Curtidas",
+    "rate": "1.80",
+    "min": "50",
+    "max": "20000",
+    "refill": false,
+    "cancel": true
+  }
+]
+```
+> **Nota:** O campo `rate` corresponde ao custo cobrado pelo fornecedor a cada **1.000 unidades**.
+
+---
+
+### 🔄 C. Solicitar Reposição (Action: `refill`)
+Muitos serviços possuem garantia de reposição gratuita em caso de queda de seguidores/curtidas ("drop"). Se o serviço contratado oferecer garantia, você pode automatizar a solicitação de reposição.
+
+#### Parâmetros do Corpo da Requisição (Form Data)
+*   `key`: API Key do fornecedor.
+*   `action`: `"refill"`.
+*   `order`: O ID do pedido original do fornecedor (ex: `123456`).
+
+#### Exemplo de Resposta de Sucesso (200 OK)
+```json
+{
+  "refill": 987654
+}
+```
+*Guarde o ID de reposição retornado para futuras consultas.*
+
+---
+
+## 🚫 6. Catálogo de Erros Comuns da API
+
+Ao integrar o PerfectPanel com seu novo sistema, certifique-se de tratar adequadamente estes retornos de erro (`data.error`):
+
+| Erro Retornado | Causa Provável | Ação Recomendada pelo Sistema |
+| :--- | :--- | :--- |
+| `Not enough funds on balance` | O saldo na sua carteira do fornecedor SMM zerou ou é inferior ao custo do pedido. | Interromper processamento, marcar o pedido como "Pendente / Erro SMM" e alertar o administrador do sistema por e-mail ou painel admin. |
+| `Invalid API Key` | A API Key configurada nos Ajustes está incorreta ou expirou. | Bloquear o envio automático e exibir erro crítico no painel administrativo. |
+| `Invalid Service ID` | O ID do serviço associado a este plano no banco de dados não existe mais no fornecedor. | Notificar o administrador que o pacote de serviços precisa ser reconfigurado ou que o ID do serviço expirou. |
+| `Bad link` | A URL fornecida no parâmetro `link` é inválida ou não condiz com a plataforma (ex: link de Kwai em serviço de Instagram). | Impedir o envio, sinalizar o pedido para revisão humana no painel de administração e/ou solicitar correção de link do usuário. |
+| `Incorrect quantity` | A quantidade informada está abaixo do `min` ou acima do `max` configurado pelo fornecedor para este serviço. | Ajustar as regras de validação dos planos no backend do sistema para coincidir com as limitações da API do fornecedor. |
+| `Action not found` | O parâmetro `action` enviado no corpo está incorreto ou vazio. | Corrigir a requisição no backend do sistema. |
