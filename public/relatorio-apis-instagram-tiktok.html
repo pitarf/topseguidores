@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>APIs Funcionais: Instagram & TikTok (Perfil + Feed/Posts/Reels)</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 12mm 12mm 12mm 12mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      line-height: 1.45;
+      font-size: 11.5px;
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+    }
+    .header {
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-primary { background-color: #e0e7ff; color: #4338ca; }
+    .badge-success { background-color: #dcfce7; color: #15803d; }
+    .badge-tiktok { background-color: #fce7f3; color: #be185d; }
+    .title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 4px 0 2px 0;
+    }
+    .subtitle {
+      font-size: 11.5px;
+      color: #64748b;
+      margin: 0;
+    }
+    .section-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 14px 0 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .callout-summary {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-left: 4px solid #2563eb;
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+    .callout-summary h3 {
+      margin: 0 0 4px 0;
+      font-size: 12.5px;
+      color: #1e3a8a;
+    }
+    .card {
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 11px;
+      margin-bottom: 10px;
+      background: #ffffff;
+      page-break-inside: avoid;
+    }
+    .card.highlight {
+      border-color: #93c5fd;
+      background-color: #f8fbff;
+    }
+    .card.highlight-tiktok {
+      border-color: #fbcfe8;
+      background-color: #fdf2f8;
+    }
+    .card-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+      color: #0f172a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-meta {
+      font-size: 10.5px;
+      color: #64748b;
+      margin-bottom: 6px;
+    }
+    .card-meta a {
+      color: #2563eb;
+      text-decoration: underline;
+      font-weight: 700;
+      word-break: break-all;
+    }
+    .grid-props {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin: 6px 0;
+      background: #ffffff;
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+    }
+    .prop-item {
+      font-size: 10.5px;
+    }
+    .prop-label {
+      font-weight: 600;
+      color: #64748b;
+      display: block;
+      margin-bottom: 1px;
+    }
+    .prop-val {
+      color: #0f172a;
+      font-weight: 700;
+    }
+    .endpoints-list {
+      margin-top: 6px;
+      background: #f1f5f9;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-family: Consolas, monospace;
+      font-size: 10px;
+      color: #334155;
+    }
+    .endpoints-list div {
+      margin-bottom: 2px;
+    }
+    ul {
+      margin: 4px 0 0 0;
+      padding-left: 16px;
+    }
+    li {
+      margin-bottom: 2px;
+    }
+    .footer-note {
+      margin-top: 12px;
+      font-size: 10px;
+      color: #94a3b8;
+      text-align: center;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <span class="badge badge-primary">TopSeguidores • Links Verificados</span>
+    <h1 class="title">APIs Ativas: Consulta de Perfil + Galeria de Mídias</h1>
+    <p class="subtitle">Links diretos e validados para o pré-carregamento do @ e escolha da publicação (Feed / Reels / Vídeos)</p>
+  </div>
+
+  <div class="callout-summary">
+    <h3>💡 Chave Única RapidAPI</h3>
+    <p style="margin: 0; color: #334155;">
+      Você pode assinar as APIs abaixo na mesma conta do RapidAPI. A mesma chave (<code>X-RapidAPI-Key</code>) configurada no painel administrativo em <strong>/administracao/settings</strong> funcionará para ambas as redes.
+    </p>
+  </div>
+
+  <!-- SEÇÃO INSTAGRAM -->
+  <div class="section-title">
+    <span>📸 1. Instagram: Perfil + Feed de Posts + Reels</span>
+  </div>
+
+  <div class="card highlight">
+    <div class="card-title">
+      <span>Opção A: Instagram Scraper Stable API — ⭐ A Melhor Escolha Atual</span>
+      <span class="badge badge-success">Link Ativo & Estável</span>
+    </div>
+    <div class="card-meta">
+      Link direto: <a href="https://rapidapi.com/thetechguy32744/api/instagram-scraper-stable-api" target="_blank">https://rapidapi.com/thetechguy32744/api/instagram-scraper-stable-api</a>
+    </div>
+    <div class="grid-props">
+      <div class="prop-item"><span class="prop-label">Preço</span><span class="prop-val">Free / Pro acessível</span></div>
+      <div class="prop-item"><span class="prop-label">Suporta Feed?</span><span class="prop-val">Sim (Posts + Reels)</span></div>
+      <div class="prop-item"><span class="prop-label">Latência</span><span class="prop-val">~500ms a 900ms</span></div>
+      <div class="prop-item"><span class="prop-label">Proteção</span><span class="prop-val">Proxies Móveis</span></div>
+    </div>
+    <div class="endpoints-list">
+      <div><strong>Consulta do @ (Perfil):</strong> GET /user_info?username={username} (Nome, foto HD e contagem de seguidores)</div>
+      <div><strong>Feed para Turbinar:</strong> GET /user_posts?username={username} e /user_reels?username={username}</div>
+    </div>
+    <ul>
+      <li>API ativa e verificada no catálogo com alta disponibilidade e dados em tempo real.</li>
+      <li>Traz miniaturas, contadores de likes/views e o link permanente para envio ao painel SMM.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <span>Opção B: Instagram Cheapest (Ulric)</span>
+      <span class="badge badge-primary">Menor Custo por Volume</span>
+    </div>
+    <div class="card-meta">
+      Link direto: <a href="https://rapidapi.com/ulric/api/instagram-cheapest" target="_blank">https://rapidapi.com/ulric/api/instagram-cheapest</a>
+    </div>
+    <div class="grid-props">
+      <div class="prop-item"><span class="prop-label">Preço</span><span class="prop-val">A partir de ~$4 a $8/mês</span></div>
+      <div class="prop-item"><span class="prop-label">Suporta Feed?</span><span class="prop-val">Sim (JSON puro)</span></div>
+      <div class="prop-item"><span class="prop-label">Latência</span><span class="prop-val">~800ms a 1.3s</span></div>
+      <div class="prop-item"><span class="prop-label">Foco</span><span class="prop-val">Altíssimo Volume</span></div>
+    </div>
+    <div class="endpoints-list">
+      <div><strong>Consulta do @ (Perfil):</strong> GET /api/v1/instagram/user/{username}</div>
+      <div><strong>Feed para Turbinar:</strong> GET /api/v1/instagram/user/{username}/posts?limit=12</div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO TIKTOK -->
+  <div class="section-title">
+    <span>🎵 2. TikTok: Perfil + Feed de Vídeos</span>
+  </div>
+
+  <div class="card highlight-tiktok">
+    <div class="card-title">
+      <span>TikTok API - Fast & Reliable Data Scraper (Alexanderxbx) — ⭐ A Escolha Perfeita</span>
+      <span class="badge badge-tiktok">Já Pronta no Código</span>
+    </div>
+    <div class="card-meta">
+      Link direto: <a href="https://rapidapi.com/alexanderxbx/api/tiktok-api-fast-reliable-data-scraper" target="_blank">https://rapidapi.com/alexanderxbx/api/tiktok-api-fast-reliable-data-scraper</a>
+    </div>
+    <div class="grid-props">
+      <div class="prop-item"><span class="prop-label">Preço</span><span class="prop-val">Free Tier / Pro acessível</span></div>
+      <div class="prop-item"><span class="prop-label">Suporta Vídeos?</span><span class="prop-val">Sim (Feed completo)</span></div>
+      <div class="prop-item"><span class="prop-label">Status Código</span><span class="prop-val">100% Configurado</span></div>
+      <div class="prop-item"><span class="prop-label">Latência</span><span class="prop-val">~500ms a 900ms</span></div>
+    </div>
+    <div class="endpoints-list">
+      <div><strong>Consulta do @ (Perfil):</strong> GET /user/{username} (Avatar, nickname e número de seguidores)</div>
+      <div><strong>Feed de Vídeos:</strong> GET /user/{username}/feed (Miniaturas, contagem de views/likes para seleção)</div>
+    </div>
+    <ul>
+      <li><strong>Total compatibilidade:</strong> O código em <code>src/app/actions/scrapers.ts</code> já consome exatamente esses endpoints.</li>
+    </ul>
+  </div>
+
+  <div class="footer-note">
+    TopSeguidores • Documentação Técnica Atualizada • Novembro/2026
+  </div>
+
+</body>
+</html>

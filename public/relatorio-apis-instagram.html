@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Comparativo de APIs para Consulta de Perfil Instagram</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 15mm 18mm 15mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      line-height: 1.5;
+      font-size: 13px;
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+    }
+    .header {
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-primary {
+      background-color: #e0e7ff;
+      color: #4338ca;
+    }
+    .badge-success {
+      background-color: #dcfce7;
+      color: #15803d;
+    }
+    .title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 8px 0 4px 0;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #64748b;
+      margin: 0;
+    }
+    .callout-winner {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-left: 5px solid #2563eb;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 22px;
+    }
+    .callout-winner h2 {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      color: #1e3a8a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      background: #ffffff;
+      page-break-inside: avoid;
+    }
+    .card.highlight {
+      border-color: #93c5fd;
+      background-color: #f0f7ff;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 6px 0;
+      color: #0f172a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-meta {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+    .card-meta a {
+      color: #2563eb;
+      text-decoration: underline;
+      font-weight: 600;
+      word-break: break-all;
+    }
+    .grid-props {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 12px 0;
+      background: #ffffff;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+    }
+    .prop-item {
+      font-size: 12px;
+    }
+    .prop-label {
+      font-weight: 600;
+      color: #475569;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .prop-val {
+      color: #0f172a;
+      font-weight: 700;
+    }
+    ul {
+      margin: 8px 0 0 0;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+    .recommendations-box {
+      margin-top: 22px;
+      padding: 16px;
+      background: #f1f5f9;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    .recommendations-box h3 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      color: #0f172a;
+    }
+    .footer-note {
+      margin-top: 20px;
+      font-size: 11px;
+      color: #94a3b8;
+      text-align: center;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <span class="badge badge-primary">Análise Técnica & Comercial</span>
+    <h1 class="title">APIs de Consulta e Pré-Carregamento de Perfil Instagram</h1>
+    <p class="subtitle">Avaliação de custo-benefício para carregamento instantâneo de foto, nome e contagem de seguidores ao digitar o @</p>
+  </div>
+
+  <div class="callout-winner">
+    <h2>🏆 Qual a Melhor Opção Escolhida?</h2>
+    <p style="margin: 0 0 8px 0;">
+      A <strong>Instagram Scraper API2 (por Social-API1)</strong> é a melhor recomendação para o TopSeguidores.
+    </p>
+    <p style="margin: 0; color: #334155;">
+      <strong>Motivo:</strong> Possui o menor preço de entrada do mercado (<strong>$5.00/mês</strong>), excelente estabilidade com proxies móveis (evitando bloqueios do Instagram), tempo de resposta rápido para a rota de perfil e fornece exatamente a estrutura necessária no checkout: foto de perfil sem expirar rápido, nome completo e contagem de seguidores.
+    </p>
+  </div>
+
+  <!-- Opção 1 -->
+  <div class="card highlight">
+    <div class="card-title">
+      <span>1. Instagram Scraper API2 (Mais Recomendada)</span>
+      <span class="badge badge-success">Melhor Custo-Benefício</span>
+    </div>
+    <div class="card-meta">
+      Link oficial: <a href="https://rapidapi.com/social-api1-instagram/api/instagram-scraper-api2" target="_blank">https://rapidapi.com/social-api1-instagram/api/instagram-scraper-api2</a>
+    </div>
+    <p style="margin: 0; color: #334155;">API consolidada no RapidAPI, amplamente adotada em ferramentas de automação e painéis SMM pela estabilidade em extrair metadados limpos de perfil público.</p>
+    
+    <div class="grid-props">
+      <div class="prop-item">
+        <span class="prop-label">Preço Inicial</span>
+        <span class="prop-val">Free ($0) / Pro ($5/mês)</span>
+      </div>
+      <div class="prop-item">
+        <span class="prop-label">Tempo Médio de Resposta</span>
+        <span class="prop-val">~600ms a 1.2s</span>
+      </div>
+      <div class="prop-item">
+        <span class="prop-label">Dados Retornados</span>
+        <span class="prop-val">Foto HD, Nome, Seguidores, Bio</span>
+      </div>
+    </div>
+    <ul>
+      <li><strong>Vantagem:</strong> Custo extremamente baixo ($5/mês já atende a demanda inicial com folga).</li>
+      <li><strong>Rota ideal para o modal:</strong> <code>GET /user_info?username_or_id={username}</code></li>
+    </ul>
+  </div>
+
+  <!-- Opção 2 -->
+  <div class="card">
+    <div class="card-title">
+      <span>2. Instagram Cheapest (Ulric)</span>
+      <span class="badge badge-primary">Foco em Volume Barato</span>
+    </div>
+    <div class="card-meta">
+      Link oficial: <a href="https://rapidapi.com/ulric/api/instagram-cheapest" target="_blank">https://rapidapi.com/ulric/api/instagram-cheapest</a>
+    </div>
+    <p style="margin: 0; color: #334155;">Projetada especificamente para desenvolvedores que precisam de altíssimo volume de requisições pagando o mínimo possível por requisição.</p>
+    
+    <div class="grid-props">
+      <div class="prop-item">
+        <span class="prop-label">Preço Inicial</span>
+        <span class="prop-val">A partir de ~$4 a $8/mês</span>
+      </div>
+      <div class="prop-item">
+        <span class="prop-label">Tempo Médio de Resposta</span>
+        <span class="prop-val">~800ms a 1.5s</span>
+      </div>
+      <div class="prop-item">
+        <span class="prop-label">Dados Retornados</span>
+        <span class="prop-val">Perfil, contadores, posts e reels</span>
+      </div>
+    </div>
+    <ul>
+      <li><strong>Vantagem:</strong> Permite filtrar parâmetros específicos para reduzir transferência e custo.</li>
+      <li><strong>Rota ideal para o modal:</strong> <code>GET /api/v1/instagram/user/{username}</code></li>
+    </ul>
+  </div>
+
+  <!-- Opção 3 -->
+  <div class="card">
+    <div class="card-title">
+      <span>3. Instagram Scraper Stable & Fast (RockSolid APIs)</span>
+      <span class="badge badge-primary">Foco em Alta Disponibilidade</span>
+    </div>
+    <div class="card-meta">
+      Link oficial: <a href="https://rapidapi.com/rocksolid-apis-rocksolid-apis-default/api/instagram-scraper-stable-fast" target="_blank">https://rapidapi.com/rocksolid-apis-rocksolid-apis-default/api/instagram-scraper-stable-fast</a>
+    </div>
+    <p style="margin: 0; color: #334155;">Utiliza infraestrutura de proxies residenciais e 4G rotativos premium, minimizando falhas de limite de taxa ou bloqueios da Meta.</p>
+    
+    <div class="grid-props">
+      <div class="prop-item">
+        <span class="prop-label">Preço Inicial</span>
+        <span class="prop-val">A partir de ~$10/mês</span>
+      </div>
+      <div class="prop-item">
+        <span class="prop-label">Tempo Médio de Resposta</span>
+        <span class="prop-val">~500ms a 900ms</span>
+      </div>
+      <div class="prop-item">
+        <span class="prop-label">Dados Retornados</span>
+        <span class="prop-val">Foto, Nome, Seguidores, Posts</span>
+      </div>
+    </div>
+    <ul>
+      <li><strong>Vantagem:</strong> Menor taxa de falha (uptime elevado) e velocidade acima da média.</li>
+      <li><strong>Rota ideal para o modal:</strong> <code>GET /user_info?username={username}</code></li>
+    </ul>
+  </div>
+
+  <div class="recommendations-box">
+    <h3>💡 Boas Práticas para Maximizar a Performance no Sistema</h3>
+    <ol style="margin: 0; padding-left: 20px;">
+      <li><strong>Debounce de 700ms:</strong> Aguardar o usuário terminar a digitação do nome de usuário antes de disparar o fetch.</li>
+      <li><strong>Consulta Sob Demanda:</strong> Buscar apenas os dados de perfil no primeiro momento; buscar o feed de publicações apenas se o plano for de curtidas/visualizações.</li>
+      <li><strong>Cache de Sessão:</strong> Salvar o resultado da consulta por 15 minutos para não gastar créditos caso o cliente clique fora e abra o modal de novo.</li>
+    </ol>
+  </div>
+
+  <div class="footer-note">
+    Documento gerado para a plataforma TopSeguidores • Atualizado em Novembro/2026
+  </div>
+
+</body>
+</html>

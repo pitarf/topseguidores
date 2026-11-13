@@ -19,7 +19,7 @@ const inter = Inter({
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSystemSettings();
-  const url = process.env.NEXT_PUBLIC_APP_URL || "https://topseguidores.net";
+  const url = process.env.NEXT_PUBLIC_APP_URL || "https://viralizareels.com";
 
   return {
     metadataBase: new URL(url),

@@ -60,7 +60,7 @@ export function Footer() {
 
         <div className="pt-12 border-t border-white/5 text-center">
           <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-6">
-            © 2026 TOPSEGUIDORES. Todos os direitos reservados.
+            © 2026 VIRALIZAREELS. Todos os direitos reservados.
           </p>
           <div className="flex justify-center gap-6 mb-8 text-zinc-700">
             <Instagram className="w-5 h-5 hover:text-primary transition-colors cursor-pointer" />
@@ -68,7 +68,7 @@ export function Footer() {
             <Youtube className="w-5 h-5 hover:text-primary transition-colors cursor-pointer" />
           </div>
           <p className="text-zinc-800 text-[9px] font-bold uppercase tracking-[0.2em] max-w-2xl mx-auto leading-relaxed">
-            O TOPSEGUIDORES É UMA PLATAFORMA INDEPENDENTE E NÃO POSSUI VÍNCULO DIRETO COM INSTAGRAM, TIKTOK, YOUTUBE OU META PLATFORMS. TODOS OS NOMES E MARCAS SÃO PROPRIEDADE DE SEUS RESPECTIVOS DONOS.
+            A VIRALIZAREELS É UMA PLATAFORMA INDEPENDENTE E NÃO POSSUI VÍNCULO DIRETO COM INSTAGRAM, TIKTOK, YOUTUBE OU META PLATFORMS. TODOS OS NOMES E MARCAS SÃO PROPRIEDADE DE SEUS RESPECTIVOS DONOS.
           </p>
         </div>
       </div>

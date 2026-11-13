@@ -108,7 +108,7 @@ export function CheckoutModal() {
         let user: any = null;
         if (resultP.success && resultP.data) {
           const dataP = resultP.data;
-          user = dataP.data?.user || dataP.user;
+          user = dataP.data?.user || dataP.data || dataP.user;
         }
 
         let feedList: any[] = [];
@@ -116,7 +116,7 @@ export function CheckoutModal() {
         if (resultM.success && resultM.data) {
           const dataM = resultM.data;
           feedList = dataM.data?.posts || dataM.data?.items || dataM.items || [];
-          feedNextCursor = dataM.data?.next_cursor || dataM.next_cursor || null;
+          feedNextCursor = dataM.data?.next_cursor || dataM.data?.pagination_token || dataM.next_cursor || null;
         }
 
         // Se o perfil principal falhar (ou retornar nulo), mas temos mídias, aplicamos o Fallback
@@ -143,7 +143,7 @@ export function CheckoutModal() {
           if (feedList.length > 0) {
             const mapped = feedList.map((m: any, idx: number) => ({
               id: m.pk || m.id || `m-${idx}`,
-              url: m.image_versions2?.candidates?.[0]?.url || m.image_urls?.[0] || m.image?.[0]?.url || m.thumbnail_url, 
+              url: m.thumbnail_url || m.image_versions2?.candidates?.[0]?.url || m.image_urls?.[0] || m.image?.[0]?.url || m.display_url, 
               likes: (m.play_count || m.view_count || m.like_count || 0).toLocaleString('pt-BR'),
               type: (m.product_type === "clips" || mType === 'reels') ? 'reels' : 'image',
               code: m.code
@@ -163,34 +163,42 @@ export function CheckoutModal() {
         if (!resultP.success) throw new Error(resultP.error);
 
         const dataP = resultP.data;
-        const user = dataP.data?.user;
+        const userInfo = dataP.userInfo;
+        const user = userInfo?.user;
+        const stats = userInfo?.stats;
 
         if (user) {
           setProfileData({
             success: true,
-            profile_pic_url: user.avatar_larger?.url_list?.[0] || user.avatar_medium?.url_list?.[0] || user.avatar_thumb?.url_list?.[0],
-            full_name: user.nickname,
-            username: user.unique_id,
-            followers: user.follower_count?.toLocaleString('pt-BR') || "---",
-            userId: user.uid || user.id
+            profile_pic_url: user.avatarLarger || user.avatarMedium || user.avatarThumb,
+            full_name: user.nickname || user.uniqueId,
+            username: user.uniqueId,
+            followers: (stats?.followerCount || user.follower_count || 0).toLocaleString('pt-BR'),
+            userId: user.id
           });
 
-          const resultM = await getTikTokFeed(username);
-          if (!resultM.success) throw new Error(resultM.error);
+          // Buscar posts usando o secUid retornado do perfil
+          const secUid = user.secUid || username;
+          const resultM = await getTikTokFeed(secUid);
+          
+          if (resultM.success && resultM.data) {
+            const dataM = resultM.data;
+            const list = dataM.data?.itemList || dataM.itemList || [];
 
-          const dataM = resultM.data;
-          const list = dataM.data?.aweme_list || [];
-
-          if (list.length > 0) {
-            const mapped = list.map((m: any, idx: number) => ({
-              id: m.aweme_id || `tk-${idx}`,
-              url: m.video?.cover?.url_list?.[0] || m.video?.dynamic_cover?.url_list?.[0],
-              likes: (service === 'visualizacoes' ? m.statistics?.play_count : m.statistics?.digg_count || 0).toLocaleString('pt-BR'),
-              type: 'reels',
-              code: m.aweme_id
-            }));
-            setPosts(mapped);
-            setNextCursor(dataM.data?.max_cursor || null);
+            if (list.length > 0) {
+              const mapped = list.map((m: any, idx: number) => ({
+                id: m.id || `tk-${idx}`,
+                url: m.video?.cover || m.video?.dynamicCover || m.video?.originCover,
+                likes: (service === 'visualizacoes' ? (m.stats?.playCount || 0) : (m.stats?.diggCount || 0)).toLocaleString('pt-BR'),
+                type: 'reels',
+                code: m.id
+              }));
+              setPosts(mapped);
+              setNextCursor(dataM.data?.cursor ? String(dataM.data.cursor) : null);
+            } else {
+              setPosts([]);
+              setNextCursor(null);
+            }
           }
         } else {
           toast.error("Perfil não encontrado no TikTok");

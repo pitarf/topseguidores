@@ -12,9 +12,9 @@ export async function getSystemSettings() {
       return await prisma.systemSetting.create({
         data: {
           id: "1",
-          siteTitle: "Top Seguidores - Comprar Seguidores e Curtidas",
+          siteTitle: "ViralizaReels - O Melhor do Instagram e TikTok",
           siteDescription: "A melhor plataforma para aumentar seu engajamento no Instagram e TikTok de forma rápida e segura.",
-          siteKeywords: "comprar seguidores, instagram, tiktok, curtidas, visualizações, engajamento",
+          siteKeywords: "comprar seguidores, viralizareels, instagram, tiktok, curtidas, visualizações, engajamento",
         },
       });
     }
@@ -28,9 +28,9 @@ export async function getSystemSettings() {
     
     return {
       id: "fallback",
-      siteTitle: "Top Seguidores",
-      siteDescription: "A melhor plataforma para comprar seguidores, curtidas e visualizações.",
-      siteKeywords: "comprar seguidores, instagram, tiktok, curtidas, visualizações",
+      siteTitle: "ViralizaReels",
+      siteDescription: "A melhor plataforma para comprar seguidores, curtidas e visualizações no Instagram e TikTok.",
+      siteKeywords: "comprar seguidores, viralizareels, instagram, tiktok, curtidas, visualizações",
       showNotifications: true,
       faviconUrl: null,
       logoUrl: null,

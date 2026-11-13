@@ -12,20 +12,20 @@ export async function searchInstagramProfile(username: string) {
   const apiKey = await getApiKey();
 
   try {
-    const res = await fetch(`https://instagram-scraper21.p.rapidapi.com/api/v1/info?id_or_username=${clean}`, {
+    const res = await fetch(`https://instagram360.p.rapidapi.com/userinfo/?username_or_id=${clean}`, {
       headers: {
-        "X-RapidAPI-Key": apiKey,
-        "X-RapidAPI-Host": "instagram-scraper21.p.rapidapi.com"
+        "x-rapidapi-key": apiKey,
+        "x-rapidapi-host": "instagram360.p.rapidapi.com"
       },
-      signal: AbortSignal.timeout(3000)
+      signal: AbortSignal.timeout(8000)
     });
     
     console.log(`[Instagram API] Status: ${res.status}`);
     const data = await res.json();
     
-    if (!res.ok) {
+    if (!res.ok || data.status === "error") {
       console.error("[Instagram API] Erro:", data);
-      return { success: false, error: data.message || "Erro na API do Instagram" };
+      return { success: false, error: data.message || "Perfil do Instagram não encontrado" };
     }
 
     return { success: true, data };
@@ -38,19 +38,18 @@ export async function searchInstagramProfile(username: string) {
 export async function getInstagramFeed(username: string, type: 'reels' | 'posts', cursor?: string) {
   const clean = username.replace("@", "").split("/").pop()?.replace("?", "").trim() || "";
   const apiKey = await getApiKey();
-  const endpoint = type === 'reels' ? 'reels' : 'posts';
-  const param = type === 'reels' ? 'id_or_username' : 'username';
+  const endpoint = type === 'reels' ? 'userreels' : 'userposts';
   
-  let url = `https://instagram-scraper21.p.rapidapi.com/api/v1/${endpoint}?${param}=${clean}&limit=12`;
-  if (cursor) url += `&cursor=${cursor}`;
+  let url = `https://instagram360.p.rapidapi.com/${endpoint}/?username_or_id=${clean}`;
+  if (cursor) url += `&pagination_token=${cursor}`;
 
   try {
     const res = await fetch(url, {
       headers: {
-        "X-RapidAPI-Key": apiKey,
-        "X-RapidAPI-Host": "instagram-scraper21.p.rapidapi.com"
+        "x-rapidapi-key": apiKey,
+        "x-rapidapi-host": "instagram360.p.rapidapi.com"
       },
-      signal: AbortSignal.timeout(6000)
+      signal: AbortSignal.timeout(10000)
     });
     const data = await res.json();
     return { success: true, data };
@@ -65,19 +64,20 @@ export async function searchTikTokProfile(username: string) {
   const apiKey = await getApiKey();
 
   try {
-    const res = await fetch(`https://tiktok-api-fast-reliable-data-scraper.p.rapidapi.com/user/${clean}`, {
+    const res = await fetch(`https://tiktok-api23.p.rapidapi.com/api/user/info?uniqueId=${clean}`, {
       headers: {
-        "X-RapidAPI-Key": apiKey,
-        "X-RapidAPI-Host": "tiktok-api-fast-reliable-data-scraper.p.rapidapi.com"
-      }
+        "x-rapidapi-key": apiKey,
+        "x-rapidapi-host": "tiktok-api23.p.rapidapi.com"
+      },
+      signal: AbortSignal.timeout(8000)
     });
     
     console.log(`[TikTok API] Status: ${res.status}`);
     const data = await res.json();
 
-    if (!res.ok) {
+    if (!res.ok || (data.statusCode && data.statusCode !== 0 && data.status_code !== 0)) {
       console.error("[TikTok API] Erro:", data);
-      return { success: false, error: data.message || "Erro na API do TikTok" };
+      return { success: false, error: data.status_msg || data.message || "Erro na API do TikTok" };
     }
 
     return { success: true, data };
@@ -87,19 +87,19 @@ export async function searchTikTokProfile(username: string) {
   }
 }
 
-export async function getTikTokFeed(username: string, cursor?: string) {
-  const clean = username.replace("@", "").split("/").pop()?.replace("?", "").trim() || "";
+export async function getTikTokFeed(secUidOrUsername: string, cursor?: string) {
   const apiKey = await getApiKey();
+  const c = cursor || "0";
   
-  let url = `https://tiktok-api-fast-reliable-data-scraper.p.rapidapi.com/user/${clean}/feed`;
-  if (cursor) url += `?cursor=${cursor}`;
+  let url = `https://tiktok-api23.p.rapidapi.com/api/user/posts?secUid=${encodeURIComponent(secUidOrUsername)}&count=12&cursor=${c}`;
 
   try {
     const res = await fetch(url, {
       headers: {
-        "X-RapidAPI-Key": apiKey,
-        "X-RapidAPI-Host": "tiktok-api-fast-reliable-data-scraper.p.rapidapi.com"
-      }
+        "x-rapidapi-key": apiKey,
+        "x-rapidapi-host": "tiktok-api23.p.rapidapi.com"
+      },
+      signal: AbortSignal.timeout(10000)
     });
     const data = await res.json();
     return { success: true, data };
