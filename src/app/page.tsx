@@ -1,6 +1,6 @@
-import { HeroWhite } from "@/components/HeroWhite";
-import { HowItWorks } from "@/components/HowItWorks";
-import { FAQ } from "@/components/FAQ";
+import { ViralizaHero } from "@/components/ViralizaHero";
+import { ViralizaFAQ } from "@/components/ViralizaFAQ";
+import { Testimonials } from "@/components/Testimonials";
 import { Footer } from "@/components/Footer";
 import { getSystemSettings } from "@/services/settings";
 
@@ -10,13 +10,10 @@ export default async function Home() {
   const settings = await getSystemSettings();
 
   return (
-    <div className="flex flex-col w-full overflow-hidden">
-      <HeroWhite 
-        title={settings.siteTitle} 
-        description="Aumente sua autoridade e destaque-se no mercado digital com as melhores ferramentas de crescimento estratégico do Brasil. Cresça seu perfil hoje."
-      />
-      <HowItWorks />
-      <FAQ />
+    <div className="flex flex-col w-full overflow-hidden bg-[#070b14]">
+      <ViralizaHero title={settings.siteTitle || "ViralizaReels"} />
+      <ViralizaFAQ />
+      <Testimonials />
       <Footer />
     </div>
   );
