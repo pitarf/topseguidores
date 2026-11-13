@@ -2,11 +2,16 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Save } from "lucide-react";
+import { Save, Eye, EyeOff } from "lucide-react";
 
 export function SettingsForm({ initialData }: { initialData: any }) {
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(false);
+  const [showTokens, setShowTokens] = useState<Record<string, boolean>>({});
+
+  const toggleShowToken = (field: string) => {
+    setShowTokens(prev => ({ ...prev, [field]: !prev[field] }));
+  };
 
   const handleSave = async () => {
     setLoading(true);
@@ -146,32 +151,62 @@ export function SettingsForm({ initialData }: { initialData: any }) {
         <div className="space-y-6">
           <div>
             <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">X-RapidAPI-Key (TikTok/Insta)</label>
-            <input 
-              type="password" 
-              value={data.rapidApiKey || ""} 
-              onChange={e => setData({...data, rapidApiKey: e.target.value})}
-              className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium focus:border-primary/50 outline-none"
-            />
+            <div className="relative">
+              <input 
+                type={showTokens.rapidApiKey ? "text" : "password"} 
+                value={data.rapidApiKey || ""} 
+                onChange={e => setData({...data, rapidApiKey: e.target.value})}
+                className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 pr-11 text-white text-sm font-medium focus:border-primary/50 outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => toggleShowToken("rapidApiKey")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors p-1"
+                title={showTokens.rapidApiKey ? "Ocultar" : "Visualizar"}
+              >
+                {showTokens.rapidApiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">PushinPay Token</label>
-              <input 
-                type="password" 
-                value={data.pushinpayToken || ""} 
-                onChange={e => setData({...data, pushinpayToken: e.target.value})}
-                className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium focus:border-emerald-500/50 outline-none"
-              />
+              <div className="relative">
+                <input 
+                  type={showTokens.pushinpayToken ? "text" : "password"} 
+                  value={data.pushinpayToken || ""} 
+                  onChange={e => setData({...data, pushinpayToken: e.target.value})}
+                  className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 pr-11 text-white text-sm font-medium focus:border-emerald-500/50 outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => toggleShowToken("pushinpayToken")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors p-1"
+                  title={showTokens.pushinpayToken ? "Ocultar" : "Visualizar"}
+                >
+                  {showTokens.pushinpayToken ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
             <div>
               <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">Webhook Token</label>
-              <input 
-                type="password" 
-                value={data.pushinpayWebhookToken || ""} 
-                onChange={e => setData({...data, pushinpayWebhookToken: e.target.value})}
-                className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium focus:border-emerald-500/50 outline-none"
-              />
+              <div className="relative">
+                <input 
+                  type={showTokens.pushinpayWebhookToken ? "text" : "password"} 
+                  value={data.pushinpayWebhookToken || ""} 
+                  onChange={e => setData({...data, pushinpayWebhookToken: e.target.value})}
+                  className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 pr-11 text-white text-sm font-medium focus:border-emerald-500/50 outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => toggleShowToken("pushinpayWebhookToken")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors p-1"
+                  title={showTokens.pushinpayWebhookToken ? "Ocultar" : "Visualizar"}
+                >
+                  {showTokens.pushinpayWebhookToken ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -187,12 +222,22 @@ export function SettingsForm({ initialData }: { initialData: any }) {
             </div>
             <div>
               <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">PerfectPanel Key</label>
-              <input 
-                type="password" 
-                value={data.perfectPanelKey || ""} 
-                onChange={e => setData({...data, perfectPanelKey: e.target.value})}
-                className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white text-sm font-medium focus:border-purple-500/50 outline-none"
-              />
+              <div className="relative">
+                <input 
+                  type={showTokens.perfectPanelKey ? "text" : "password"} 
+                  value={data.perfectPanelKey || ""} 
+                  onChange={e => setData({...data, perfectPanelKey: e.target.value})}
+                  className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 pr-11 text-white text-sm font-medium focus:border-purple-500/50 outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => toggleShowToken("perfectPanelKey")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors p-1"
+                  title={showTokens.perfectPanelKey ? "Ocultar" : "Visualizar"}
+                >
+                  {showTokens.perfectPanelKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
           </div>
         </div>
