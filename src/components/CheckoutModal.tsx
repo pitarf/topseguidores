@@ -509,117 +509,27 @@ export function CheckoutModal() {
             )}
 
             {step === 6 && (
-              <div className="w-full max-w-lg mx-auto space-y-6 pb-12">
-                <div className="text-center mb-6 md:mb-8">
-                  <h1 className="text-xl md:text-3xl font-black text-white mb-1 md:mb-2 tracking-tight uppercase tracking-widest">Finalizar Pedido</h1>
+              <div className="w-full max-w-lg mx-auto space-y-4 pb-12">
+                <div className="text-center mb-3">
+                  <h1 className="text-xl md:text-3xl font-black text-white mb-1 tracking-tight uppercase tracking-widest">Finalizar Pedido</h1>
                   <p className="text-zinc-500 text-xs md:text-sm">Complete seu pedido em poucos passos</p>
                 </div>
 
-                <div className="bg-[#121826]/60 border border-white/5 rounded-[2rem] md:rounded-[2.5rem] p-5 md:p-8 space-y-5 md:y-6 shadow-2xl relative overflow-hidden">
+                <div className="bg-[#121826]/60 border border-white/5 rounded-[2rem] md:rounded-[2.5rem] p-4 md:p-6 space-y-4 shadow-2xl relative overflow-hidden">
                   
-                  {/* Timer Box */}
-                  <div className="bg-red-500/5 border border-red-500/20 p-4 rounded-2xl text-center space-y-1">
-                    <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2">
-                      <Clock className="w-3 h-3 text-red-500" /> Sua reserva expira em
+                  {/* Timer Box Compacto */}
+                  <div className="bg-red-500/5 border border-red-500/20 py-2.5 px-4 rounded-xl text-center flex items-center justify-between">
+                    <p className="text-zinc-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-red-500" /> Reserva expira em:
                     </p>
-                    <p className="text-red-500 font-mono text-3xl font-black">{formatTime(timeLeft)}</p>
-                    <p className="text-zinc-500 text-[9px]">Finalize agora para garantir o preço promocional</p>
+                    <p className="text-red-500 font-mono text-xl font-black">{formatTime(timeLeft)}</p>
                   </div>
 
-                  {/* Plan Summary */}
-                  <div className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
-                      <Zap className="w-5 h-5" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-white font-bold text-sm">
-                        {selectedPlan?.quantity?.toLocaleString('pt-BR')}x {service === 'visualizacoes' ? 'Visualizações Reels' : service} {packageType === 'mundiais' ? 'mundiais' : 'brasileiros'}
-                      </p>
-                      <p className="text-primary font-black text-lg">R$ {selectedPlan?.price}</p>
-                    </div>
-                  </div>
-
-                  {/* Profile Preview */}
-                  {profileData && (
-                    <div className="bg-white/5 border border-white/5 p-4 rounded-2xl flex items-center gap-4 text-left">
-                      <img src={`https://images.weserv.nl/?url=${encodeURIComponent(profileData.profile_pic_url)}`} className="w-14 h-14 rounded-full border-2 border-primary/30 object-cover" alt="Avatar" />
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-white font-black text-base truncate">@{profileData.username}</h3>
-                        <p className="text-zinc-500 font-bold text-[10px] uppercase tracking-widest">{profileData.followers} seguidores</p>
-                      </div>
-                    </div>
-                  )}
-
-
-
-                  {/* Pix Box */}
-                  <div className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-500">
-                      <Zap className="w-5 h-5 fill-current" />
-                    </div>
-                    <div className="text-left">
-                      <p className="text-white font-bold text-sm">Pix</p>
-                      <p className="text-zinc-500 text-[10px]">Pagamento rápido e aprovado na hora</p>
-                    </div>
-                  </div>
-
-                  {/* Social Proof */}
-                  <div className="bg-white/5 p-3 rounded-2xl flex items-center justify-center gap-2">
-                    <Users className="w-4 h-4 text-primary" />
-                    <span className="text-white font-bold text-xs">+245 pedidos realizados <span className="text-emerald-500">●</span></span>
-                  </div>
-
-                  {/* Testimonials Mini */}
-                  <div className="space-y-3">
-                    <p className="text-zinc-500 text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
-                      <Star className="w-3 h-3 text-primary fill-primary" /> O que dizem nossos clientes
-                    </p>
-                    <div className="space-y-2">
-                      {[
-                        { name: 'Lucas M.', text: 'Recebi em menos de 1 hora, muito rápido!', initial: 'L' },
-                        { name: 'Ana C.', text: 'Já é meu terceiro pedido, sempre entrega certinho.', initial: 'A' },
-                        { name: 'Pedro S.', text: 'Excelente atendimento e entrega garantida!', initial: 'P' },
-                      ].map((t, i) => (
-                        <div key={i} className="bg-white/5 p-3 rounded-xl flex items-start gap-3 text-left">
-                          <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black text-[10px] shrink-0">{t.initial}</div>
-                          <div className="space-y-0.5">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-white font-bold text-[10px]">{t.name}</span>
-                              <div className="flex gap-0.5"><Star className="w-2 h-2 text-orange-500 fill-orange-500" /><Star className="w-2 h-2 text-orange-500 fill-orange-500" /><Star className="w-2 h-2 text-orange-500 fill-orange-500" /><Star className="w-2 h-2 text-orange-500 fill-orange-500" /><Star className="w-2 h-2 text-orange-500 fill-orange-500" /></div>
-                            </div>
-                            <p className="text-zinc-500 text-[9px] leading-tight">{t.text}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Trust Badges */}
-                  <div className="flex justify-center gap-6 py-2">
-                    <div className="flex items-center gap-1.5 text-zinc-500 text-[9px] font-bold">
-                      <ShieldCheck className="w-3 h-3 text-primary" /> Compra Segura
-                    </div>
-                    <div className="flex items-center gap-1.5 text-zinc-500 text-[9px] font-bold">
-                      <CheckCircle2 className="w-3 h-3 text-primary" /> Garantia 90 dias
-                    </div>
-                  </div>
-
-                  {/* Replacement Guarantee */}
-                  <div className="bg-emerald-500/5 border border-emerald-500/20 p-4 rounded-2xl text-left flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-500 mt-0.5">
-                      <Check className="w-4 h-4 stroke-[3]" />
-                    </div>
-                    <div className="space-y-0.5">
-                      <p className="text-emerald-500 font-black text-xs">Garantia de reposição gratuita</p>
-                      <p className="text-zinc-500 text-[9px] leading-snug font-medium">Se não atingir a quantidade contratada, repomos sem custo adicional.</p>
-                    </div>
-                  </div>
-
-                  {/* Pay Button */}
+                  {/* Botão de Pagamento Principal - NO TOPO */}
                   <button 
                     onClick={handleGeneratePix} 
                     disabled={loading} 
-                    className="w-full py-4 md:py-5 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-black rounded-2xl shadow-[0_10px_30px_rgba(59,130,246,0.4)] active:scale-95 transition-all flex flex-col items-center justify-center gap-0.5 group"
+                    className="w-full py-4 md:py-5 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-black rounded-2xl shadow-[0_10px_30px_rgba(59,130,246,0.5)] active:scale-95 transition-all flex flex-col items-center justify-center gap-0.5 group cursor-pointer"
                   >
                     <div className="flex items-center gap-2">
                       {loading ? <Loader2 className="animate-spin w-5 h-5 md:w-6 md:h-6" /> : (
@@ -629,10 +539,97 @@ export function CheckoutModal() {
                         </>
                       )}
                     </div>
-                    {!loading && <span className="text-[8px] md:text-[9px] opacity-70 font-medium">Aprovação instantânea • Entrega automática</span>}
+                    {!loading && <span className="text-[9px] md:text-[10px] opacity-80 font-medium">Aprovação instantânea • Entrega automática</span>}
                   </button>
 
-                  <button onClick={() => setStep(2)} className="w-full py-4 text-zinc-500 hover:text-white font-bold text-[10px] uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2">
+                  {/* Plan Summary */}
+                  <div className="bg-primary/5 border border-primary/20 p-3.5 rounded-2xl flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary shrink-0">
+                      <Zap className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white font-bold text-xs sm:text-sm truncate">
+                        {selectedPlan?.quantity?.toLocaleString('pt-BR')}x {service === 'visualizacoes' ? 'Visualizações Reels' : service} {packageType === 'mundiais' ? 'mundiais' : 'brasileiros'}
+                      </p>
+                      <p className="text-primary font-black text-base sm:text-lg">R$ {selectedPlan?.price}</p>
+                    </div>
+                  </div>
+
+                  {/* Profile Preview */}
+                  {profileData && (
+                    <div className="bg-white/5 border border-white/5 p-3.5 rounded-2xl flex items-center gap-3 text-left">
+                      <img src={`https://images.weserv.nl/?url=${encodeURIComponent(profileData.profile_pic_url)}`} className="w-11 h-11 rounded-full border-2 border-primary/30 object-cover shrink-0" alt="Avatar" />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-white font-black text-sm truncate">@{profileData.username}</h3>
+                        <p className="text-zinc-500 font-bold text-[9px] uppercase tracking-widest">{profileData.followers} seguidores</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Pix Box */}
+                  <div className="bg-primary/5 border border-primary/20 p-3.5 rounded-2xl flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-500 shrink-0">
+                      <Zap className="w-4 h-4 fill-current" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-white font-bold text-xs sm:text-sm">Pix</p>
+                      <p className="text-zinc-500 text-[9px]">Pagamento rápido e aprovado na hora</p>
+                    </div>
+                  </div>
+
+                  {/* Social Proof */}
+                  <div className="bg-white/5 p-2.5 rounded-xl flex items-center justify-center gap-2">
+                    <Users className="w-3.5 h-3.5 text-primary" />
+                    <span className="text-white font-bold text-[11px]">+245 pedidos realizados <span className="text-emerald-500">●</span></span>
+                  </div>
+
+                  {/* Testimonials Mini */}
+                  <div className="space-y-2">
+                    <p className="text-zinc-500 text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-1.5">
+                      <Star className="w-3 h-3 text-primary fill-primary" /> O que dizem nossos clientes
+                    </p>
+                    <div className="space-y-1.5">
+                      {[
+                        { name: 'Lucas M.', text: 'Recebi em menos de 1 hora, muito rápido!', initial: 'L' },
+                        { name: 'Ana C.', text: 'Já é meu terceiro pedido, sempre entrega certinho.', initial: 'A' },
+                        { name: 'Pedro S.', text: 'Excelente atendimento e entrega garantida!', initial: 'P' },
+                      ].map((t, i) => (
+                        <div key={i} className="bg-white/5 p-2.5 rounded-xl flex items-start gap-2.5 text-left">
+                          <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black text-[9px] shrink-0">{t.initial}</div>
+                          <div className="space-y-0.5">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-white font-bold text-[9px]">{t.name}</span>
+                              <div className="flex gap-0.5"><Star className="w-2 h-2 text-orange-500 fill-orange-500" /><Star className="w-2 h-2 text-orange-500 fill-orange-500" /><Star className="w-2 h-2 text-orange-500 fill-orange-500" /><Star className="w-2 h-2 text-orange-500 fill-orange-500" /><Star className="w-2 h-2 text-orange-500 fill-orange-500" /></div>
+                            </div>
+                            <p className="text-zinc-500 text-[8px] leading-tight">{t.text}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Trust Badges */}
+                  <div className="flex justify-center gap-6 py-1">
+                    <div className="flex items-center gap-1.5 text-zinc-500 text-[9px] font-bold">
+                      <ShieldCheck className="w-3 h-3 text-primary" /> Compra Segura
+                    </div>
+                    <div className="flex items-center gap-1.5 text-zinc-500 text-[9px] font-bold">
+                      <CheckCircle2 className="w-3 h-3 text-primary" /> Garantia 90 dias
+                    </div>
+                  </div>
+
+                  {/* Replacement Guarantee */}
+                  <div className="bg-emerald-500/5 border border-emerald-500/20 p-3 rounded-2xl text-left flex items-start gap-2.5">
+                    <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-500 mt-0.5">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <p className="text-emerald-500 font-black text-xs">Garantia de reposição gratuita</p>
+                      <p className="text-zinc-500 text-[9px] leading-snug font-medium">Se não atingir a quantidade contratada, repomos sem custo adicional.</p>
+                    </div>
+                  </div>
+
+                  <button onClick={() => setStep(2)} className="w-full py-2.5 text-zinc-500 hover:text-white font-bold text-[10px] uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2">
                     <RotateCcw className="w-3 h-3" /> Voltar aos serviços
                   </button>
 
