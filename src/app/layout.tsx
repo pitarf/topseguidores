@@ -36,6 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
       icon: settings.faviconUrl || "/favicon.png",
       apple: settings.faviconUrl || "/favicon.png",
     },
+    manifest: "/manifest.json",
     openGraph: {
       title: settings.siteTitle,
       description: settings.siteDescription,

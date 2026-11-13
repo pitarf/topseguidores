@@ -74,6 +74,28 @@ model FakeNotification {
   createdAt DateTime @default(now())
 }
 
+model PushSubscription {
+  id        String   @id @default(cuid())
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  userAgent String?
+  createdAt DateTime @default(now())
+}
+
+model AdminNotification {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  orderId   String?
+  amount    Int?
+  price     Decimal?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
 enum OrderStatus {
   PENDING
   SUCCESS

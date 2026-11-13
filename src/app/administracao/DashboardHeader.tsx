@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Calendar } from "lucide-react";
+import { NotificationCenter } from "@/components/NotificationCenter";
 
 export function DashboardHeader({ availableMonths }: { availableMonths: { label: string, month: number, year: number }[] }) {
   const router = useRouter();
@@ -31,7 +32,9 @@ export function DashboardHeader({ availableMonths }: { availableMonths: { label:
           <p className="text-zinc-400 font-medium text-sm mt-1">Acompanhe as métricas de conversão e receita em tempo real.</p>
         </div>
 
-        <div className="flex items-center gap-2 p-1.5 bg-[#0b111e] border border-white/5 rounded-2xl">
+        <div className="flex items-center gap-3">
+          <NotificationCenter />
+          <div className="flex items-center gap-2 p-1.5 bg-[#0b111e] border border-white/5 rounded-2xl">
           <button
             onClick={() => handleFilterChange(null, null)}
             className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendOrderToPerfectPanel } from "@/services/perfectpanel";
+import { sendAdminPurchaseNotification } from "@/services/webpush";
 
 export async function POST(req: Request) {
   try {
@@ -145,6 +146,27 @@ export async function POST(req: Request) {
         }
       } catch (capiErr) {
         console.error("⚠️ Erro ao processar CAPI:", capiErr);
+      }
+
+      // 8. Disparo de Notificação Web Push para o Administrador (Celular + Web)
+      try {
+        const precoFormatado = Number(order.price).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        });
+        const qtdFormatada = order.amount.toLocaleString("pt-BR");
+        const planoNome = order.plan.name || "Plano";
+
+        await sendAdminPurchaseNotification({
+          title: `💰 Nova Venda Aprovada! (${precoFormatado})`,
+          message: `${planoNome} (${qtdFormatada}) para ${order.instagramUrl}`,
+          orderId: order.id,
+          amount: order.amount,
+          price: Number(order.price),
+          url: "/administracao",
+        });
+      } catch (pushErr) {
+        console.error("⚠️ Erro ao disparar Web Push no webhook:", pushErr);
       }
     } else {
       console.log(`ℹ️ Webhook recebido com status irrelevante: ${status}`);
