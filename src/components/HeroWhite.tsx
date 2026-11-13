@@ -56,7 +56,7 @@ export function HeroWhite({ title, description }: HeroWhiteProps) {
             className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto px-4"
           >
             <Link 
-              href="/home"
+              href="/"
               className="w-full sm:w-auto px-10 py-5 bg-primary text-white font-black text-base md:text-lg rounded-2xl transition-all duration-300 btn-primary-gradient shadow-[0_20px_40px_rgba(255,0,0,0.2)] hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
             >
               Começar agora
