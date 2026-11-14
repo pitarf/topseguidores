@@ -562,11 +562,25 @@ export function CheckoutModal() {
                     <p className="text-red-500 font-mono text-xl font-black">{formatTime(timeLeft)}</p>
                   </div>
 
-                  {/* Botão de Pagamento Principal - NO TOPO */}
-                  <button 
+                  {/* Botão de Pagamento Principal - Verde com pulso sutil e atrativo */}
+                  <motion.button 
                     onClick={handleGeneratePix} 
                     disabled={loading} 
-                    className="w-full py-4 md:py-5 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-black rounded-2xl shadow-[0_10px_30px_rgba(59,130,246,0.5)] active:scale-95 transition-all flex flex-col items-center justify-center gap-0.5 group cursor-pointer"
+                    animate={loading ? {} : { 
+                      scale: [1, 1.02, 1],
+                      boxShadow: [
+                        "0 10px 25px -5px rgba(16, 185, 129, 0.4), 0 0 15px rgba(16, 185, 129, 0.2)",
+                        "0 15px 35px -5px rgba(16, 185, 129, 0.65), 0 0 25px rgba(16, 185, 129, 0.45)",
+                        "0 10px 25px -5px rgba(16, 185, 129, 0.4), 0 0 15px rgba(16, 185, 129, 0.2)"
+                      ]
+                    }}
+                    transition={{
+                      duration: 2.2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                    whileTap={{ scale: 0.97 }}
+                    className="w-full py-4 md:py-5 bg-gradient-to-r from-emerald-600 via-emerald-500 to-green-500 text-white font-black rounded-2xl active:scale-95 transition-all flex flex-col items-center justify-center gap-0.5 group cursor-pointer border border-emerald-400/30"
                   >
                     <div className="flex items-center gap-2">
                       {loading ? <Loader2 className="animate-spin w-5 h-5 md:w-6 md:h-6" /> : (
@@ -576,8 +590,8 @@ export function CheckoutModal() {
                         </>
                       )}
                     </div>
-                    {!loading && <span className="text-[9px] md:text-[10px] opacity-80 font-medium">Aprovação instantânea • Entrega automática</span>}
-                  </button>
+                    {!loading && <span className="text-[9px] md:text-[10px] text-emerald-100 font-bold tracking-wide">Aprovação instantânea • Entrega automática</span>}
+                  </motion.button>
 
                   {/* Plan Summary */}
                   <div className="bg-primary/5 border border-primary/20 p-3.5 rounded-2xl flex items-center gap-3">
