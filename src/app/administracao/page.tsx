@@ -143,61 +143,61 @@ export default async function AdministracaoPage({
       <DashboardHeader availableMonths={availableMonthsList} />
 
       {/* Cards de Faturamento (Power BI Style) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <MetricCard 
           title={isFiltered ? "Faturamento Filtrado" : "Faturamento Hoje"} 
           value={formatMoney(isFiltered ? filteredRevenue : revToday)} 
-          icon={<DollarSign className="w-6 h-6 text-emerald-400" />} 
+          icon={<DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400" />} 
           trend={isFiltered ? "No Período" : "Hoje"}
           color="emerald"
         />
         <MetricCard 
           title="Faturamento Semana" 
           value={formatMoney(revWeek)} 
-          icon={<Activity className="w-6 h-6 text-primary" />} 
+          icon={<Activity className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />} 
           trend="Esta semana"
           color="primary"
         />
         <MetricCard 
           title="Faturamento Mês" 
           value={formatMoney(revMonth)} 
-          icon={<Calendar className="w-6 h-6 text-blue-400" />} 
+          icon={<Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />} 
           trend="Este mês"
           color="blue"
         />
         <MetricCard 
           title="Faturamento Ano" 
           value={formatMoney(revYear)} 
-          icon={<TrendingUp className="w-6 h-6 text-purple-400" />} 
+          icon={<TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />} 
           trend="Este ano"
           color="purple"
         />
       </div>
 
       {/* Gráfico de Desempenho e Estatísticas */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         
         {/* Gráfico Ocupando 2 Colunas */}
-        <div className="lg:col-span-2 bg-[#0b111e] border border-white/5 p-8 rounded-[2rem] shadow-2xl">
-          <h2 className="text-xl font-black text-white tracking-tight mb-6">
+        <div className="lg:col-span-2 bg-[#0b111e] border border-white/5 p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-[2rem] shadow-2xl">
+          <h2 className="text-lg sm:text-xl font-black text-white tracking-tight mb-4 sm:mb-6">
             Receita ({isFiltered ? `Dias do Mês ${selectedMonth}` : "Últimos 7 Dias"})
           </h2>
           <RevenueChart data={chartData} />
         </div>
 
         {/* Estatísticas Secundárias */}
-        <div className="flex flex-col gap-6">
-          <div className="bg-[#0b111e] border border-white/5 p-6 rounded-[2rem] flex-1 flex flex-col justify-center shadow-xl">
-            <div className="w-12 h-12 mb-4 rounded-xl bg-green-500/10 flex items-center justify-center border border-green-500/20 text-green-500">
-              <CheckCircle2 className="w-6 h-6" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 sm:gap-6">
+          <div className="bg-[#0b111e] border border-white/5 p-4 sm:p-6 rounded-2xl md:rounded-[2rem] flex-1 flex flex-col justify-center shadow-xl">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 mb-3 sm:mb-4 rounded-xl bg-green-500/10 flex items-center justify-center border border-green-500/20 text-green-500">
+              <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <p className="text-zinc-400 font-bold text-xs uppercase tracking-wider mb-1">Pedidos Pagos</p>
-            <p className="text-3xl font-black text-white">{totalSuccess}</p>
+            <p className="text-2xl sm:text-3xl font-black text-white">{totalSuccess}</p>
           </div>
           
-          <div className="bg-[#0b111e] border border-white/5 p-6 rounded-[2rem] flex-1 flex flex-col justify-center shadow-xl">
-            <div className="w-12 h-12 mb-4 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20 text-primary">
-              <Target className="w-6 h-6" />
+          <div className="bg-[#0b111e] border border-white/5 p-4 sm:p-6 rounded-2xl md:rounded-[2rem] flex-1 flex flex-col justify-center shadow-xl">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 mb-3 sm:mb-4 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20 text-primary">
+              <Target className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <p className="text-zinc-400 font-bold text-xs uppercase tracking-wider mb-1">Serviços Entregues</p>
             <p className="text-3xl font-black text-white">{(totalDelivered).toLocaleString('pt-BR')}</p>

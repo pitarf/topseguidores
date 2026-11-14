@@ -138,15 +138,15 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
 
   return (
-    <div className="bg-[#0b111e] border border-white/5 rounded-[2rem] overflow-hidden shadow-2xl">
+    <div className="bg-[#0b111e] border border-white/5 rounded-2xl md:rounded-[2rem] overflow-hidden shadow-2xl">
       {/* Abas de Filtro Estilo PerfectPanel */}
-      <div className="p-6 border-b border-white/5 bg-[#0e1525]">
-        <div className="flex flex-wrap items-center gap-2 mb-6">
+      <div className="p-4 sm:p-6 border-b border-white/5 bg-[#0e1525]">
+        <div className="flex items-center gap-2 mb-4 overflow-x-auto scrollbar-hide pb-2">
           {tabs.map(t => (
             <button
               key={t}
               onClick={() => setFilter(t)}
-              className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider transition-all ${
+              className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-xs font-black uppercase tracking-wider transition-all shrink-0 ${
                 filter === t 
                   ? "bg-primary text-white shadow-[0_0_15px_rgba(255,0,0,0.3)]" 
                   : "bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white"
@@ -159,13 +159,13 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
 
         {/* Barra de Busca */}
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <input 
             type="text" 
             placeholder="Procurar por ID, Link ou ID SMM..." 
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full bg-[#050810] border border-white/5 rounded-xl pl-11 pr-4 py-4 text-white text-sm font-medium placeholder:text-zinc-600 focus:outline-none focus:border-primary/50 transition-colors"
+            className="w-full bg-[#050810] border border-white/5 rounded-xl pl-10 pr-4 py-3 sm:py-4 text-white text-xs sm:text-sm font-medium placeholder:text-zinc-600 focus:outline-none focus:border-primary/50 transition-colors"
           />
         </div>
       </div>
@@ -174,39 +174,39 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse whitespace-nowrap">
           <thead>
-            <tr className="bg-[#0b111e] border-b border-white/5 text-zinc-400 text-[10px] uppercase tracking-widest font-black">
-              <th className="p-6">ID Local</th>
-              <th className="p-6">Data</th>
-              <th className="p-6">Link</th>
-              <th className="p-6">Valor</th>
-              <th className="p-6 text-center">Contagem Inicial</th>
-              <th className="p-6 text-center">Quantidade</th>
-              <th className="p-6">Plano</th>
-              <th className="p-6 text-center">Status SMM</th>
-              <th className="p-6 text-center">Restam</th>
+            <tr className="bg-[#0b111e] border-b border-white/5 text-zinc-400 text-[9px] sm:text-[10px] uppercase tracking-widest font-black">
+              <th className="p-3.5 sm:p-6">ID Local</th>
+              <th className="p-3.5 sm:p-6">Data</th>
+              <th className="p-3.5 sm:p-6">Link</th>
+              <th className="p-3.5 sm:p-6">Valor</th>
+              <th className="p-3.5 sm:p-6 text-center">Contagem Inicial</th>
+              <th className="p-3.5 sm:p-6 text-center">Quantidade</th>
+              <th className="p-3.5 sm:p-6">Plano</th>
+              <th className="p-3.5 sm:p-6 text-center">Status SMM</th>
+              <th className="p-3.5 sm:p-6 text-center">Restam</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
             {filteredOrders.length === 0 ? (
               <tr>
-                <td colSpan={9} className="p-12 text-center text-zinc-500 font-bold">
+                <td colSpan={9} className="p-8 sm:p-12 text-center text-zinc-500 font-bold text-xs sm:text-sm">
                   Nenhum pedido encontrado.
                 </td>
               </tr>
             ) : (
               filteredOrders.map((order) => (
-                <tr key={order.id} className="hover:bg-white/[0.02] transition-colors">
-                  <td className="p-6 text-xs text-zinc-500 font-bold">
+                <tr key={order.id} className="hover:bg-white/[0.02] transition-colors text-xs sm:text-sm">
+                  <td className="p-3.5 sm:p-6 text-[11px] sm:text-xs text-zinc-500 font-bold">
                     {order.id.slice(-6).toUpperCase()}
                     {order.panelOrderId && (
                       <div className="text-primary mt-1 text-[10px]">SMM: {order.panelOrderId}</div>
                     )}
                   </td>
-                  <td className="p-6 text-xs text-zinc-300 font-bold">
+                  <td className="p-3.5 sm:p-6 text-xs text-zinc-300 font-bold">
                     {new Date(order.createdAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                     <div className="text-zinc-500 font-normal">{new Date(order.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</div>
                   </td>
-                  <td className="p-6">
+                  <td className="p-3.5 sm:p-6">
                     <a 
                       href={order.instagramUrl} 
                       target="_blank" 
@@ -217,19 +217,19 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
                       {order.instagramUrl.replace("https://www.instagram.com/", "").replace("https://instagram.com/", "").split("?")[0]}
                     </a>
                   </td>
-                  <td className="p-6 text-sm font-black text-emerald-400">
+                  <td className="p-3.5 sm:p-6 text-sm font-black text-emerald-400">
                     {formatMoney(Number(order.price))}
                   </td>
-                  <td className="p-6 text-center text-xs font-black text-white">
+                  <td className="p-3.5 sm:p-6 text-center text-xs font-black text-white">
                     {order.startCount}
                   </td>
-                  <td className="p-6 text-center text-xs font-black text-white">
+                  <td className="p-3.5 sm:p-6 text-center text-xs font-black text-white">
                     {order.amount.toLocaleString('pt-BR')}
                   </td>
-                  <td className="p-6 text-xs font-bold text-zinc-300">
+                  <td className="p-3.5 sm:p-6 text-xs font-bold text-zinc-300">
                     {order.plan?.name || "Avulso"}
                   </td>
-                  <td className="p-6 text-center">
+                  <td className="p-3.5 sm:p-6 text-center">
                     <div className="flex flex-col items-center justify-center gap-1.5 mt-1.5">
                       <div className="flex items-center justify-center gap-1.5">
                         <span className={`inline-flex items-center px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-wider border ${
@@ -246,7 +246,7 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
                         {order.finalStatus === 'Erro SMM' && order.smmError && (
                           <div className="group/error relative">
                             <Info className="w-3.5 h-3.5 text-zinc-500 hover:text-white transition-colors cursor-help" />
-                            <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 p-2 bg-black border border-white/10 rounded-lg text-[9px] text-zinc-300 font-medium leading-tight opacity-0 group-hover/error:opacity-100 transition-opacity pointer-events-none z-50 shadow-2xl">
+                            <div className="absolute right-0 sm:left-1/2 sm:-translate-x-1/2 bottom-full mb-2 w-48 p-2 bg-black border border-white/10 rounded-lg text-[9px] text-zinc-300 font-medium leading-tight opacity-0 group-hover/error:opacity-100 transition-opacity pointer-events-none z-50 shadow-2xl">
                               <span className="text-red-400 font-black block mb-1">ERRO DO FORNECEDOR:</span>
                               {order.smmError}
                             </div>

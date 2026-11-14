@@ -35,7 +35,7 @@ export function SettingsForm({ initialData }: { initialData: any }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Branding & SEO */}
-      <div className="bg-[#0b111e] border border-white/5 p-8 rounded-[2rem] shadow-2xl space-y-6">
+      <div className="bg-[#0b111e] border border-white/5 p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-[2rem] shadow-2xl space-y-6">
         <h2 className="text-xl font-black text-white tracking-tight uppercase">Branding & SEO</h2>
         
         <div className="space-y-4">
@@ -116,7 +116,7 @@ export function SettingsForm({ initialData }: { initialData: any }) {
       </div>
 
       {/* Facebook Tracking */}
-      <div className="bg-[#0b111e] border border-white/5 p-8 rounded-[2rem] shadow-2xl space-y-6">
+      <div className="bg-[#0b111e] border border-white/5 p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-[2rem] shadow-2xl space-y-6">
         <h2 className="text-xl font-black text-[#1877F2] tracking-tight uppercase mb-6 flex items-center gap-2">
           Facebook Tracking
         </h2>
@@ -145,7 +145,7 @@ export function SettingsForm({ initialData }: { initialData: any }) {
       </div>
 
       {/* Integrações de API */}
-      <div className="bg-[#0b111e] border border-white/5 p-8 rounded-[2rem] shadow-2xl space-y-6">
+      <div className="bg-[#0b111e] border border-white/5 p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-[2rem] shadow-2xl space-y-6">
         <h2 className="text-xl font-black text-primary tracking-tight uppercase">Chaves de API</h2>
         
         <div className="space-y-6">
@@ -169,7 +169,7 @@ export function SettingsForm({ initialData }: { initialData: any }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">PushinPay Token</label>
               <div className="relative">
@@ -210,7 +210,7 @@ export function SettingsForm({ initialData }: { initialData: any }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">PerfectPanel URL</label>
               <input 

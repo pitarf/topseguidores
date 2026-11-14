@@ -162,10 +162,10 @@ export function NotificationCenter() {
       {isOpen && (
         <>
           <div
-            className="fixed inset-0 z-40"
+            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs md:bg-transparent"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 mt-3 w-80 md:w-96 rounded-2xl bg-[#0b111e] border border-white/10 shadow-2xl z-50 overflow-hidden flex flex-col max-h-[500px]">
+          <div className="fixed inset-x-3 top-20 md:static md:inset-auto md:absolute md:right-0 md:mt-3 w-auto md:w-96 rounded-2xl bg-[#0b111e] border border-white/10 shadow-2xl z-50 overflow-hidden flex flex-col max-h-[80vh] md:max-h-[500px]">
             {/* Header do Menu */}
             <div className="p-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
               <div className="flex items-center gap-2">

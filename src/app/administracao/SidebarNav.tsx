@@ -35,7 +35,7 @@ function SidebarLink({ href, icon: Icon, label, active }: { href: string, icon: 
   return (
     <Link 
       href={href} 
-      className={`flex-1 md:flex-none flex items-center justify-center md:justify-start gap-2 px-3 md:px-4 py-3 md:py-3.5 rounded-xl md:rounded-2xl transition-all uppercase tracking-wider text-[10px] md:text-xs whitespace-nowrap border ${
+      className={`shrink-0 md:shrink flex items-center justify-center md:justify-start gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 sm:py-3.5 rounded-xl md:rounded-2xl transition-all uppercase tracking-wider text-[10px] sm:text-xs whitespace-nowrap border ${
         active 
           ? "bg-primary/10 text-primary border-primary/20 font-black shadow-[0_0_20px_rgba(255,0,0,0.1)]" 
           : "text-zinc-400 font-bold border-transparent hover:bg-white/5 hover:text-white"
