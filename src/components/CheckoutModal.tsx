@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useCheckout } from "@/hooks/useCheckout";
-import { X, CheckCircle2, Copy, ShieldCheck, Search, ArrowLeft, ArrowRight, Heart, Play, Loader2, Star, RotateCcw, Check, Clock, Users, Zap } from "lucide-react";
+import { X, CheckCircle2, Copy, ShieldCheck, Search, ArrowLeft, ArrowRight, Heart, Play, Loader2, Star, RotateCcw, Check, Clock, Users, Zap, UserPlus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { 
@@ -335,15 +335,44 @@ export function CheckoutModal() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
                   {[
-                    { id: 'seguidores', label: 'Seguidores', icon: Heart },
-                    { id: 'curtidas', label: 'Curtidas', icon: Heart },
-                    { id: 'visualizacoes', label: 'Visualizações', icon: Play },
+                    { 
+                      id: 'seguidores', 
+                      label: 'Seguidores', 
+                      icon: UserPlus,
+                      bgGradient: 'from-blue-600/20 via-blue-500/10 to-indigo-600/20',
+                      borderColor: 'border-blue-500/30 group-hover:border-blue-400',
+                      iconBg: 'bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-[0_0_20px_rgba(37,99,235,0.4)]',
+                      iconColor: 'text-white'
+                    },
+                    { 
+                      id: 'curtidas', 
+                      label: 'Curtidas', 
+                      icon: Heart,
+                      bgGradient: 'from-rose-600/20 via-pink-500/10 to-red-600/20',
+                      borderColor: 'border-rose-500/30 group-hover:border-rose-400',
+                      iconBg: 'bg-gradient-to-tr from-rose-600 to-pink-500 shadow-[0_0_20px_rgba(244,63,94,0.4)]',
+                      iconColor: 'text-white'
+                    },
+                    { 
+                      id: 'visualizacoes', 
+                      label: 'Visualizações', 
+                      icon: Play,
+                      bgGradient: 'from-amber-600/20 via-orange-500/10 to-yellow-600/20',
+                      borderColor: 'border-amber-500/30 group-hover:border-amber-400',
+                      iconBg: 'bg-gradient-to-tr from-amber-500 to-orange-500 shadow-[0_0_20px_rgba(245,158,11,0.4)]',
+                      iconColor: 'text-white'
+                    },
                   ].map((s) => (
-                    <button key={s.id} onClick={() => handleSelectService(s.id as any)} className="group p-4 md:p-10 rounded-[1.5rem] md:rounded-[2rem] border border-white/5 bg-[#121826]/40 hover:border-primary transition-all flex flex-col items-center">
-                      <div className="w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-[#0b111e] flex items-center justify-center text-primary mb-3 md:mb-6 group-hover:scale-110 transition-transform">
-                        <s.icon className="w-5 h-5 md:w-8 md:h-8" />
+                    <button 
+                      key={s.id} 
+                      onClick={() => handleSelectService(s.id as any)} 
+                      className={`group relative p-5 md:p-8 rounded-[1.75rem] md:rounded-[2rem] border ${s.borderColor} bg-gradient-to-b ${s.bgGradient} hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex flex-col items-center justify-center overflow-hidden shadow-lg`}
+                    >
+                      <div className="absolute inset-0 bg-white/[0.02] group-hover:bg-white/[0.05] transition-colors" />
+                      <div className={`w-14 h-14 md:w-18 md:h-18 rounded-2xl ${s.iconBg} flex items-center justify-center ${s.iconColor} mb-3 md:mb-5 group-hover:scale-110 transition-transform duration-300`}>
+                        <s.icon className="w-7 h-7 md:w-9 md:h-9" />
                       </div>
-                      <span className="text-base md:text-xl font-black text-white">{s.label}</span>
+                      <span className="text-base md:text-xl font-[900] text-white tracking-wide relative z-10">{s.label}</span>
                     </button>
                   ))}
                 </div>
