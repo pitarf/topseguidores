@@ -412,22 +412,34 @@ export function CheckoutModal() {
             )}
 
             {step === 4 && (
-              <div className="w-full max-w-xl mx-auto space-y-10">
+              <div className="w-full max-w-xl mx-auto space-y-4">
                 <div className="text-center">
-                  <h1 className="text-2xl md:text-4xl font-black text-white mb-2 md:mb-4 tracking-tight">Selecione a publicação</h1>
-                  <p className="text-zinc-500 text-sm md:text-base">Escolha onde deseja receber as {service}</p>
+                  <h1 className="text-xl md:text-3xl font-black text-white mb-1 tracking-tight">Selecione a publicação</h1>
+                  <p className="text-zinc-500 text-xs md:text-sm">Escolha onde deseja receber as {service}</p>
                 </div>
-                <div className="bg-[#121826]/60 border border-white/5 rounded-[2rem] p-4 md:p-6 space-y-8">
-                  <div className="grid grid-cols-3 gap-3">
+
+                {/* Botão de Confirmação NO TOPO - Sempre visível sem precisar rolar */}
+                <button 
+                  onClick={() => setStep(5)} 
+                  disabled={!selectedPost} 
+                  className={`w-full py-4 bg-primary text-white font-black text-sm md:text-base rounded-2xl shadow-xl flex items-center justify-center gap-2 group hover:scale-[1.01] active:scale-95 transition-all cursor-pointer ${
+                    !selectedPost ? 'opacity-50 cursor-not-allowed bg-zinc-800 text-zinc-400' : 'shadow-[0_0_20px_rgba(59,130,246,0.5)]'
+                  }`}
+                >
+                  Confirmar seleção <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
+                </button>
+
+                <div className="bg-[#121826]/60 border border-white/5 rounded-[2rem] p-3 md:p-5 space-y-4">
+                  <div className="grid grid-cols-3 gap-2.5 max-h-[55vh] overflow-y-auto pr-1">
                     {posts.map((post) => (
-                      <button key={post.id} onClick={() => setSelectedPost(post)} className={`relative aspect-square rounded-xl overflow-hidden border-[3px] transition-all group ${selectedPost?.id === post.id ? 'border-primary shadow-[0_0_15px_rgba(59,130,246,0.3)]' : 'border-transparent'}`}>
+                      <button key={post.id} onClick={() => setSelectedPost(post)} className={`relative aspect-square rounded-xl overflow-hidden border-[3px] transition-all group cursor-pointer ${selectedPost?.id === post.id ? 'border-primary shadow-[0_0_15px_rgba(59,130,246,0.4)] scale-[0.98]' : 'border-transparent hover:border-white/20'}`}>
                         <img src={`https://images.weserv.nl/?url=${encodeURIComponent(post.url)}&w=400&h=400&fit=cover`} className="w-full h-full object-cover group-hover:scale-110 transition-transform" alt="Post" />
                         {selectedPost?.id === post.id && (
                           <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in duration-300">
                             <Check className="text-white stroke-[4] w-8 h-8" />
                           </div>
                         )}
-                        <div className="absolute bottom-1 left-1 flex items-center gap-1 text-white text-[8px] font-bold bg-black/50 px-1 rounded shadow-sm">
+                        <div className="absolute bottom-1 left-1 flex items-center gap-1 text-white text-[8px] font-bold bg-black/60 px-1.5 py-0.5 rounded shadow-sm">
                           {post.type === 'reels' ? <Play className="w-2 h-2 fill-white" /> : <Heart className="w-2 h-2 fill-white" />} {post.likes}
                         </div>
                       </button>
@@ -438,15 +450,11 @@ export function CheckoutModal() {
                     <button 
                       onClick={handleLoadMore}
                       disabled={loadingMore}
-                      className="w-full py-4 text-primary font-black text-sm border-b border-white/5 flex items-center justify-center gap-2 hover:bg-primary/5 transition-all rounded-xl mt-2"
+                      className="w-full py-3 text-primary font-black text-xs md:text-sm border-t border-white/5 flex items-center justify-center gap-2 hover:bg-primary/5 transition-all rounded-xl"
                     >
                       {loadingMore ? <Loader2 className="animate-spin w-4 h-4" /> : "Ver mais publicações"}
                     </button>
                   )}
-
-                  <button onClick={() => setStep(5)} disabled={!selectedPost} className="w-full py-6 bg-primary text-white font-black rounded-2xl shadow-xl flex items-center justify-center gap-2 group hover:scale-[1.02] active:scale-95 disabled:opacity-50 transition-all mt-4">
-                    Confirmar seleção <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </button>
                 </div>
               </div>
             )}
