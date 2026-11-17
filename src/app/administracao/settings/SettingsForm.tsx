@@ -144,6 +144,62 @@ export function SettingsForm({ initialData }: { initialData: any }) {
         </div>
       </div>
 
+      {/* Google Tag Manager & Scripts de Rastreamento */}
+      <div className="bg-[#0b111e] border border-white/5 p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-[2rem] shadow-2xl space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-black text-amber-400 tracking-tight uppercase flex items-center gap-2">
+            Google Tag Manager / Tags
+          </h2>
+          <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 bg-amber-400/10 text-amber-400 border border-amber-400/20 rounded-full">
+            Header Scripts
+          </span>
+        </div>
+
+        {/* Tag Ativa / Amostra */}
+        <div className="bg-[#050810] border border-white/10 rounded-xl p-4 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              Tag Padrão / Amostra Atual:
+            </span>
+            <button
+              type="button"
+              onClick={() => setData({
+                ...data,
+                customHeaderTags: `<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-TLZXFQ8D"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag('js', new Date());\n</script>`
+              })}
+              className="text-[10px] text-amber-400 hover:text-amber-300 font-bold uppercase tracking-wider underline cursor-pointer"
+            >
+              Inserir Tag Padrão
+            </button>
+          </div>
+          <pre className="text-[11px] text-zinc-300 font-mono bg-black/40 p-3 rounded-lg overflow-x-auto whitespace-pre border border-white/5">
+{`<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-TLZXFQ8D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+</script>`}
+          </pre>
+        </div>
+
+        {/* Campo de Edição da Tag */}
+        <div>
+          <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-2">
+            Tags e Scripts Personalizados (Injetados no Header)
+          </label>
+          <textarea
+            placeholder={`Cole aqui as suas tags (ex: Google Tag Manager, Google Analytics, pixels adicionais)...\nDeixe em branco para usar a tag padrão exibida acima.`}
+            value={data.customHeaderTags ?? ""}
+            onChange={e => setData({ ...data, customHeaderTags: e.target.value })}
+            className="w-full bg-[#050810] border border-white/5 rounded-xl px-4 py-3 text-white font-mono text-xs focus:border-amber-400/50 outline-none h-36 resize-y"
+          />
+          <p className="text-[11px] text-zinc-500 mt-2 font-medium">
+            💡 Dica: Os scripts adicionados aqui são injetados diretamente no topo do site para rastreamento de conversões e tráfego.
+          </p>
+        </div>
+      </div>
+
       {/* Integrações de API */}
       <div className="bg-[#0b111e] border border-white/5 p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-[2rem] shadow-2xl space-y-6">
         <h2 className="text-xl font-black text-primary tracking-tight uppercase">Chaves de API</h2>

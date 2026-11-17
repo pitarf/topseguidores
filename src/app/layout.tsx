@@ -78,12 +78,47 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const settings = await getSystemSettings();
+  
+  // Tag GTM padrão solicitada caso nenhuma outra seja definida
+  const defaultGtm = `
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TLZXFQ8D');</script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    </script>
+    <!-- End Google Tag Manager -->
+  `;
+
+  const headerTagsToRender = settings.customHeaderTags?.trim() ? settings.customHeaderTags : defaultGtm;
 
   return (
     <html lang="pt-BR" className="dark">
+      <head>
+        {headerTagsToRender && (
+          <div
+            style={{ display: "none" }}
+            dangerouslySetInnerHTML={{ __html: headerTagsToRender }}
+          />
+        )}
+      </head>
       <body
         className={`${poppins.variable} ${inter.variable} antialiased selection:bg-primary selection:text-white`}
       >
+        {/* Fallback de noscript do GTM */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-TLZXFQ8D"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-Z6MPV4SH16"
           strategy="afterInteractive"

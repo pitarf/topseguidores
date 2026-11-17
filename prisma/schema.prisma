@@ -28,6 +28,7 @@ model SystemSetting {
   
   fbPixelId           String?
   fbApiToken          String?
+  customHeaderTags    String?  @db.Text
   updatedAt           DateTime @updatedAt
 }
 

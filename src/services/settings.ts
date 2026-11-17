@@ -36,6 +36,7 @@ export async function getSystemSettings() {
       logoUrl: null,
       fbPixelId: null,
       fbApiToken: null,
+      customHeaderTags: null,
       whatsappNumber: "",
       updatedAt: new Date(),
     } as any;
