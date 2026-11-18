@@ -267,15 +267,49 @@ export function CheckoutModal() {
   };
 
   const handleGeneratePix = async () => {
-
     setLoading(true);
     try {
+      // Determina a URL de entrega:
+      // Para seguidores: link do perfil (Instagram ou TikTok)
+      // Para curtidas ou visualizações: link da publicação selecionada
+      let targetUrl = "";
+      const cleanUser = username.replace("@", "").trim();
+
+      if (service === 'seguidores') {
+        targetUrl = platform === 'tiktok' 
+          ? `https://www.tiktok.com/@${cleanUser}` 
+          : `https://www.instagram.com/${cleanUser}`;
+      } else {
+        if (selectedPost) {
+          if (platform === 'tiktok') {
+            targetUrl = selectedPost.code 
+              ? `https://www.tiktok.com/@${cleanUser}/video/${selectedPost.code}` 
+              : `https://www.tiktok.com/@${cleanUser}`;
+          } else {
+            // Instagram: reels ou posts
+            const isReel = selectedPost.type === 'reels';
+            const code = selectedPost.code;
+            if (code) {
+              targetUrl = isReel 
+                ? `https://www.instagram.com/reel/${code}/` 
+                : `https://www.instagram.com/p/${code}/`;
+            } else {
+              targetUrl = `https://www.instagram.com/${cleanUser}`;
+            }
+          }
+        } else {
+          targetUrl = platform === 'tiktok' 
+            ? `https://www.tiktok.com/@${cleanUser}` 
+            : `https://www.instagram.com/${cleanUser}`;
+        }
+      }
+
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           planId: selectedPlan?.id,
-          instagramUrl: `https://instagram.com/${username.replace("@", "")}`,
+          instagramUrl: targetUrl,
         }),
       });
       const data = await res.json();
@@ -606,8 +640,16 @@ export function CheckoutModal() {
                     </div>
                   </div>
 
-                  {/* Profile Preview */}
-                  {profileData && (
+                  {/* Profile / Post Preview */}
+                  {selectedPost && (service === 'curtidas' || service === 'visualizacoes') ? (
+                    <div className="bg-white/5 border border-white/5 p-3.5 rounded-2xl flex items-center gap-3 text-left">
+                      <img src={`https://images.weserv.nl/?url=${encodeURIComponent(selectedPost.url)}&w=100&h=100&fit=cover`} className="w-11 h-11 rounded-xl border-2 border-primary/30 object-cover shrink-0" alt="Publicação selecionada" />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-white font-black text-xs truncate">Publicação Selecionada</h3>
+                        <p className="text-zinc-500 font-bold text-[9px] uppercase tracking-widest truncate">@{profileData?.username || username}</p>
+                      </div>
+                    </div>
+                  ) : profileData && (
                     <div className="bg-white/5 border border-white/5 p-3.5 rounded-2xl flex items-center gap-3 text-left">
                       <img src={`https://images.weserv.nl/?url=${encodeURIComponent(profileData.profile_pic_url)}`} className="w-11 h-11 rounded-full border-2 border-primary/30 object-cover shrink-0" alt="Avatar" />
                       <div className="flex-1 min-w-0">

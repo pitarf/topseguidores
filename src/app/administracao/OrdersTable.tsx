@@ -211,10 +211,16 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
                       href={order.instagramUrl} 
                       target="_blank" 
                       rel="noreferrer"
-                      className="text-blue-400 hover:text-blue-300 text-xs font-bold hover:underline truncate max-w-[150px] block"
+                      className="text-blue-400 hover:text-blue-300 text-xs font-bold hover:underline truncate max-w-[180px] block"
                       title={order.instagramUrl}
                     >
-                      {order.instagramUrl.replace("https://www.instagram.com/", "").replace("https://instagram.com/", "").split("?")[0]}
+                      {order.instagramUrl.includes("/reel/") 
+                        ? `reel/${order.instagramUrl.split("/reel/")[1]?.split("/")[0] || ""}`
+                        : order.instagramUrl.includes("/p/") 
+                          ? `post/${order.instagramUrl.split("/p/")[1]?.split("/")[0] || ""}`
+                          : order.instagramUrl.includes("/video/")
+                            ? `video/${order.instagramUrl.split("/video/")[1]?.split("?")[0] || ""}`
+                            : `@${order.instagramUrl.replace("https://www.instagram.com/", "").replace("https://instagram.com/", "").replace("https://www.tiktok.com/@", "").replace("https://tiktok.com/@", "").split("/")[0].split("?")[0]}`}
                     </a>
                   </td>
                   <td className="p-3.5 sm:p-6 text-sm font-black text-emerald-400">
