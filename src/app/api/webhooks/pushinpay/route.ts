@@ -154,12 +154,10 @@ export async function POST(req: Request) {
           style: "currency",
           currency: "BRL",
         });
-        const qtdFormatada = order.amount.toLocaleString("pt-BR");
-        const planoNome = order.plan.name || "Plano";
 
         await sendAdminPurchaseNotification({
-          title: `💰 Nova Venda Aprovada! (${precoFormatado})`,
-          message: `${planoNome} (${qtdFormatada}) para ${order.instagramUrl}`,
+          title: "Venda realizada",
+          message: `Você fez uma venda de ${precoFormatado}`,
           orderId: order.id,
           amount: order.amount,
           price: Number(order.price),
